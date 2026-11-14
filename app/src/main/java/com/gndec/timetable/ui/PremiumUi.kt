@@ -33,7 +33,6 @@ import androidx.compose.material.icons.filled.CheckCircle
 import androidx.compose.material.icons.filled.WarningAmber
 import androidx.compose.material.icons.filled.ChevronRight
 import androidx.compose.material.icons.filled.CloudDone
-import androidx.compose.material.icons.filled.FormatQuote
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.LocationOn
 import androidx.compose.material.icons.filled.MenuBook
@@ -1020,51 +1019,36 @@ fun PremiumOfflineCard(modifier: Modifier = Modifier) {
  * Daily quote strip, shown between the hero lecture card and the notice card.
  *
  * Deliberately not a card: it is a quiet line of text that breaks up two dense blocks, so
- * it stays borderless and carries no surface of its own. The quote is a compact centered group:
- * the glyph sits beside a narrower text column, whose lines are centered while the author sits
- * on the right edge beneath them.
+ * it stays borderless and carries no surface of its own. Quote and author are a single
+ * centered column (no leading quote glyph) so the body text lines up on the optical center.
  *
  * The author is skipped when ZenQuotes returns it blank rather than rendering a lone dash.
  */
 @Composable
 fun PremiumDailyQuote(quote: DailyQuote, modifier: Modifier = Modifier) {
-    Row(
+    Column(
         modifier = modifier.fillMaxWidth(),
-        horizontalArrangement = Arrangement.Center,
-        verticalAlignment = Alignment.Top
+        horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Row(
-            modifier = Modifier.fillMaxWidth(0.74f),
-            verticalAlignment = Alignment.Top
-        ) {
-            Icon(
-                Icons.Default.FormatQuote,
-                contentDescription = null,
-                tint = MaterialTheme.colorScheme.primary,
-                modifier = Modifier.size(28.dp)
+        Text(
+            quote.text,
+            modifier = Modifier.fillMaxWidth(0.86f),
+            color = MaterialTheme.colorScheme.onSurfaceVariant,
+            style = MaterialTheme.typography.bodyLarge,
+            fontStyle = FontStyle.Italic,
+            lineHeight = 25.sp,
+            textAlign = TextAlign.Center
+        )
+        quote.author.takeIf { it.isNotBlank() }?.let { author ->
+            Spacer(Modifier.height(3.dp))
+            Text(
+                "— $author",
+                modifier = Modifier.fillMaxWidth(0.86f),
+                color = MaterialTheme.colorScheme.primary,
+                style = MaterialTheme.typography.bodySmall,
+                fontWeight = FontWeight.Medium,
+                textAlign = TextAlign.Center
             )
-            Spacer(Modifier.width(2.dp))
-            Column(Modifier.weight(1f)) {
-                Text(
-                    quote.text,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant,
-                    style = MaterialTheme.typography.bodyLarge,
-                    fontStyle = FontStyle.Italic,
-                    lineHeight = 25.sp,
-                    textAlign = TextAlign.Center
-                )
-                quote.author.takeIf { it.isNotBlank() }?.let { author ->
-                    Spacer(Modifier.height(3.dp))
-                    Text(
-                        "— $author",
-                        modifier = Modifier.fillMaxWidth(),
-                        color = MaterialTheme.colorScheme.primary,
-                        style = MaterialTheme.typography.bodySmall,
-                        fontWeight = FontWeight.Medium,
-                        textAlign = TextAlign.End
-                    )
-                }
-            }
         }
     }
 }
