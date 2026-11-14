@@ -18,7 +18,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -159,11 +158,6 @@ fun SearchScreen(
         }
     }
 
-    // Department picker inside the suggestions — null means "All departments".
-    // With a query it filters the FACULTY results; with an empty query picking a
-    // department browses that department's teachers right here in search.
-    var deptFilter by rememberSaveable { mutableStateOf<String?>(null) }
-
     val today = remember { LocalDate.now() }
     val nowMinutes = remember {
         val z = Instant.ofEpochMilli(System.currentTimeMillis()).atZone(ZoneId.systemDefault())
@@ -183,10 +177,7 @@ fun SearchScreen(
             nowMinutes = nowMinutes
         )
     }
-    val facultyDepts = remember(query, snapshot) { facultyDepartments(query, snapshot) }
-    // A department the current query no longer matches falls back to "All".
-    val effectiveDept = deptFilter?.takeIf { it in facultyDepts }
-    val results = remember(query, snapshot, effectiveDept) { search(query, snapshot, effectiveDept) }
+    val results = remember(query, snapshot) { search(query, snapshot) }
 
     fun run(action: SearchAction) {
         focusManager.clearFocus()
@@ -258,44 +249,6 @@ fun SearchScreen(
                         keyboardOptions = KeyboardOptions(imeAction = ImeAction.Search),
                         keyboardActions = KeyboardActions(onSearch = { focusManager.clearFocus() })
                     )
-                }
-
-                // Department picker — part of the search suggestions. Offers every
-                // department the query can still narrow to (all of them while the
-                // query is empty), so same-name teachers across departments can be
-                // separated with one tap and any department can be browsed.
-                if (facultyDepts.isNotEmpty()) {
-                    item(key = "dept-picker") {
-                        Column {
-                            Text(
-                                "DEPARTMENT",
-                                modifier = Modifier.padding(start = 22.dp, bottom = 4.dp),
-                                color = MaterialTheme.colorScheme.primary,
-                                style = MaterialTheme.typography.labelMedium,
-                                fontWeight = FontWeight.Bold,
-                                letterSpacing = 1.2.sp
-                            )
-                            LazyRow(
-                                contentPadding = PaddingValues(horizontal = 20.dp),
-                                horizontalArrangement = Arrangement.spacedBy(8.dp)
-                            ) {
-                                item(key = "dept-all") {
-                                    DeptChip(
-                                        label = "All",
-                                        selected = effectiveDept == null,
-                                        onClick = { deptFilter = null }
-                                    )
-                                }
-                                items(facultyDepts, key = { it }) { dept ->
-                                    DeptChip(
-                                        label = com.gndec.timetable.domain.FacultyDirectoryManager.shortDepartment(dept),
-                                        selected = effectiveDept == dept,
-                                        onClick = { deptFilter = if (effectiveDept == dept) null else dept }
-                                    )
-                                }
-                            }
-                        }
-                    }
                 }
 
                 if (results.isEmpty() && trimmed.isNotEmpty()) {
@@ -439,31 +392,6 @@ private fun NoResults(query: String) {
                 style = MaterialTheme.typography.bodySmall
             )
         }
-    }
-}
-
-/** One department filter chip of the suggestions picker — ticks with the
- * app-wide haptic on pick, like the other segmented controls. */
-@Composable
-private fun DeptChip(label: String, selected: Boolean, onClick: () -> Unit) {
-    val view = LocalView.current
-    Surface(
-        shape = RoundedCornerShape(14.dp),
-        color = if (selected) MaterialTheme.colorScheme.primary.copy(alpha = 0.14f) else MaterialTheme.colorScheme.surface,
-        border = BorderStroke(
-            1.dp,
-            if (selected) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.outlineVariant
-        ),
-        modifier = Modifier.clickable(onClick = { view.hapticTick(); onClick() })
-    ) {
-        Text(
-            label,
-            modifier = Modifier.padding(horizontal = 13.dp, vertical = 8.dp),
-            color = if (selected) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurface,
-            style = MaterialTheme.typography.bodyMedium,
-            fontWeight = if (selected) FontWeight.Bold else FontWeight.SemiBold,
-            maxLines = 1
-        )
     }
 }
 

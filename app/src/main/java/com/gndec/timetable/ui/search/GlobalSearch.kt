@@ -363,6 +363,16 @@ private data class QuickAction(
 /** Route names are MainActivity's `composable(...)` strings, reused verbatim. */
 private val QuickActions = listOf(
     QuickAction("vacant", "Find vacant rooms", "vacant_rooms", listOf("vacantroom", "vacantrooms", "freeclass", "freeclasses", "freeslot", "freeslots", "emptylab", "roomavailability", "isroomfree", "roomstatus", "whichroom")),
+    QuickAction(
+        "faculty",
+        "Faculty members",
+        "faculty_members",
+        listOf(
+            "faculty", "facultymembers", "teachers", "teacherlist", "staff", "professors",
+            "lecturers", "directory", "facultydirectory", "findteacher", "searchteacher"
+        ),
+        hint = "Browse the college faculty directory"
+    ),
     QuickAction("attendance", "My attendance", "attendance", listOf("attendance", "myattendance", "present", "absent", "percentage", "howmanypercent", "amirequired"), hint="Marks and overall percentage"),
     QuickAction("profile", "My profile", "profile", listOf("profile", "myprofile", "studentprofile", "mydetails", "personalinfo", "myinfo")),
     QuickAction("notice", "Notices", "notice", listOf("notice", "notices", "erpnotice", "officialnotice", "circular")),
@@ -467,11 +477,13 @@ private fun suggestions(snapshot: SearchSnapshot): List<SearchResult> {
             action = SearchAction.Navigate("profile")
         )
     }
-    snapshot.settings.studentName.takeIf { it.isNotBlank() }?.let {
+    // College mail instead of name — knowing your own name is not useful here;
+    // name remains searchable via identity aliases ("name", "my name", …).
+    collegeEmailOf(snapshot.settings).takeIf { it.isNotBlank() }?.let {
         out += SearchResult(
-            id = "you-name",
+            id = "you-email",
             group = SearchGroup.YOU,
-            title = "Your name",
+            title = "Your mail",
             subtitle = it,
             score = SCORE_PREFIX - 2,
             action = SearchAction.Navigate("profile")
