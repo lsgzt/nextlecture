@@ -326,20 +326,39 @@ private fun SubjectAttendanceStrip(attendance: SubjectAttendance, lectureType: S
         "tutorial" -> "tutorial"
         else -> "lecture"
     }
-    val verdict = when {
-        attendance.canAffordToMiss && attendance.isComfortable ->
-            "Good job! You have $percent attendance in ${attendance.subject}."
-        attendance.canAffordToMiss ->
-            "You can safely miss this $noun — $percent in ${attendance.subject}."
-        projected != null ->
-            "Missing this $noun would drop your attendance to $projected in ${attendance.subject}."
-        else ->
-            "You can't afford to miss this $noun — $percent in ${attendance.subject}."
-    }
+    val subject = attendance.subject
     val (container, content, icon) = when {
         attendance.canAffordToMiss && attendance.isComfortable -> ComfortTone()
         attendance.canAffordToMiss -> SafeTone()
         else -> DangerTone()
+    }
+    val bold = SpanStyle(fontWeight = FontWeight.Bold, color = content)
+    val normal = SpanStyle(fontWeight = FontWeight.Medium, color = content)
+    val verdict = when {
+        attendance.canAffordToMiss && attendance.isComfortable -> buildAnnotatedString {
+            withStyle(normal) { append("Good job! You have ") }
+            withStyle(bold) { append(percent) }
+            withStyle(normal) { append(" attendance in $subject.") }
+        }
+        attendance.canAffordToMiss -> buildAnnotatedString {
+            withStyle(normal) { append("You can ") }
+            withStyle(bold) { append("safely miss") }
+            withStyle(normal) { append(" this $noun — ") }
+            withStyle(bold) { append(percent) }
+            withStyle(normal) { append(" in $subject.") }
+        }
+        projected != null -> buildAnnotatedString {
+            withStyle(normal) { append("Missing this $noun would ") }
+            withStyle(bold) { append("drop your attendance to $projected") }
+            withStyle(normal) { append(" in $subject.") }
+        }
+        else -> buildAnnotatedString {
+            withStyle(normal) { append("You ") }
+            withStyle(bold) { append("can't afford to miss") }
+            withStyle(normal) { append(" this $noun — ") }
+            withStyle(bold) { append(percent) }
+            withStyle(normal) { append(" in $subject.") }
+        }
     }
     Row(
         Modifier
@@ -353,9 +372,7 @@ private fun SubjectAttendanceStrip(attendance: SubjectAttendance, lectureType: S
         Spacer(Modifier.width(9.dp))
         Text(
             verdict,
-            color = content,
-            style = MaterialTheme.typography.bodySmall,
-            fontWeight = FontWeight.Medium
+            style = MaterialTheme.typography.bodySmall
         )
     }
 }
