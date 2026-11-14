@@ -68,6 +68,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.drawBehind
+import androidx.compose.ui.draw.drawWithContent
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Brush
@@ -636,7 +637,56 @@ private fun TimelineSection(
     onOpenLecture: (LectureEntity, java.time.LocalDate) -> Unit
 ) {
     var sectionCoords by remember { mutableStateOf<LayoutCoordinates?>(null) }
+    // LayoutCoordinates alone can go stale when cards above expand (friend chips,
+    // multi-line subjects). Cache section-relative centres and refresh them on
+    // every node/section layout pass so the rail always reaches the last item.
     val nodeCoords = remember { mutableStateMapOf<Int, LayoutCoordinates>() }
+    val nodeYs = remember { mutableStateMapOf<Int, Float>() }
+    val nodeHalfHs = remember { mutableStateMapOf<Int, Float>() }
+    var layoutEpoch by remember { mutableStateOf(0) }
+
+    fun refreshNode(index: Int, coords: LayoutCoordinates) {
+        nodeCoords[index] = coords
+        val section = sectionCoords
+        if (section != null && section.isAttached && coords.isAttached) {
+            nodeYs[index] = section.localPositionOf(
+                coords,
+                Offset(coords.size.width / 2f, coords.size.height / 2f)
+            ).y
+            nodeHalfHs[index] = coords.size.height / 2f
+        }
+        layoutEpoch++
+    }
+
+    fun refreshAllFromSection(section: LayoutCoordinates) {
+        sectionCoords = section
+        if (!section.isAttached) return
+        nodeCoords.forEach { (index, coords) ->
+            if (!coords.isAttached) return@forEach
+            nodeYs[index] = section.localPositionOf(
+                coords,
+                Offset(coords.size.width / 2f, coords.size.height / 2f)
+            ).y
+            nodeHalfHs[index] = coords.size.height / 2f
+        }
+        layoutEpoch++
+    }
+
+    // Drop cached nodes when the timeline shape changes so indices never point
+    // at a previous day's leftover coordinates.
+    val timelineKey = timeline.joinToString("|") {
+        when (it) {
+            is TimelineItem.Lecture -> "L${it.lecture.startMinutes}-${it.lecture.endMinutes}-${it.lecture.subject}"
+            is TimelineItem.Free -> "F${it.start}-${it.end}"
+        }
+    }
+    androidx.compose.runtime.LaunchedEffect(timelineKey) {
+        nodeCoords.clear()
+        nodeYs.clear()
+        nodeHalfHs.clear()
+        layoutEpoch++
+    }
+
     // When every lecture is done, drive the glow to the very last timeline node
     // (including a trailing free period) so the rail looks fully completed.
     val allDone = timeline.isNotEmpty() &&
@@ -646,36 +696,36 @@ private fun TimelineSection(
     } else {
         timeline.indexOfLast { it is TimelineItem.Lecture && it.state != LectureState.UPCOMING }
     }
-    val glowTarget = run {
-        val section = sectionCoords
-        val node = nodeCoords[activeIndex]
-        if (section == null || node == null || !section.isAttached || !node.isAttached) 0f
-        else section.localPositionOf(node, Offset(node.size.width / 2f, node.size.height / 2f)).y
+    // Subscribe to layoutEpoch so glow recomputes after late position updates.
+    // Keep the last known centre when a node has not reported yet so the
+    // animation does not collapse to y=0 mid-layout.
+    var lastGlowY by remember { mutableStateOf(0f) }
+    layoutEpoch.let {
+        nodeYs[activeIndex]?.let { lastGlowY = it }
     }
     val glowEnd by animateFloatAsState(
-        targetValue = glowTarget,
+        targetValue = lastGlowY,
         animationSpec = motionTween(700),
         label = "railGlowEnd"
     )
     Box(
         Modifier.fillMaxWidth()
-            .onGloballyPositioned { sectionCoords = it }
-            .drawBehind {
-                val section = sectionCoords ?: return@drawBehind
-                if (!section.isAttached) return@drawBehind
-                fun nodeY(index: Int): Float? {
-                    val coords = nodeCoords[index] ?: return null
-                    if (!coords.isAttached) return null
-                    return section.localPositionOf(coords, Offset(coords.size.width / 2f, coords.size.height / 2f)).y
-                }
-                val first = nodeY(0)
-                val last = nodeY(timeline.lastIndex)
-                if (first == null || last == null || last <= first) return@drawBehind
+            .onGloballyPositioned { refreshAllFromSection(it) }
+            // Draw after children so node centres from this frame are available.
+            .drawWithContent {
+                drawContent()
+                // Touch epoch so draw invalidates whenever positions refresh.
+                val epoch = layoutEpoch
+                if (epoch < 0) return@drawWithContent
+                fun nodeY(index: Int): Float? = nodeYs[index]
+                fun nodeGap(index: Int): Float =
+                    (nodeHalfHs[index] ?: (RailNodeSize.toPx() / 2f)) + 4.dp.toPx()
+                val positioned = (0..timeline.lastIndex).mapNotNull { i -> nodeY(i)?.let { i to it } }
+                if (positioned.size < 2) return@drawWithContent
+                val first = positioned.first().second
+                val last = positioned.last().second
+                if (last <= first) return@drawWithContent
                 val x = RailCenterX.toPx()
-                fun nodeGap(index: Int): Float {
-                    val coords = nodeCoords[index]
-                    return (coords?.size?.height?.toFloat()?.div(2f) ?: RailNodeSize.toPx() / 2f) + 4.dp.toPx()
-                }
                 val labelBand = 58.dp.toPx()
                 for (index in 0 until timeline.lastIndex) {
                     val startY = nodeY(index) ?: continue
@@ -685,11 +735,32 @@ private fun TimelineSection(
                     val labelStart = segmentStart
                     val labelEnd = labelStart + if (timeline[index] is TimelineItem.Lecture) labelBand else 0f
                     if (segmentEnd > segmentStart) {
-                        if (labelStart > segmentStart) drawLine(muted.copy(alpha = 0.18f), Offset(x, segmentStart), Offset(x, minOf(segmentEnd, labelStart)), 2.dp.toPx(), StrokeCap.Round)
-                        if (segmentEnd > labelEnd) drawLine(muted.copy(alpha = 0.18f), Offset(x, maxOf(segmentStart, labelEnd)), Offset(x, segmentEnd), 2.dp.toPx(), StrokeCap.Round)
+                        if (labelStart > segmentStart) {
+                            drawLine(
+                                muted.copy(alpha = 0.18f),
+                                Offset(x, segmentStart),
+                                Offset(x, minOf(segmentEnd, labelStart)),
+                                2.dp.toPx(),
+                                StrokeCap.Round
+                            )
+                        }
+                        if (segmentEnd > labelEnd) {
+                            drawLine(
+                                muted.copy(alpha = 0.18f),
+                                Offset(x, maxOf(segmentStart, labelEnd)),
+                                Offset(x, segmentEnd),
+                                2.dp.toPx(),
+                                StrokeCap.Round
+                            )
+                        }
                     }
                 }
-                val tip = glowEnd.coerceIn(first, last)
+                val tip = when {
+                    activeIndex < 0 -> first
+                    allDone -> last
+                    glowEnd > first -> glowEnd.coerceIn(first, last)
+                    else -> first
+                }
                 if (tip > first + 2f) {
                     // When the day is fully complete, keep the tip solid so the
                     // rail looks finished instead of fading out at the last node.
@@ -721,8 +792,8 @@ private fun TimelineSection(
                         )
                     } else {
                         Brush.verticalGradient(
-                            0f to accent.copy(alpha = 0.18f),
-                            0.7f to accent.copy(alpha = 0.07f),
+                            0f to accent.copy(alpha = 0.22f),
+                            0.7f to accent.copy(alpha = 0.10f),
                             1f to Color.Transparent,
                             startY = first,
                             endY = tip
@@ -750,11 +821,10 @@ private fun TimelineSection(
                         }
                     }
                 }
-                // Draw the masks last so neither the base rail nor the gradient
-                // halo can bleed into the timing-label band.
+                // Mask the timing-label band so the rail does not cut through text.
                 for (index in 0 until timeline.lastIndex) {
                     val startY = nodeY(index) ?: continue
-                    val endY = nodeY(index + 1) ?: continue
+                    if (nodeY(index + 1) == null) continue
                     val labelStart = startY + nodeGap(index)
                     val labelEnd = labelStart + if (timeline[index] is TimelineItem.Lecture) labelBand else 0f
                     if (labelEnd > labelStart) {
@@ -776,7 +846,7 @@ private fun TimelineSection(
                         nowMinutes = nowMinutes,
                         nodeIndex = index,
                         sectionCoords = { sectionCoords },
-                        registerNode = { i, coords -> nodeCoords[i] = coords },
+                        registerNode = { i, coords -> refreshNode(i, coords) },
                         accent = accent,
                         primaryText = primaryText,
                         muted = muted,
@@ -788,7 +858,7 @@ private fun TimelineSection(
                         end = item.end,
                         nodeIndex = index,
                         sectionCoords = { sectionCoords },
-                        registerNode = { i, coords -> nodeCoords[i] = coords },
+                        registerNode = { i, coords -> refreshNode(i, coords) },
                         muted = muted,
                         accent = accent,
                         freeFriends = friends.friendsFreeWithin(item.start, item.end)
