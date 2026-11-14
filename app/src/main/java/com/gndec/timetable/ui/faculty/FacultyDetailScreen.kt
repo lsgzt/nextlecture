@@ -1,0 +1,661 @@
+package com.gndec.timetable.ui.faculty
+
+import android.content.Intent
+import android.net.Uri
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.AccessTime
+import androidx.compose.material.icons.filled.Email
+import androidx.compose.material.icons.filled.EventAvailable
+import androidx.compose.material.icons.filled.Groups
+import androidx.compose.material.icons.filled.Info
+import androidx.compose.material.icons.filled.LocationOn
+import androidx.compose.material.icons.filled.Person
+import androidx.compose.material.icons.filled.Phone
+import androidx.compose.material.icons.filled.Refresh
+import androidx.compose.material.icons.filled.Schedule
+import androidx.compose.material.icons.filled.School
+import androidx.compose.material.icons.filled.Work
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+import com.gndec.timetable.domain.AppContainer
+import com.gndec.timetable.domain.FacultyRecord
+import com.gndec.timetable.domain.FacultySchedule
+import com.gndec.timetable.domain.FacultyStatus
+import com.gndec.timetable.domain.FacultyTimetableManager
+import com.gndec.timetable.domain.FacultyTimetableResult
+import com.gndec.timetable.parse.FacultySlot
+import com.gndec.timetable.ui.Header
+import com.gndec.timetable.ui.IconBadge
+import com.gndec.timetable.ui.PillTone
+import com.gndec.timetable.ui.PremiumBottomBarContentClearance
+import com.gndec.timetable.ui.PremiumScreenBackground
+import com.gndec.timetable.ui.ScreenSurface
+import com.gndec.timetable.ui.StatusPill
+import com.gndec.timetable.ui.TealOutlineButton
+import com.gndec.timetable.ui.theme.GndecMuted
+import com.gndec.timetable.util.Formatters
+import java.time.LocalDate
+import java.time.LocalTime
+
+/**
+ * Faculty profile + live weekly schedule.
+ *
+ * Contact details (name, designation, email, phones, department) come from the
+ * bundled directory and are ALWAYS shown, including for teachers whose
+ * department publishes no timetable — those get the honest "This teacher's
+ * timetable is not available in our database" note instead of a wrong schedule.
+ * The timetable itself is discovered live from the department website (never
+ * hardcoded), so weekly revisions appear without an app update.
+ */
+@Composable
+fun FacultyDetailScreen(
+    container: AppContainer,
+    profileId: String,
+    onBack: () -> Unit,
+    onOpenSettings: () -> Unit
+) {
+    val context = LocalContext.current
+    val faculty = remember(profileId) { container.facultyDirectory.byProfileId(profileId) }
+
+    var result by remember(profileId) { mutableStateOf<FacultyTimetableResult?>(null) }
+    var loading by remember(profileId) { mutableStateOf(true) }
+    var refreshTick by remember(profileId) { mutableStateOf(0) }
+
+    LaunchedEffect(profileId, refreshTick) {
+        val teacher = faculty ?: return@LaunchedEffect
+        loading = true
+        result = runCatching { container.facultyTimetables.load(teacher, forceRefresh = refreshTick > 0) }
+            .getOrElse { FacultyTimetableResult.Unavailable(it.message ?: "Something went wrong") }
+        loading = false
+    }
+
+    Scaffold(containerColor = MaterialTheme.colorScheme.background) { padding ->
+        PremiumScreenBackground {
+            if (faculty == null) {
+                ScreenSurface {
+                    LazyColumn(
+                        modifier = Modifier.fillMaxSize().padding(padding),
+                        contentPadding = PaddingValues(bottom = 22.dp + PremiumBottomBarContentClearance)
+                    ) {
+                        item { Header(title = "Faculty details", onBack = onBack, onSettings = onOpenSettings) }
+                        item {
+                            Card(
+                                modifier = Modifier.fillMaxWidth().padding(horizontal = 20.dp),
+                                shape = RoundedCornerShape(18.dp),
+                                colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.secondaryContainer)
+                            ) {
+                                Column(Modifier.padding(22.dp)) {
+                                    Text("Teacher not found", style = MaterialTheme.typography.titleLarge)
+                                    Spacer(Modifier.height(6.dp))
+                                    Text(
+                                        "This teacher is no longer in the college directory.",
+                                        color = GndecMuted
+                                    )
+                                }
+                            }
+                        }
+                    }
+                }
+                return@PremiumScreenBackground
+            }
+
+            val schedule = (result as? FacultyTimetableResult.Ready)?.schedule
+            val today = remember { LocalDate.now() }
+            val nowMinutes = remember { LocalTime.now().let { it.hour * 60 + it.minute } }
+            val status = remember(schedule, today, nowMinutes) {
+                schedule?.let { FacultyTimetableManager.statusAt(it, today, nowMinutes) }
+            }
+
+            LazyColumn(
+                modifier = Modifier.fillMaxSize().padding(padding),
+                contentPadding = PaddingValues(
+                    top = 8.dp,
+                    bottom = 26.dp + PremiumBottomBarContentClearance
+                ),
+                verticalArrangement = Arrangement.spacedBy(14.dp)
+            ) {
+                item {
+                    Header(title = "Faculty details", onBack = onBack, onSettings = onOpenSettings, modifier = Modifier.padding(top = 8.dp))
+                }
+
+                // Identity
+                item {
+                    Row(
+                        Modifier.fillMaxWidth().padding(horizontal = 24.dp, vertical = 8.dp),
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        IconBadge(
+                            Icons.Default.Person,
+                            containerColor = MaterialTheme.colorScheme.primary,
+                            tint = MaterialTheme.colorScheme.onPrimary,
+                            size = 72.dp
+                        )
+                        Spacer(Modifier.width(16.dp))
+                        Column(Modifier.weight(1f)) {
+                            Text(
+                                prettyName(faculty.name),
+                                style = MaterialTheme.typography.headlineSmall,
+                                overflow = TextOverflow.Ellipsis,
+                                maxLines = 2
+                            )
+                            if (faculty.designation.isNotBlank()) {
+                                Text(faculty.designation, style = MaterialTheme.typography.titleMedium)
+                            }
+                            Text(
+                                faculty.department,
+                                color = MaterialTheme.colorScheme.primary,
+                                style = MaterialTheme.typography.titleMedium,
+                                fontWeight = FontWeight.SemiBold
+                            )
+                        }
+                    }
+                }
+
+                // Contact details — always available, straight from the directory
+                if (faculty.contactable || faculty.profileUrl.isNotBlank()) {
+                    item { ContactCard(faculty) }
+                }
+
+                // RAI note — shown ONLY for ME department teachers, whose
+                // department timetable also carries the RAI faculty
+                if (faculty.department == "Mechanical Engineering") {
+                    item { RaiNoteCard() }
+                }
+
+                // Timetable
+                item {
+                    when {
+                        loading -> TimetableLoadingCard(faculty)
+                        result is FacultyTimetableResult.NotPublished -> TimetableUnavailableCard(
+                            "This teacher's timetable is not available in our database",
+                            faculty.department
+                        )
+                        result is FacultyTimetableResult.Unavailable -> TimetableErrorCard(
+                            (result as FacultyTimetableResult.Unavailable).reason
+                        ) { refreshTick++ }
+                        schedule != null -> ScheduleHeaderCard(schedule, status)
+                        else -> TimetableUnavailableCard(
+                            "This teacher's timetable is not available in our database",
+                            faculty.department
+                        )
+                    }
+                }
+
+                // Today's classes
+                if (schedule != null && !loading) {
+                    val todayDow = today.dayOfWeek.value - 1
+                    val todaySlots = schedule.slotsForDay(todayDow)
+                    item {
+                        Text(
+                            "TODAY · ${Formatters.dayName(today.dayOfWeek.value).uppercase()}",
+                            modifier = Modifier.padding(start = 24.dp, top = 4.dp),
+                            color = MaterialTheme.colorScheme.primary,
+                            style = MaterialTheme.typography.labelMedium,
+                            fontWeight = FontWeight.Bold,
+                            letterSpacing = 1.2.sp
+                        )
+                    }
+                    if (todaySlots.isEmpty()) {
+                        item {
+                            Card(
+                                modifier = Modifier.fillMaxWidth().padding(horizontal = 20.dp),
+                                shape = RoundedCornerShape(16.dp),
+                                colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
+                                elevation = CardDefaults.cardElevation(defaultElevation = 0.dp)
+                            ) {
+                                Text(
+                                    "No classes listed for today",
+                                    modifier = Modifier.padding(16.dp),
+                                    color = GndecMuted
+                                )
+                            }
+                        }
+                    } else {
+                        val liveKey = (status as? FacultyStatus.Busy)?.slot?.let { "${it.day}-${it.startMinutes}" }
+                        todaySlots.forEach { slot ->
+                            item(key = "today-${slot.day}-${slot.startMinutes}") {
+                                SlotCard(
+                                    slot = slot,
+                                    live = liveKey == "${slot.day}-${slot.startMinutes}"
+                                )
+                            }
+                        }
+                    }
+
+                    // Full week
+                    item {
+                        Text(
+                            "FULL WEEK",
+                            modifier = Modifier.padding(start = 24.dp, top = 12.dp),
+                            color = MaterialTheme.colorScheme.primary,
+                            style = MaterialTheme.typography.labelMedium,
+                            fontWeight = FontWeight.Bold,
+                            letterSpacing = 1.2.sp
+                        )
+                    }
+                    val weekDays = (0..6).filter { d -> schedule.slotsForDay(d).isNotEmpty() }
+                    if (weekDays.isEmpty()) {
+                        item {
+                            Card(
+                                modifier = Modifier.fillMaxWidth().padding(horizontal = 20.dp),
+                                shape = RoundedCornerShape(16.dp),
+                                colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface)
+                            ) {
+                                Text(
+                                    "No classes listed in this teacher's week",
+                                    modifier = Modifier.padding(16.dp),
+                                    color = GndecMuted
+                                )
+                            }
+                        }
+                    }
+                    weekDays.forEach { day ->
+                        item(key = "week-day-$day") {
+                            WeekDayCard(day, schedule.slotsForDay(day), todayDow)
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
+// ---------------------------------------------------------------------------
+// Cards
+// ---------------------------------------------------------------------------
+
+@Composable
+private fun ContactCard(faculty: FacultyRecord) {
+    val context = LocalContext.current
+    Card(
+        modifier = Modifier.fillMaxWidth().padding(horizontal = 20.dp),
+        shape = RoundedCornerShape(16.dp),
+        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
+        elevation = CardDefaults.cardElevation(defaultElevation = 0.dp)
+    ) {
+        Column(Modifier.padding(horizontal = 18.dp, vertical = 10.dp)) {
+            if (faculty.email.isNotBlank()) {
+                ContactRow(Icons.Default.Email, faculty.email, "Email") {
+                    runCatching { context.startActivity(Intent(Intent.ACTION_SENDTO, Uri.parse("mailto:${faculty.email}"))) }
+                }
+            }
+            if (faculty.phoneOffice.isNotBlank()) {
+                ContactRow(Icons.Default.Phone, faculty.phoneOffice, "Office phone") {
+                    runCatching { context.startActivity(Intent(Intent.ACTION_DIAL, Uri.parse("tel:${faculty.phoneOffice.filter { it.isDigit() || it == '+' }}"))) }
+                }
+            }
+            if (faculty.phoneMobile.isNotBlank()) {
+                ContactRow(Icons.Default.Phone, faculty.phoneMobile, "Mobile") {
+                    runCatching { context.startActivity(Intent(Intent.ACTION_DIAL, Uri.parse("tel:${faculty.phoneMobile.filter { it.isDigit() || it == '+' }}"))) }
+                }
+            }
+            if (faculty.profileUrl.isNotBlank()) {
+                ContactRow(Icons.Default.School, "Faculty profile", "College website") {
+                    runCatching { context.startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(faculty.profileUrl))) }
+                }
+            }
+        }
+    }
+}
+
+@Composable
+private fun ContactRow(icon: ImageVector, text: String, label: String, onClick: () -> Unit) {
+    Column(
+        Modifier.fillMaxWidth().clickable(onClick = onClick)
+    ) {
+        Row(
+            Modifier.fillMaxWidth().padding(vertical = 8.dp),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            IconBadge(icon, size = 42.dp)
+            Spacer(Modifier.width(14.dp))
+            Column(Modifier.weight(1f)) {
+                Text(label, style = MaterialTheme.typography.labelMedium, color = GndecMuted)
+                Text(text, style = MaterialTheme.typography.bodyLarge, fontWeight = FontWeight.Medium)
+            }
+        }
+        HorizontalDivider(color = MaterialTheme.colorScheme.outlineVariant, modifier = Modifier.padding(start = 56.dp))
+    }
+}
+
+@Composable
+private fun RaiNoteCard() {
+    Card(
+        modifier = Modifier.fillMaxWidth().padding(horizontal = 20.dp),
+        shape = RoundedCornerShape(16.dp),
+        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.secondaryContainer)
+    ) {
+        Row(Modifier.padding(16.dp), verticalAlignment = Alignment.Top) {
+            Icon(
+                Icons.Default.Info,
+                contentDescription = null,
+                tint = MaterialTheme.colorScheme.onSecondaryContainer,
+                modifier = Modifier.size(20.dp)
+            )
+            Spacer(Modifier.width(12.dp))
+            Column {
+                Text(
+                    "RAI department teachers",
+                    style = MaterialTheme.typography.titleMedium,
+                    fontWeight = FontWeight.SemiBold,
+                    color = MaterialTheme.colorScheme.onSecondaryContainer
+                )
+                Spacer(Modifier.height(4.dp))
+                Text(
+                    "The RAI department does not publish its own teacher timetable — RAI faculty schedules are published under the ME department's timetable, which also serves this teacher.",
+                    style = MaterialTheme.typography.bodySmall,
+                    color = MaterialTheme.colorScheme.onSecondaryContainer
+                )
+            }
+        }
+    }
+}
+
+@Composable
+private fun TimetableLoadingCard(faculty: FacultyRecord) {
+    Card(
+        modifier = Modifier.fillMaxWidth().padding(horizontal = 20.dp),
+        shape = RoundedCornerShape(16.dp),
+        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface)
+    ) {
+        Row(Modifier.padding(18.dp), verticalAlignment = Alignment.CenterVertically) {
+            CircularProgressIndicator(strokeWidth = 2.dp, modifier = Modifier.size(22.dp))
+            Spacer(Modifier.width(14.dp))
+            Text("Fetching ${prettyName(faculty.name)}'s timetable from the ${faculty.department} website…")
+        }
+    }
+}
+
+@Composable
+private fun TimetableUnavailableCard(message: String, department: String) {
+    Card(
+        modifier = Modifier.fillMaxWidth().padding(horizontal = 20.dp),
+        shape = RoundedCornerShape(18.dp),
+        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.secondaryContainer)
+    ) {
+        Column(Modifier.padding(22.dp)) {
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                IconBadge(Icons.Default.Schedule, size = 40.dp)
+                Spacer(Modifier.width(12.dp))
+                Text(message, style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.Bold)
+            }
+            Spacer(Modifier.height(8.dp))
+            Text(
+                "The contact details above are still current. Some departments do not publish a weekly teacher timetable, and teachers visiting from other departments may not be listed in the $department file.",
+                color = GndecMuted,
+                style = MaterialTheme.typography.bodySmall
+            )
+        }
+    }
+}
+
+@Composable
+private fun TimetableErrorCard(reason: String, onRetry: () -> Unit) {
+    Card(
+        modifier = Modifier.fillMaxWidth().padding(horizontal = 20.dp),
+        shape = RoundedCornerShape(18.dp),
+        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface)
+    ) {
+        Column(Modifier.padding(20.dp)) {
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                IconBadge(Icons.Default.Refresh, size = 40.dp)
+                Spacer(Modifier.width(12.dp))
+                Text("Couldn't load the timetable", style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.Bold)
+            }
+            Spacer(Modifier.height(6.dp))
+            Text(reason, color = GndecMuted, style = MaterialTheme.typography.bodySmall)
+            Spacer(Modifier.height(14.dp))
+            TealOutlineButton(text = "Try again", icon = Icons.Default.Refresh, onClick = onRetry)
+        }
+    }
+}
+
+@Composable
+private fun ScheduleHeaderCard(schedule: FacultySchedule, status: FacultyStatus?) {
+    Card(
+        modifier = Modifier.fillMaxWidth().padding(horizontal = 20.dp),
+        shape = RoundedCornerShape(18.dp),
+        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
+        elevation = CardDefaults.cardElevation(defaultElevation = 0.dp)
+    ) {
+        Column(Modifier.padding(20.dp)) {
+            when (status) {
+                is FacultyStatus.Busy -> {
+                    Row(verticalAlignment = Alignment.CenterVertically) {
+                        StatusPill("BUSY RIGHT NOW", tone = PillTone.ORANGE)
+                    }
+                    Spacer(Modifier.height(10.dp))
+                    InfoLine(Icons.Default.LocationOn, status.slot.room ?: "Room not listed")
+                    InfoLine(Icons.Default.School, status.slot.subject ?: "Class")
+                    status.slot.studentsSet?.let { InfoLine(Icons.Default.Groups, it) }
+                    InfoLine(Icons.Default.AccessTime, "Until ${Formatters.hm(status.untilMinutes)}")
+                }
+                is FacultyStatus.FreeWithNextClass -> {
+                    Row(verticalAlignment = Alignment.CenterVertically) {
+                        StatusPill("FREE RIGHT NOW", tone = PillTone.GREEN)
+                    }
+                    Spacer(Modifier.height(10.dp))
+                    InfoLine(Icons.Default.EventAvailable, "Next class at ${Formatters.hm(status.slot.startMinutes)}")
+                    status.slot.room?.let { InfoLine(Icons.Default.LocationOn, it) }
+                    status.slot.subject?.let { InfoLine(Icons.Default.School, it) }
+                }
+                FacultyStatus.FreeRestOfDay -> {
+                    Row(verticalAlignment = Alignment.CenterVertically) {
+                        StatusPill("FREE FOR THE REST OF TODAY", tone = PillTone.GREEN)
+                    }
+                    Spacer(Modifier.height(8.dp))
+                    Text("No more classes listed for today.", color = GndecMuted, style = MaterialTheme.typography.bodySmall)
+                }
+                FacultyStatus.NoClassesToday -> {
+                    Row(verticalAlignment = Alignment.CenterVertically) {
+                        StatusPill("NO CLASSES TODAY", tone = PillTone.TEAL)
+                    }
+                    Spacer(Modifier.height(8.dp))
+                    Text("Nothing is listed for today in this teacher's week.", color = GndecMuted, style = MaterialTheme.typography.bodySmall)
+                }
+                FacultyStatus.Weekend -> {
+                    Row(verticalAlignment = Alignment.CenterVertically) {
+                        StatusPill("IT'S THE WEEKEND", tone = PillTone.GRAY)
+                    }
+                    Spacer(Modifier.height(8.dp))
+                    Text("The weekly timetable below shows this teacher's regular schedule.", color = GndecMuted, style = MaterialTheme.typography.bodySmall)
+                }
+                null -> Unit
+            }
+
+            Spacer(Modifier.height(14.dp))
+            HorizontalDivider(color = MaterialTheme.colorScheme.outlineVariant)
+            Spacer(Modifier.height(10.dp))
+            val generated = schedule.generatedAtMillis
+            Text(
+                buildString {
+                    append("Live from the ${schedule.sourceRootId.uppercase()} department website")
+                    if (generated != null) append(" · timetable generated ${Formatters.dateTime(generated)}")
+                },
+                color = GndecMuted,
+                style = MaterialTheme.typography.bodySmall,
+                modifier = Modifier.fillMaxWidth()
+            )
+        }
+    }
+}
+
+@Composable
+private fun InfoLine(icon: ImageVector, text: String) {
+    Row(Modifier.padding(vertical = 4.dp), verticalAlignment = Alignment.CenterVertically) {
+        Icon(icon, contentDescription = null, tint = MaterialTheme.colorScheme.primary, modifier = Modifier.size(18.dp))
+        Spacer(Modifier.width(10.dp))
+        Text(text, style = MaterialTheme.typography.bodyLarge, fontWeight = FontWeight.Medium)
+    }
+}
+
+@Composable
+private fun SlotCard(slot: FacultySlot, live: Boolean) {
+    Card(
+        modifier = Modifier.fillMaxWidth().padding(horizontal = 20.dp),
+        shape = RoundedCornerShape(16.dp),
+        colors = CardDefaults.cardColors(
+            containerColor = if (live) MaterialTheme.colorScheme.primaryContainer else MaterialTheme.colorScheme.surface
+        ),
+        elevation = CardDefaults.cardElevation(defaultElevation = 0.dp)
+    ) {
+        Row(Modifier.padding(16.dp), verticalAlignment = Alignment.CenterVertically) {
+            Column(Modifier.width(86.dp)) {
+                Text(
+                    Formatters.hm(slot.startMinutes),
+                    style = MaterialTheme.typography.titleMedium,
+                    fontWeight = FontWeight.Bold
+                )
+                Text(
+                    Formatters.hm(slot.endMinutes),
+                    color = GndecMuted,
+                    style = MaterialTheme.typography.bodySmall
+                )
+            }
+            Column(Modifier.weight(1f)) {
+                Text(
+                    slot.subject ?: "Class",
+                    style = MaterialTheme.typography.titleMedium,
+                    fontWeight = FontWeight.SemiBold,
+                    maxLines = 2,
+                    overflow = TextOverflow.Ellipsis
+                )
+                slot.room?.let {
+                    Row(verticalAlignment = Alignment.CenterVertically) {
+                        Icon(Icons.Default.LocationOn, contentDescription = null, modifier = Modifier.size(14.dp), tint = GndecMuted)
+                        Spacer(Modifier.width(4.dp))
+                        Text(it, color = GndecMuted, style = MaterialTheme.typography.bodySmall)
+                    }
+                }
+                slot.studentsSet?.let {
+                    Row(verticalAlignment = Alignment.CenterVertically) {
+                        Icon(Icons.Default.Groups, contentDescription = null, modifier = Modifier.size(14.dp), tint = GndecMuted)
+                        Spacer(Modifier.width(4.dp))
+                        Text(it, color = GndecMuted, style = MaterialTheme.typography.bodySmall, maxLines = 1, overflow = TextOverflow.Ellipsis)
+                    }
+                }
+                if (live) {
+                    Text(
+                        "IN PROGRESS",
+                        color = MaterialTheme.colorScheme.primary,
+                        style = MaterialTheme.typography.labelMedium,
+                        fontWeight = FontWeight.Bold
+                    )
+                }
+            }
+        }
+    }
+}
+
+@Composable
+private fun WeekDayCard(day: Int, slots: List<FacultySlot>, todayDow: Int) {
+    val isToday = day == todayDow
+    Card(
+        modifier = Modifier.fillMaxWidth().padding(horizontal = 20.dp),
+        shape = RoundedCornerShape(16.dp),
+        colors = CardDefaults.cardColors(
+            containerColor = if (isToday) MaterialTheme.colorScheme.primaryContainer else MaterialTheme.colorScheme.surface
+        ),
+        elevation = CardDefaults.cardElevation(defaultElevation = 0.dp)
+    ) {
+        Column(Modifier.padding(16.dp)) {
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                Icon(Icons.Default.Work, contentDescription = null, tint = MaterialTheme.colorScheme.primary, modifier = Modifier.size(18.dp))
+                Spacer(Modifier.width(8.dp))
+                Text(
+                    dayLabel(day),
+                    style = MaterialTheme.typography.titleMedium,
+                    fontWeight = FontWeight.Bold
+                )
+                if (isToday) {
+                    Spacer(Modifier.width(8.dp))
+                    StatusPill("TODAY", tone = PillTone.TEAL)
+                }
+            }
+            Spacer(Modifier.height(10.dp))
+            slots.forEachIndexed { index, slot ->
+                Row(Modifier.padding(vertical = 5.dp), verticalAlignment = Alignment.CenterVertically) {
+                    Text(
+                        "${Formatters.hm(slot.startMinutes)}–${Formatters.hm(slot.endMinutes)}",
+                        style = MaterialTheme.typography.bodyMedium,
+                        fontWeight = FontWeight.Medium,
+                        modifier = Modifier.width(120.dp)
+                    )
+                    Column(Modifier.weight(1f)) {
+                        Text(
+                            slot.subject ?: "Class",
+                            style = MaterialTheme.typography.bodyMedium,
+                            maxLines = 1,
+                            overflow = TextOverflow.Ellipsis
+                        )
+                        val details = listOfNotNull(slot.room, slot.studentsSet).joinToString(" · ")
+                        if (details.isNotEmpty()) {
+                            Text(details, color = GndecMuted, style = MaterialTheme.typography.bodySmall, maxLines = 1, overflow = TextOverflow.Ellipsis)
+                        }
+                    }
+                }
+                if (index < slots.lastIndex) {
+                    HorizontalDivider(color = MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.5f))
+                }
+            }
+        }
+    }
+}
+
+private fun dayLabel(day: Int): String = when (day) {
+    0 -> "Monday"; 1 -> "Tuesday"; 2 -> "Wednesday"; 3 -> "Thursday"
+    4 -> "Friday"; 5 -> "Saturday"; 6 -> "Sunday"; else -> "Day $day"
+}
+
+/** "DR. HARPREET KAUR GREWAL" → "Dr. Harpreet Kaur Grewal". */
+internal fun prettyName(name: String): String =
+    name.lowercase().split(Regex("\\s+"))
+        .filter { it.isNotBlank() }
+        .joinToString(" ") { word ->
+            val cleaned = word.trim('.', ',')
+            when {
+                cleaned.equals("dr", true) -> "Dr."
+                cleaned.equals("er", true) -> "Er."
+                cleaned.equals("prof", true) || cleaned.equals("professor", true) -> "Prof."
+                cleaned.equals("pf", true) -> "Pf."
+                cleaned.equals("ms", true) -> "Ms."
+                cleaned.equals("mrs", true) -> "Mrs."
+                cleaned.equals("mr", true) -> "Mr."
+                cleaned.length <= 2 -> cleaned.uppercase()
+                else -> cleaned.replaceFirstChar { it.uppercase() }
+            }
+        }

@@ -36,6 +36,8 @@ class AppContainer(val context: Context) {
     val studentDirectoryManager by lazy { StudentDirectoryManager(context, settings, keys) }
     val groupTimetableManager by lazy { GroupTimetableManager(context) }
     val vacantRoomsManager by lazy { VacantRoomsManager(context) }
+    val facultyDirectory by lazy { FacultyDirectoryManager(context) }
+    val facultyTimetables by lazy { FacultyTimetableManager(context, facultyDirectory) }
     val quoteClient by lazy { ZenQuoteClient() }
     val quoteManager by lazy { DailyQuoteManager(settings, quoteClient) }
     val quoteScheduler by lazy { QuoteScheduler(context) }

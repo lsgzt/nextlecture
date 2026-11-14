@@ -33,6 +33,7 @@ import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.EventAvailable
 import androidx.compose.material.icons.filled.FactCheck
 import androidx.compose.material.icons.filled.MeetingRoom
+import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material.icons.filled.Today
@@ -70,6 +71,7 @@ import com.gndec.timetable.ui.PremiumScreenBackground
 import com.gndec.timetable.ui.attendance.rememberAttendanceHomeState
 import com.gndec.timetable.ui.attendance.subjectAttendance
 import kotlinx.coroutines.flow.flowOf
+import kotlinx.coroutines.withContext
 import java.time.Instant
 import java.time.LocalDate
 import java.time.ZoneId
@@ -80,7 +82,8 @@ fun SearchScreen(
     onBack: () -> Unit,
     onNavigate: (String) -> Unit,
     onOpenSettings: () -> Unit,
-    onOpenLecture: (LectureEntity, LocalDate) -> Unit
+    onOpenLecture: (LectureEntity, LocalDate) -> Unit,
+    onOpenFaculty: (String) -> Unit = {}
 ) {
     val context = LocalContext.current
     val focusManager = LocalFocusManager.current
@@ -109,12 +112,21 @@ fun SearchScreen(
         if (looksLikeRoom) container.vacantRoomsManager.ensureLoaded()
     }
 
+    // Bundled faculty directory — read once from the APK the first time the
+    // user types anything, so teacher results appear instantly (no network).
+    var faculty by remember { mutableStateOf(emptyList<com.gndec.timetable.domain.FacultyRecord>()) }
+    LaunchedEffect(trimmed.isNotEmpty()) {
+        if (trimmed.isNotEmpty() && faculty.isEmpty()) {
+            faculty = withContext(kotlinx.coroutines.Dispatchers.Default) { container.facultyDirectory.directory }
+        }
+    }
+
     val today = remember { LocalDate.now() }
     val nowMinutes = remember {
         val z = Instant.ofEpochMilli(System.currentTimeMillis()).atZone(ZoneId.systemDefault())
         z.hour * 60 + z.minute
     }
-    val snapshot = remember(settings, lectures, notices, holidays, roomState, attendanceState, today) {
+    val snapshot = remember(settings, lectures, notices, holidays, roomState, attendanceState, faculty, today) {
         SearchSnapshot(
             settings = settings,
             lectures = lectures,
@@ -123,6 +135,7 @@ fun SearchScreen(
             attendance = lectures.mapNotNull { attendanceState.subjectAttendance(it.subject) }
                 .distinctBy { it.subject },
             rooms = (roomState as? VacantRoomsState.Ready)?.data,
+            faculty = faculty,
             today = today,
             nowMinutes = nowMinutes
         )
@@ -145,6 +158,10 @@ fun SearchScreen(
             is SearchAction.OpenLecture -> {
                 onBack()
                 onOpenLecture(action.lecture, action.date)
+            }
+            is SearchAction.OpenFaculty -> {
+                onBack()
+                onOpenFaculty(action.profileId)
             }
         }
     }
@@ -314,6 +331,7 @@ private fun NoResults(query: String) {
 private fun iconFor(group: SearchGroup): ImageVector = when (group) {
     SearchGroup.DAY -> Icons.Default.CalendarMonth
     SearchGroup.YOU -> Icons.Default.Badge
+    SearchGroup.FACULTY -> Icons.Default.Person
     SearchGroup.ACTION -> Icons.Default.ArrowForward
     SearchGroup.ROOM -> Icons.Default.MeetingRoom
     SearchGroup.LECTURE -> Icons.Default.Today

@@ -31,6 +31,7 @@ import com.gndec.timetable.ui.alerts.AlertsScreen
 import com.gndec.timetable.ui.attendance.AttendanceScreen
 import com.gndec.timetable.ui.day.DayScreen
 import com.gndec.timetable.ui.details.LectureDetailScreen
+import com.gndec.timetable.ui.faculty.FacultyDetailScreen
 import com.gndec.timetable.ui.home.HomeScreen
 import com.gndec.timetable.ui.PremiumBottomBar
 import com.gndec.timetable.ui.motion.LocalReducedMotion
@@ -41,6 +42,7 @@ import com.gndec.timetable.ui.onboarding.NotificationPermissionOnboardingScreen
 import com.gndec.timetable.ui.onboarding.OnboardingScreen
 import com.gndec.timetable.ui.notice.NoticeScreen
 import com.gndec.timetable.ui.profile.ProfileScreen
+import com.gndec.timetable.ui.search.SearchScreen
 import com.gndec.timetable.ui.settings.SettingsScreen
 import com.gndec.timetable.ui.syllabus.FrequentlyAskedGroupScreen
 import com.gndec.timetable.ui.syllabus.FrequentlyAskedScreen
@@ -257,7 +259,17 @@ class MainActivity : ComponentActivity() {
                                                 selectedLecture = lecture
                                                 selectedLectureDate = date
                                                 navigate("detail")
-                                            }
+                                            },
+                                            onOpenFaculty = { profileId -> navigate("faculty/$profileId") }
+                                        )
+                                    }
+                                    composable("faculty/{facultyId}") { entry ->
+                                        val facultyId = entry.arguments?.getString("facultyId").orEmpty()
+                                        FacultyDetailScreen(
+                                            container = container,
+                                            profileId = facultyId,
+                                            onBack = { nav.popBackStack() },
+                                            onOpenSettings = { navigate("settings") }
                                         )
                                     }
                                     composable("profile") {

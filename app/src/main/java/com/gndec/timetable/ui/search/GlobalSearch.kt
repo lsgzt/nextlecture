@@ -3,6 +3,7 @@ package com.gndec.timetable.ui.search
 import com.gndec.timetable.data.db.LectureEntity
 import com.gndec.timetable.data.prefs.AppSettings
 import com.gndec.timetable.domain.ErpNotice
+import com.gndec.timetable.domain.FacultyRecord
 import com.gndec.timetable.domain.Holiday
 import com.gndec.timetable.domain.VacantRoomsManager
 import com.gndec.timetable.parse.GlobalRoomData
@@ -16,6 +17,7 @@ import java.time.format.DateTimeFormatter
 enum class SearchGroup(val title: String) {
     DAY("That day"),
     YOU("You"),
+    FACULTY("Faculty"),
     ACTION("Go to"),
     ROOM("Rooms"),
     LECTURE("Lectures"),
@@ -30,6 +32,7 @@ sealed interface SearchAction {
     data class Navigate(val route: String) : SearchAction
     data class OpenUrl(val url: String) : SearchAction
     data class OpenLecture(val lecture: LectureEntity, val date: LocalDate) : SearchAction
+    data class OpenFaculty(val profileId: String) : SearchAction
 }
 
 data class SearchResult(
@@ -52,6 +55,7 @@ data class SearchSnapshot(
     val holidays: List<Holiday>,
     val attendance: List<SubjectAttendance>,
     val rooms: GlobalRoomData?,
+    val faculty: List<FacultyRecord> = emptyList(),
     val today: LocalDate,
     val nowMinutes: Int
 )
@@ -338,6 +342,7 @@ fun search(query: String, snapshot: SearchSnapshot): List<SearchResult> {
     val out = mutableListOf<SearchResult>()
     out += dateResults(trimmed, snapshot)
     out += identityResults(trimmed, snapshot)
+    out += facultyResults(trimmed, snapshot)
     out += roomResults(trimmed, snapshot)
     out += actionResults(trimmed)
     out += syllabusResults(trimmed)
@@ -498,6 +503,66 @@ private fun formatSlot(minutes: Int): String {
 private fun ErpNotice.actionOrNavigate(): SearchAction =
     if (url.startsWith("http")) SearchAction.OpenUrl(url) else SearchAction.Navigate("notice")
 
+// --- faculty ---------------------------------------------------------------
+
+/**
+ * Faculty search over the bundled college directory. Every teacher is
+ * searchable by name — including teachers whose weekly timetable is not
+ * published; their detail page answers with contact details plus the honest
+ * "timetable not available" note. The department in the subtitle
+ * disambiguates same-name teachers (three Mandeep Kaurs across departments).
+ *
+ * Names go through BOTH the shared score ladder and a per-word Damerau fuzzy
+ * pass, because the directory and the timetable files disagree on spellings
+ * ("KULVINDER" vs "Kulwinder") — a user typing either finds the teacher.
+ */
+private fun facultyResults(query: String, snapshot: SearchSnapshot): List<SearchResult> {
+    if (snapshot.faculty.isEmpty()) return emptyList()
+    val hits = snapshot.faculty.mapNotNull { faculty ->
+        val name = maxOf(scoreWords(query, faculty.name), fuzzyNameScore(query, faculty.name))
+        val dept = score(query, faculty.department)
+        val designation = score(query, faculty.designation)
+        val best = maxOf(name, dept, designation)
+        if (best <= 0) return@mapNotNull null
+        val subtitle = listOfNotNull(
+            faculty.designation.takeIf { it.isNotBlank() },
+            faculty.department.takeIf { it.isNotBlank() }
+        ).joinToString(" · ").ifBlank { "Faculty" }
+        SearchResult(
+            id = "faculty-${faculty.profileId}",
+            group = SearchGroup.FACULTY,
+            title = faculty.name,
+            subtitle = subtitle,
+            score = if (best == name) best else best - 10,
+            action = SearchAction.OpenFaculty(faculty.profileId)
+        )
+    }
+    return hits.sortedWith(compareByDescending<SearchResult> { it.score }.thenBy { it.title }).take(8)
+}
+
+/**
+ * Every query word must fuzzy-match (or be a prefix of) some name word; the
+ * result ranks just under a clean word-boundary hit. Spelling drift between
+ * the college directory and the department files is common, so typing
+ * "kulwinder" still surfaces "DR. KULVINDER SINGH MANN".
+ */
+private fun fuzzyNameScore(query: String, name: String?): Int {
+    val queryWords = query.lowercase().split(Regex("[^a-z0-9]+")).filter { it.isNotBlank() }
+    if (queryWords.isEmpty()) return 0
+    val nameWords = name.orEmpty().lowercase().split(Regex("[^a-z0-9]+")).filter { it.isNotBlank() }
+    if (nameWords.isEmpty()) return 0
+    val matched = queryWords.count { qw ->
+        nameWords.any { nw ->
+            qw == nw || nw.startsWith(qw) || (
+                qw.length >= 4 && nw.length >= 4 &&
+                    com.gndec.timetable.parse.FacultyNameMatcher.damerau(qw, nw).toDouble() / maxOf(qw.length, nw.length) <= 0.25
+                )
+        }
+    }
+    if (matched != queryWords.size) return 0
+    return SCORE_WORD - 8
+}
+
 // --- rooms ----------------------------------------------------------------
 
 /**
@@ -643,7 +708,7 @@ private fun textResults(query: String, snapshot: SearchSnapshot): List<SearchRes
 
     snapshot.notices.forEach { notice ->
         val title = scoreWords(query, notice.title)
-        val body = score(query, notice.message)
+        val body = score(query, notice.author)
         val source = score(query, notice.source)
         val best = maxOf(title, body, source)
         if (best <= 0) return@forEach
