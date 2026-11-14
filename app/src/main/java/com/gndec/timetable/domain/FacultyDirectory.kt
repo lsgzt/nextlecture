@@ -44,7 +44,7 @@ class FacultyDirectoryManager(context: Context) {
 
     private val json = Json { ignoreUnknownKeys = true; isLenient = true }
 
-    val directory: List<FacultyRecord> by lazy {
+    private val directoryLazy: Lazy<List<FacultyRecord>> = lazy {
         runCatching {
             context.resources.openRawResource(R.raw.faculty_directory).bufferedReader().use { reader ->
                 json.decodeFromString<List<FacultyRecord>>(reader.readText())
@@ -52,8 +52,21 @@ class FacultyDirectoryManager(context: Context) {
         }.getOrDefault(emptyList())
     }
 
+    val directory: List<FacultyRecord> get() = directoryLazy.value
+
+    /** True once the bundled JSON has been parsed this process. */
+    val isLoaded: Boolean get() = directoryLazy.isInitialized()
+
     fun byProfileId(profileId: String): FacultyRecord? =
         directory.firstOrNull { it.profileId == profileId }
+
+    /**
+     * Main-thread-safe lookup: returns a match only when the directory is
+     * already in memory. Never triggers the JSON parse.
+     */
+    fun byProfileIdIfLoaded(profileId: String): FacultyRecord? =
+        if (!directoryLazy.isInitialized()) null
+        else directory.firstOrNull { it.profileId == profileId }
 
     /** Directory records of every department served by [root]. */
     fun poolForRoot(root: RoomSourceRoot): List<FacultyRecord> =

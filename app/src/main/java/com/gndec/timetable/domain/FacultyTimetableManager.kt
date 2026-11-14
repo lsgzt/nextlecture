@@ -89,6 +89,10 @@ class FacultyTimetableManager(
      * re-opening a teacher's detail page is instant (no loading flash). */
     private val resultMemory = mutableMapOf<String, FacultyTimetableResult.Ready>()
 
+    /** Per-document name→table assignment so opening a second teacher in the
+     * same department does not re-run the full matcher on the UI path. */
+    private val assignmentMemory = mutableMapOf<String, Map<String, TeacherTable>>()
+
     /** The directory + timetable-only-extras teacher pool, as search and the
      * browser show it — built once per process so returning from a detail
      * page renders the list synchronously (and keeps its scroll position). */
@@ -111,7 +115,11 @@ class FacultyTimetableManager(
         if (!forceRefresh) {
             synchronized(resultMemory) { resultMemory[faculty.profileId] }?.let { return it }
         }
-        val result = loadFresh(faculty, forceRefresh)
+        // Name matching and JSON/doc work must not run on Main — it froze the
+        // detail-screen enter animation for large department files.
+        val result = withContext(Dispatchers.Default) {
+            loadFresh(faculty, forceRefresh)
+        }
         if (result is FacultyTimetableResult.Ready) {
             synchronized(resultMemory) { resultMemory[faculty.profileId] = result }
         }
@@ -274,15 +282,20 @@ class FacultyTimetableManager(
     private fun matchTable(root: RoomSourceRoot, doc: ParsedFacultyDoc, faculty: FacultyRecord): TeacherTable? {
         val pool = directory.poolForRoot(root)
         if (pool.isEmpty()) return null
-        val labels = doc.tables.map { listOfNotNull(it.teacherName, it.code).joinToString(" ") }
-        val assignment = FacultyNameMatcher.assignTables(
-            directoryNames = pool.map { it.name },
-            directoryDepartments = pool.map { it.department },
-            teacherNames = doc.tables.map { it.teacherName },
-            teacherCodes = doc.tables.map { it.code },
-            teacherLabels = labels,
-            tableAt = { doc.tables[it] }
-        )
+        val cacheKey = "${root.id}|${doc.fetchedAtMillis}|${doc.tables.size}|${pool.size}"
+        val assignment = synchronized(assignmentMemory) {
+            assignmentMemory.getOrPut(cacheKey) {
+                val labels = doc.tables.map { listOfNotNull(it.teacherName, it.code).joinToString(" ") }
+                FacultyNameMatcher.assignTables(
+                    directoryNames = pool.map { it.name },
+                    directoryDepartments = pool.map { it.department },
+                    teacherNames = doc.tables.map { it.teacherName },
+                    teacherCodes = doc.tables.map { it.code },
+                    teacherLabels = labels,
+                    tableAt = { doc.tables[it] }
+                )
+            }
+        }
         return assignment[FacultyNameMatcher.normName(faculty.name)]
     }
 

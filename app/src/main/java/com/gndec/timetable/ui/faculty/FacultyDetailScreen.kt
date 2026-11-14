@@ -122,20 +122,29 @@ fun FacultyDetailScreen(
     onOpenSettings: () -> Unit
 ) {
     val context = LocalContext.current
-    // Directory teachers resolve instantly; a timetable-only teacher needs the
-    // parsed department document (disk-warm by the time search offered the
-    // result), so its record arrives a moment later.
+    // Prefer an already-warmed directory hit (no parse). Never call byProfileId
+    // on first composition — that blocked the enter animation while JSON/disk
+    // work ran on Main.
     var faculty by remember(profileId) {
-        mutableStateOf(container.facultyDirectory.byProfileId(profileId))
+        mutableStateOf(container.facultyDirectory.byProfileIdIfLoaded(profileId))
     }
+    var resolvingFaculty by remember(profileId) { mutableStateOf(faculty == null) }
+    val isExtraTeacher = profileId.startsWith(ExtraTeacherIdPrefix)
+
     LaunchedEffect(profileId) {
-        if (faculty == null && profileId.startsWith(ExtraTeacherIdPrefix)) {
+        if (faculty != null) {
+            resolvingFaculty = false
+        } else {
+            resolvingFaculty = true
             faculty = withContext(Dispatchers.Default) {
-                container.facultyTimetables.extraTeacherById(profileId)?.record
+                container.facultyDirectory.byProfileId(profileId)
+                    ?: if (isExtraTeacher) {
+                        container.facultyTimetables.extraTeacherById(profileId)?.record
+                    } else null
             }
+            resolvingFaculty = false
         }
     }
-    val isExtraTeacher = profileId.startsWith(ExtraTeacherIdPrefix)
 
     // Non-null while the zoomable photo viewer is open: the teacher's image
     // URL paired with their display name.
@@ -144,8 +153,8 @@ fun FacultyDetailScreen(
     var result by remember(profileId) {
         mutableStateOf<FacultyTimetableResult?>(container.facultyTimetables.cachedResult(profileId))
     }
-    // A revisit within this process starts with the cached Ready schedule, so
-    // the page renders fully-formed on the first frame — no loading flash.
+    // Cached Ready schedules paint on the first frame; otherwise the schedule
+    // area shows a loading card while Main stays free for the enter transition.
     var loading by remember(profileId) { mutableStateOf(result == null) }
     var refreshTick by remember(profileId) { mutableStateOf(0) }
     var tabName by rememberSaveable(profileId) { mutableStateOf(ScheduleTab.TODAY.name) }
@@ -174,9 +183,7 @@ fun FacultyDetailScreen(
                     ) {
                         item { Header(title = "Faculty details", onBack = onBack, onSettings = onOpenSettings) }
                         item {
-                            if (isExtraTeacher) {
-                                // Still resolving the timetable-only teacher from the
-                                // parsed department document — a brief loading state.
+                            if (resolvingFaculty || isExtraTeacher) {
                                 Card(
                                     modifier = Modifier.fillMaxWidth().padding(horizontal = 20.dp),
                                     shape = RoundedCornerShape(18.dp),
@@ -185,7 +192,10 @@ fun FacultyDetailScreen(
                                     Row(Modifier.padding(18.dp), verticalAlignment = Alignment.CenterVertically) {
                                         CircularProgressIndicator(strokeWidth = 2.dp, modifier = Modifier.size(22.dp))
                                         Spacer(Modifier.width(14.dp))
-                                        Text("Looking up this teacher in the department timetable…")
+                                        Text(
+                                            if (isExtraTeacher) "Looking up this teacher in the department timetable…"
+                                            else "Loading faculty profile…"
+                                        )
                                     }
                                 }
                             } else {
