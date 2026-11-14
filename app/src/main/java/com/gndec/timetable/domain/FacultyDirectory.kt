@@ -25,11 +25,19 @@ data class FacultyRecord(
     @SerialName("dept_id") val deptId: Int = 0,
     @SerialName("profile_url") val profileUrl: String = "",
     /** Absolute photo URL from the college website, blank when it has none
-     * (five of the 280 directory pages carry no usable picture). */
+     * (a handful of the directory pages carry no usable picture). */
     @SerialName("image_url") val imageUrl: String = "",
     @SerialName("phone_office") val phoneOffice: String = "",
     @SerialName("phone_mobile") val phoneMobile: String = "",
-    @SerialName("admin_roles") val adminRoles: String = ""
+    @SerialName("admin_roles") val adminRoles: String = "",
+    /**
+     * Other spellings the college publishes for this teacher. The department
+     * timetables do not always use the name the website uses - "Er. Jaswant
+     * Singh Taur" is the directory's "ER. JASWANT SINGH", "DR APK SODHI" is
+     * "DR AMANPREET KAUR SODHI" - and without this the app would invent a
+     * second, contact-less record for the same person.
+     */
+    @SerialName("also_published_as") val alsoPublishedAs: List<String> = emptyList()
 ) {
     val contactable: Boolean get() = email.isNotBlank() || phoneOffice.isNotBlank() || phoneMobile.isNotBlank()
 }
@@ -91,6 +99,25 @@ class FacultyDirectoryManager(context: Context) {
             ?: FacultyNameMatcher.deptHintOf(cleaned)
         val publishedTitle = FacultyNameMatcher.titleOf(cleaned)
         val publishedTokens = FacultyNameMatcher.nameTokens(cleaned)
+
+        // A curated published spelling is authoritative: the college publishes
+        // that name for this teacher, so it wins over another teacher's equally
+        // good name match ("DR APK SODHI" is the directory's "DR AMANPREET KAUR
+        // SODHI"). It is only used when the published spelling belongs to this
+        // teacher alone - the college has three Harminder Kaurs and two Jagdeep
+        // Singhs, and there the plain name stays ambiguous on purpose.
+        val aliasHits = directory.filter { FacultyNameMatcher.matchesAlias(cleaned, it.alsoPublishedAs) }
+        if (aliasHits.isNotEmpty() && aliasHits.all { samePerson(aliasHits.first(), it) }) {
+            val owner = aliasHits.first()
+            val spelled = FacultyNameMatcher.normName(cleaned)
+            val shared = directory.any { record ->
+                FacultyNameMatcher.normName(record.name) == spelled && !samePerson(owner, record)
+            }
+            if (!shared) {
+                synchronized(publishedNameCache) { publishedNameCache[label] = owner }
+                return owner
+            }
+        }
 
         data class Candidate(val record: FacultyRecord, val score: Int)
         val candidates = mutableListOf<Candidate>()
@@ -157,6 +184,21 @@ class FacultyDirectoryManager(context: Context) {
     /** Directory records of every department served by [root]. */
     fun poolForRoot(root: RoomSourceRoot): List<FacultyRecord> =
         directory.filter { rootForDepartment(it.department) == root }
+
+    /**
+     * True when two directory records are the same person. The college files a
+     * few teachers under two departments (Harpuneet Singh in Mechanical and
+     * Production Engineering) and keeps one e-mail address for them, so a
+     * shared address is what tells the records apart from two different
+     * teachers who happen to share a name.
+     */
+    private fun samePerson(a: FacultyRecord, b: FacultyRecord): Boolean {
+        if (a.profileId == b.profileId) return true
+        val left = a.email.split(',', ';').map { it.trim().trimEnd('.').lowercase() }.filter { it.isNotEmpty() }
+        val right = b.email.split(',', ';').map { it.trim().trimEnd('.').lowercase() }.filter { it.isNotEmpty() }
+        if (left.isEmpty() || right.isEmpty()) return false
+        return left.any { it in right }
+    }
 
     companion object {
         /**

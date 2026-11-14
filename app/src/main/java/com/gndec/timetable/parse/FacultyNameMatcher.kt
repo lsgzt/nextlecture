@@ -28,6 +28,10 @@ package com.gndec.timetable.parse
  */
 object FacultyNameMatcher {
 
+    // "ar" (the architect's prefix) is deliberately NOT a title here: the
+    // college files its School of Architecture teachers as "AR. X", and keeping
+    // the prefix in the name keeps them apart from a teacher of another
+    // department with the same name.
     private val TITLES = setOf("dr", "er", "prof", "professor", "pf", "mrs", "mr", "ms", "miss", "sh", "smt", "shri")
 
     /** Short uppercase codes that actually name a DEPARTMENT, not a teacher. */
@@ -41,7 +45,6 @@ object FacultyNameMatcher {
         "it" to "Information Technology",
         "cse" to "Computer Science & Engg.",
         "cs" to "Computer Science & Engg.",
-        "ta" to "Workshops",
         "ws" to "Workshops",
         "as" to "Applied Science",
         "aps" to "Applied Science",
@@ -51,6 +54,15 @@ object FacultyNameMatcher {
         "mca" to "Computer Applications",
         "ca" to "Computer Applications"
     )
+
+    /**
+     * Teacher codes that are NOT department codes. The Applied Science, CSE and
+     * IT timetables label their teaching assistants "TA", "TA1", "TA2" - that is
+     * the assistant's own code, not the department the table belongs to, so a
+     * label like "ER. JASHANDEEP KAUR (TA)" must not be read as a Workshops
+     * teacher.
+     */
+    private val TEACHER_CODES = setOf("ta", "ta1", "ta2", "ta3")
 
     // --- tokenisation ---------------------------------------------------------
 
@@ -82,8 +94,8 @@ object FacultyNameMatcher {
 
     /**
      * The department a bare teacher-table code stands for when it is a
-     * DEPARTMENT code ("EE" → Electrical Engineering, "TA" → Workshops).
-     * Real teacher codes ("KDS", "HVS") return null.
+     * DEPARTMENT code ("EE" → Electrical Engineering, "WS" → Workshops).
+     * Real teacher codes ("KDS", "HVS", "TA1") return null.
      */
     fun deptOfCode(code: String?): String? =
         code?.trim()?.takeIf { it.isNotEmpty() }?.let { DEPT_CODES[it.lowercase()] }
@@ -180,6 +192,30 @@ object FacultyNameMatcher {
         return 0
     }
 
+    // --- published spellings of one teacher ----------------------------------------
+
+    /**
+     * Score for a table whose label is one of a teacher's other published
+     * spellings ("also_published_as" in the directory). The college is not
+     * consistent about names - "Er. Jaswant Singh Taur" is the directory's
+     * "ER. JASWANT SINGH", "DR APK SODHI" is "DR AMANPREET KAUR SODHI" - and
+     * the alias list states which published spelling belongs to which teacher.
+     * A curated alias therefore outranks a merely equal name.
+     */
+    private const val ALIAS_SCORE = 200
+
+    /**
+     * True when [published] is one of the teacher's other published spellings.
+     * Compared on the normalised name, so "Dr. Jaswant Singh Taur" and
+     * "ER. JASWANT SINGH TAUR" are the same published form.
+     */
+    fun matchesAlias(published: String, aliases: List<String>): Boolean {
+        if (aliases.isEmpty()) return false
+        val target = normName(published)
+        if (target.isBlank()) return false
+        return aliases.any { normName(it) == target }
+    }
+
     // --- fuzzy tokens -------------------------------------------------------------
 
     private fun tokenSimilar(a: String, b: String, threshold: Double): Boolean {
@@ -224,7 +260,9 @@ object FacultyNameMatcher {
      * several records (the directory occasionally lists one person twice).
      *
      * Pass 1 — full-name matches, honouring department annotations and
-     * honorific tie-breaks, requiring a strictly best table per record.
+     * honorific tie-breaks, requiring a strictly best table per record. A
+     * curated published spelling ("also_published_as") wins outright: the
+     * college publishes that name for this teacher.
      * Pass 2 — bare-code subsequence matching with GLOBAL uniqueness, iterated
      * to a fixpoint. A code may only claim a table that pass 1 left unclaimed,
      * and only a teacher whose first initial the code starts with.
@@ -235,7 +273,8 @@ object FacultyNameMatcher {
         teacherNames: List<String?>,
         teacherCodes: List<String?>,
         teacherLabels: List<String>,
-        tableAt: (Int) -> T
+        tableAt: (Int) -> T,
+        directoryAliases: List<List<String>> = emptyList()
     ): Map<String, T> {
         val assignment = mutableMapOf<String, T>()
         /** Table indexes already handed to a teacher by the name pass. */
@@ -246,6 +285,7 @@ object FacultyNameMatcher {
             val dirName = directoryNames[r]
             val dirDept = directoryDepartments[r]
             val dirTitle = titleOf(dirName)
+            val aliases = directoryAliases.getOrElse(r) { emptyList() }
             var best: T? = null
             var bestIndex = -1
             var bestScore = 0
@@ -258,6 +298,8 @@ object FacultyNameMatcher {
                     if (hint != null && hint != dirDept) score = (score - 40).coerceAtLeast(0)
                     if (score > 0 && dirTitle.isNotEmpty() && titleOf(published) == dirTitle) score += 3
                 }
+                // A curated alias is authoritative - it names this teacher.
+                if (matchesAlias(published, aliases)) score = ALIAS_SCORE
                 if (score > bestScore) {
                     best = tableAt(t); bestIndex = t; bestScore = score; tie = false
                 } else if (score == bestScore && score > 0) {
@@ -278,6 +320,7 @@ object FacultyNameMatcher {
                 val code = teacherCodes[t] ?: continue
                 if (code.length < 2) continue
                 if (code.lowercase() in DEPT_CODES) continue
+                if (code.lowercase() in TEACHER_CODES) continue
                 // A table the name pass already claimed belongs to THAT teacher:
                 // a second teacher must never steal it on a loose code match.
                 if (t in claimedTables) continue

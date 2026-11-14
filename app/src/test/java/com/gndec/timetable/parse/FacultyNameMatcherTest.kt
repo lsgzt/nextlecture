@@ -1,6 +1,7 @@
 package com.gndec.timetable.parse
 
 import org.junit.Assert.assertEquals
+import org.junit.Assert.assertFalse
 import org.junit.Assert.assertNull
 import org.junit.Assert.assertNotNull
 import org.junit.Assert.assertTrue
@@ -261,5 +262,90 @@ class FacultyNameMatcherTest {
         )
         assertEquals("Pf. Preetinder Singh (PTS)", assigned["preetinder singh"])
         assertNull(assigned["sanpreet singh"])
+    }
+
+    // --- published spellings of one teacher -------------------------------------
+
+    @Test
+    fun aCuratedPublishedSpellingIsRecognised() {
+        // The college's own list calls him "DR AMANPREET KAUR SODHI", the
+        // Applied Science timetable writes "DR APK SODHI".
+        assertTrue(
+            FacultyNameMatcher.matchesAlias(
+                "DR APK SODHI",
+                listOf("DR APK SODHI")
+            )
+        )
+        // compared on the normalised name, so the honorific and the spacing
+        // do not matter
+        assertTrue(
+            FacultyNameMatcher.matchesAlias(
+                "Er. Jaswant Singh Taur",
+                listOf("ER. JASWANT SINGH TAUR")
+            )
+        )
+        assertFalse(
+            FacultyNameMatcher.matchesAlias(
+                "ER. JASWANT SINGH",
+                listOf("ER. JASWANT SINGH TAUR")
+            )
+        )
+        assertFalse(FacultyNameMatcher.matchesAlias("ER. JASWANT SINGH", emptyList()))
+    }
+
+    @Test
+    fun aPublishedSpellingClaimsTheTableOfItsOwnTeacher() {
+        // "DR APK SODHI" names the Applied Science professor, and the
+        // directory record carries that spelling as an alias.
+        val result = FacultyNameMatcher.assignTables(
+            directoryNames = listOf("DR AMANPREET KAUR SODHI"),
+            directoryDepartments = listOf("Applied Science"),
+            teacherNames = listOf("DR APK SODHI"),
+            teacherCodes = listOf(null),
+            teacherLabels = listOf("DR APK SODHI"),
+            tableAt = { 0 },
+            directoryAliases = listOf(listOf("DR APK SODHI"))
+        )
+        assertEquals(0, result["amanpreet kaur sodhi"])
+    }
+
+    @Test
+    fun aPublishedSpellingWinsOverAnotherTeacherOfTheSameName() {
+        // Three Harminder Kaurs are on the college's list; the Applied Science
+        // file publishes one of them under the same spelling, and the alias
+        // says which one.
+        val result = FacultyNameMatcher.assignTables(
+            directoryNames = listOf(
+                "HARMINDER KAUR",
+                "HARMINDER KAUR",
+                "HARMINDER KAUR"
+            ),
+            directoryDepartments = listOf(
+                "Computer Science & Engg.",
+                "Electronics & Communication Engineering",
+                "Information Technology"
+            ),
+            teacherNames = listOf("ER. HARMINDER KAUR"),
+            teacherCodes = listOf(null),
+            teacherLabels = listOf("ER. HARMINDER KAUR"),
+            tableAt = { 0 },
+            directoryAliases = listOf(
+                listOf("ER. HARMINDER KAUR"),
+                emptyList(),
+                emptyList()
+            )
+        )
+        // every record is keyed by its normalised name, so the alias owner wins
+        assertEquals(0, result["harminder kaur"])
+    }
+
+    @Test
+    fun aTeachingAssistantCodeIsNotADepartment() {
+        // "ER. JASHANDEEP KAUR (TA)" labels a teaching assistant, not a
+        // Workshops teacher.
+        assertNull(FacultyNameMatcher.deptOfCode("TA"))
+        assertNull(FacultyNameMatcher.deptOfCode("TA1"))
+        assertNull(FacultyNameMatcher.deptOfCode("TA2"))
+        assertEquals("Workshops", FacultyNameMatcher.deptOfCode("WS"))
     }
 }
