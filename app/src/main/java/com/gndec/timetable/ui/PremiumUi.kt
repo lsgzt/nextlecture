@@ -92,6 +92,9 @@ import com.gndec.timetable.ui.motion.motionTween
 import com.gndec.timetable.ui.theme.LocalLectureTypePalette
 import com.gndec.timetable.ui.theme.lectureTypeColors
 import com.gndec.timetable.util.Formatters
+import com.gndec.timetable.util.displayTeacher
+import com.gndec.timetable.util.displayVenue
+import com.gndec.timetable.util.resolvedVenue
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.animateFloatAsState
@@ -234,7 +237,9 @@ fun PremiumNextLectureCard(
     isHappening: Boolean,
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
-    attendance: SubjectAttendance? = null
+    attendance: SubjectAttendance? = null,
+    mentorName: String = "",
+    mentorVenue: String = ""
 ) {
     // The hero wears the same type tint as the Today tab: teal for lectures,
     // amber for tutorials, blue for practicals.
@@ -296,11 +301,11 @@ fun PremiumNextLectureCard(
             Spacer(Modifier.height(10.dp))
             Text(Formatters.range(lecture.startMinutes, lecture.endMinutes), color = MaterialTheme.colorScheme.primary, style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.SemiBold)
             Spacer(Modifier.height(13.dp))
-            lecture.venue?.takeIf { it.isNotBlank() }?.let {
+            lecture.resolvedVenue(mentorVenue)?.let {
                 PremiumMetaRow(Icons.Default.LocationOn, it)
                 Spacer(Modifier.height(7.dp))
             }
-            PremiumMetaRow(Icons.Default.Person, lecture.teacher?.takeIf { it.isNotBlank() } ?: "Teacher unavailable")
+            PremiumMetaRow(Icons.Default.Person, lecture.displayTeacher(mentorName))
             if (attendance != null) {
                 Spacer(Modifier.height(13.dp))
                 SubjectAttendanceStrip(attendance = attendance, lectureType = lecture.lectureType)
@@ -958,7 +963,7 @@ fun PremiumHomeBannerCarousel(
 }
 
 @Composable
-fun PremiumTodayPreview(lectures: List<LectureEntity>, dateLabel: String, onOpen: () -> Unit, onLecture: (LectureEntity) -> Unit, modifier: Modifier = Modifier) {
+fun PremiumTodayPreview(lectures: List<LectureEntity>, dateLabel: String, onOpen: () -> Unit, onLecture: (LectureEntity) -> Unit, modifier: Modifier = Modifier, mentorName: String = "", mentorVenue: String = "") {
     Card(
         modifier = modifier,
         shape = RoundedCornerShape(20.dp),
@@ -983,7 +988,7 @@ fun PremiumTodayPreview(lectures: List<LectureEntity>, dateLabel: String, onOpen
                 Text("No lectures scheduled today", color = MaterialTheme.colorScheme.onSurfaceVariant)
             } else {
                 lectures.take(3).forEach { lecture ->
-                    PremiumPreviewRow(lecture, onClick = { onLecture(lecture) })
+                    PremiumPreviewRow(lecture, onClick = { onLecture(lecture) }, mentorVenue = mentorVenue)
                     Spacer(Modifier.height(7.dp))
                 }
             }
@@ -1002,7 +1007,7 @@ fun PremiumTodayPreview(lectures: List<LectureEntity>, dateLabel: String, onOpen
 }
 
 @Composable
-private fun PremiumPreviewRow(lecture: LectureEntity, onClick: () -> Unit) {
+private fun PremiumPreviewRow(lecture: LectureEntity, onClick: () -> Unit, mentorVenue: String = "") {
     val pressInteraction = remember { MutableInteractionSource() }
     Row(
         Modifier.fillMaxWidth().clip(RoundedCornerShape(14.dp))
@@ -1020,7 +1025,7 @@ private fun PremiumPreviewRow(lecture: LectureEntity, onClick: () -> Unit) {
         Spacer(Modifier.width(10.dp))
         Column(Modifier.weight(1f)) {
             Text(lecture.subject ?: "Lecture", fontWeight = FontWeight.SemiBold, maxLines = 1, overflow = TextOverflow.Ellipsis)
-            Text(lecture.venue ?: "Venue unavailable", color = MaterialTheme.colorScheme.onSurfaceVariant, style = MaterialTheme.typography.bodySmall, maxLines = 1, overflow = TextOverflow.Ellipsis)
+            Text(lecture.displayVenue(mentorVenue), color = MaterialTheme.colorScheme.onSurfaceVariant, style = MaterialTheme.typography.bodySmall, maxLines = 1, overflow = TextOverflow.Ellipsis)
         }
         Icon(Icons.Default.ChevronRight, contentDescription = null, tint = MaterialTheme.colorScheme.onSurfaceVariant, modifier = Modifier.size(18.dp))
     }

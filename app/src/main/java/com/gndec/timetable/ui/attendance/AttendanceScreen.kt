@@ -78,6 +78,8 @@ import com.gndec.timetable.ui.theme.GndecMuted
 import com.gndec.timetable.ui.theme.GndecOrange
 import com.gndec.timetable.ui.theme.GndecTeal
 import com.gndec.timetable.util.Formatters
+import com.gndec.timetable.util.resolvedTeacher
+import com.gndec.timetable.util.resolvedVenue
 import java.time.LocalDate
 import java.time.YearMonth
 import java.time.format.DateTimeFormatter
@@ -365,7 +367,9 @@ private fun AttendanceLectureCard(
     status: String?,
     saving: Boolean,
     onStatus: (String) -> Unit,
-    onUnmark: () -> Unit
+    onUnmark: () -> Unit,
+    mentorName: String = "",
+    mentorVenue: String = ""
 ) {
     val iconSwapIn = motionTween<Float>(Motion.Fast)
     val iconSwapOut = motionTween<Float>(Motion.Fast)
@@ -379,7 +383,7 @@ private fun AttendanceLectureCard(
                 Column(Modifier.weight(1f)) {
                     Text(lecture.subject?.takeIf { it.isNotBlank() } ?: "Lecture", style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.Bold, maxLines = 1, overflow = TextOverflow.Ellipsis)
                     Text(Formatters.range(lecture.startMinutes, lecture.endMinutes), color = MaterialTheme.colorScheme.primary, style = MaterialTheme.typography.bodyMedium)
-                    Text(listOf(lecture.teacher, lecture.venue).filter { !it.isNullOrBlank() }.joinToString(" · ").ifBlank { "Details unavailable" }, color = MaterialTheme.colorScheme.onSurfaceVariant, style = MaterialTheme.typography.bodySmall, maxLines = 1, overflow = TextOverflow.Ellipsis)
+                    Text(listOf(lecture.resolvedTeacher(mentorName), lecture.resolvedVenue(mentorVenue)).filter { !it.isNullOrBlank() }.joinToString(" · ").ifBlank { "Details unavailable" }, color = MaterialTheme.colorScheme.onSurfaceVariant, style = MaterialTheme.typography.bodySmall, maxLines = 1, overflow = TextOverflow.Ellipsis)
                 }
                 AnimatedContent(
                     targetState = status,

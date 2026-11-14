@@ -70,6 +70,9 @@ import com.gndec.timetable.ui.motion.pressFeedback
 import com.gndec.timetable.ui.theme.GndecMuted
 import com.gndec.timetable.ui.theme.GndecTeal
 import com.gndec.timetable.util.Formatters
+import com.gndec.timetable.util.displayTeacher
+import com.gndec.timetable.util.displayVenue
+import com.gndec.timetable.util.resolvedTeacher
 import java.time.LocalDate
 import java.time.LocalTime
 import kotlinx.coroutines.Dispatchers
@@ -126,10 +129,13 @@ fun LectureDetailScreen(
 
     // Match timetable teacher → directory profile off the main thread so this
     // screen never freezes on open. Cached Ready lookups stay instant.
-    var matchedFaculty by remember(lecture.teacher) { mutableStateOf<FacultyRecord?>(null) }
+    val displayTeacherName = lecture.displayTeacher(settings.mentorName)
+    val displayVenueName = lecture.displayVenue(settings.mentorVenue)
+    val resolvedTeacherName = lecture.resolvedTeacher(settings.mentorName)
+    var matchedFaculty by remember(resolvedTeacherName) { mutableStateOf<FacultyRecord?>(null) }
     var photoViewerOpen by remember { mutableStateOf(false) }
-    LaunchedEffect(lecture.teacher) {
-        val name = lecture.teacher?.takeIf { it.isNotBlank() }
+    LaunchedEffect(resolvedTeacherName) {
+        val name = resolvedTeacherName
         if (name == null) {
             matchedFaculty = null
             return@LaunchedEffect
@@ -172,9 +178,9 @@ fun LectureDetailScreen(
                     ) {
                         Column(Modifier.padding(horizontal = 18.dp, vertical = 10.dp)) {
                             InfoRow(Icons.Default.AccessTime, Formatters.range(lecture.startMinutes, lecture.endMinutes), divider = true)
-                            InfoRow(Icons.Default.LocationOn, lecture.venue?.takeIf { it.isNotBlank() } ?: "Venue unavailable", divider = true)
+                            InfoRow(Icons.Default.LocationOn, displayVenueName, divider = true)
                             TeacherDetailRow(
-                                teacherName = lecture.teacher?.takeIf { it.isNotBlank() } ?: "Teacher unavailable",
+                                teacherName = displayTeacherName,
                                 faculty = matchedFaculty,
                                 store = container.facultyPhotos,
                                 onOpenFaculty = { matchedFaculty?.profileId?.let(onOpenFaculty) },

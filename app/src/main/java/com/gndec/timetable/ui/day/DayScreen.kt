@@ -109,6 +109,8 @@ import com.gndec.timetable.ui.motion.motionTween
 import com.gndec.timetable.ui.motion.pressFeedback
 import com.gndec.timetable.ui.theme.lectureTypeColors
 import com.gndec.timetable.util.Formatters
+import com.gndec.timetable.util.displayTeacher
+import com.gndec.timetable.util.resolvedVenue
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.map
@@ -236,7 +238,9 @@ fun DayScreen(
                                         primaryText = primaryText,
                                         muted = muted,
                                         accent = accent,
-                                        onOpenLecture = onOpenLecture
+                                        onOpenLecture = onOpenLecture,
+                                        mentorName = settings.mentorName,
+                                        mentorVenue = settings.mentorVenue
                                     )
                                 }
                             }
@@ -481,7 +485,7 @@ private fun WeekTypeLegendItem(
 
 
 @Composable
-private fun WeekDaySection(date: java.time.LocalDate, lectures: List<LectureEntity>, primaryText: Color, muted: Color, accent: Color, onOpenLecture: (LectureEntity, java.time.LocalDate) -> Unit) {
+private fun WeekDaySection(date: java.time.LocalDate, lectures: List<LectureEntity>, primaryText: Color, muted: Color, accent: Color, onOpenLecture: (LectureEntity, java.time.LocalDate) -> Unit, mentorName: String = "", mentorVenue: String = "") {
     Card(Modifier.fillMaxWidth().padding(horizontal = 20.dp), shape = RoundedCornerShape(20.dp), colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface), border = androidx.compose.foundation.BorderStroke(1.dp, MaterialTheme.colorScheme.outlineVariant), elevation = CardDefaults.cardElevation(0.dp)) {
         Column(Modifier.padding(horizontal = 16.dp, vertical = 13.dp)) {
             Row(verticalAlignment = Alignment.CenterVertically) {
@@ -496,7 +500,7 @@ private fun WeekDaySection(date: java.time.LocalDate, lectures: List<LectureEnti
                 Text("No lectures scheduled", color = muted, style = MaterialTheme.typography.bodyMedium, modifier = Modifier.padding(vertical = 10.dp))
             } else {
                 lectures.forEachIndexed { index, lecture ->
-                    WeekLectureRow(lecture, date, primaryText, muted, accent, onOpenLecture)
+                    WeekLectureRow(lecture, date, primaryText, muted, accent, onOpenLecture, mentorName, mentorVenue)
                     if (index < lectures.lastIndex) androidx.compose.material3.HorizontalDivider(color = MaterialTheme.colorScheme.outlineVariant)
                 }
             }
@@ -505,7 +509,7 @@ private fun WeekDaySection(date: java.time.LocalDate, lectures: List<LectureEnti
 }
 
 @Composable
-private fun WeekLectureRow(lecture: LectureEntity, date: java.time.LocalDate, primaryText: Color, muted: Color, accent: Color, onOpenLecture: (LectureEntity, java.time.LocalDate) -> Unit) {
+private fun WeekLectureRow(lecture: LectureEntity, date: java.time.LocalDate, primaryText: Color, muted: Color, accent: Color, onOpenLecture: (LectureEntity, java.time.LocalDate) -> Unit, mentorName: String = "", mentorVenue: String = "") {
     val pressInteraction = remember { MutableInteractionSource() }
     Row(
         Modifier.fillMaxWidth()
@@ -523,7 +527,7 @@ private fun WeekLectureRow(lecture: LectureEntity, date: java.time.LocalDate, pr
         Spacer(Modifier.width(10.dp))
         Column(Modifier.weight(1f)) {
             Text(lecture.subject ?: "Lecture", color = primaryText, style = MaterialTheme.typography.bodyLarge, fontWeight = FontWeight.SemiBold, maxLines = 1, overflow = TextOverflow.Ellipsis)
-            Text(lecture.teacher?.takeIf { it.isNotBlank() } ?: (lecture.venue ?: "Details unavailable"), color = muted, style = MaterialTheme.typography.bodySmall, maxLines = 1, overflow = TextOverflow.Ellipsis)
+            Text(lecture.displayTeacher(mentorName, unavailable = "").ifBlank { lecture.resolvedVenue(mentorVenue) ?: "Details unavailable" }, color = muted, style = MaterialTheme.typography.bodySmall, maxLines = 1, overflow = TextOverflow.Ellipsis)
         }
     }
 }
@@ -849,7 +853,9 @@ private fun TimelineSection(
                         primaryText = primaryText,
                         muted = muted,
                         freeFriends = friends.friendsFreeWithin(item.lecture.startMinutes, item.lecture.endMinutes),
-                        onClick = { onOpenLecture(item.lecture, lectureDate) }
+                        onClick = { onOpenLecture(item.lecture, lectureDate) },
+                        mentorName = settings.mentorName,
+                        mentorVenue = settings.mentorVenue
                     )
                     is TimelineItem.Free -> FreePeriod(
                         start = item.start,
@@ -868,7 +874,7 @@ private fun TimelineSection(
 }
 
 @Composable
-private fun TimelineLectureCard(lecture: LectureEntity, state: LectureState, nowMinutes: Int, nodeIndex: Int, sectionCoords: () -> LayoutCoordinates?, registerNode: (Int, LayoutCoordinates) -> Unit, accent: Color, primaryText: Color, muted: Color, freeFriends: List<FriendFreeWindow>, onClick: () -> Unit) {
+private fun TimelineLectureCard(lecture: LectureEntity, state: LectureState, nowMinutes: Int, nodeIndex: Int, sectionCoords: () -> LayoutCoordinates?, registerNode: (Int, LayoutCoordinates) -> Unit, accent: Color, primaryText: Color, muted: Color, freeFriends: List<FriendFreeWindow>, onClick: () -> Unit, mentorName: String = "", mentorVenue: String = "") {
     val live = state == LectureState.HAPPENING
     // Teal for lectures, amber for tutorials, blue for practicals; the live card is
     // the brighter step of whichever tint it is, not a fixed aqua.
@@ -1000,8 +1006,8 @@ private fun TimelineLectureCard(lecture: LectureEntity, state: LectureState, now
                 Spacer(Modifier.height(15.dp))
                 Text((lecture.subject ?: "Lecture").uppercase(), color = primaryText, style = MaterialTheme.typography.titleLarge, fontWeight = FontWeight.Bold, maxLines = 3, overflow = TextOverflow.Ellipsis)
                 Spacer(Modifier.height(13.dp))
-                TimelineMetaRow(Icons.Default.Person, lecture.teacher?.takeIf { it.isNotBlank() }?.uppercase() ?: "TEACHER UNAVAILABLE", primaryText, muted, maxLines = 1)
-                lecture.venue?.takeIf { it.isNotBlank() }?.let { Spacer(Modifier.height(8.dp)); TimelineMetaRow(Icons.Default.LocationOn, it, primaryText, muted) }
+                TimelineMetaRow(Icons.Default.Person, lecture.displayTeacher(mentorName, unavailable = "Teacher unavailable").uppercase(), primaryText, muted, maxLines = 1)
+                lecture.resolvedVenue(mentorVenue)?.let { Spacer(Modifier.height(8.dp)); TimelineMetaRow(Icons.Default.LocationOn, it, primaryText, muted) }
                 if (freeFriends.isNotEmpty()) {
                     Spacer(Modifier.height(12.dp))
                     FriendAvailabilityNote(

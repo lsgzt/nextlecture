@@ -113,6 +113,7 @@ fun HomeScreen(
     @Composable
     fun heroAttendance(lecture: LectureEntity) =
         remember(attendanceState, lecture.id) { attendanceState.subjectAttendance(lecture.subject) }
+    val settings by container.settings.flow.collectAsStateWithLifecycle(initialValue = com.gndec.timetable.data.prefs.AppSettings())
     val erpNotices by container.erpNoticeManager.notices.collectAsStateWithLifecycle()
     val holidays by container.holidayManager.holidays.collectAsStateWithLifecycle()
     val releaseUpdate by container.releaseUpdateManager.state.collectAsStateWithLifecycle()
@@ -270,7 +271,9 @@ fun HomeScreen(
                                     isHappening = happening,
                                     onClick = { onOpenLecture(target.lecture!!) },
                                     modifier = androidx.compose.ui.Modifier.padding(horizontal = 20.dp),
-                                    attendance = heroAttendance(target.lecture!!)
+                                    attendance = heroAttendance(target.lecture!!),
+                                    mentorName = settings.mentorName,
+                                    mentorVenue = settings.mentorVenue
                                 )
                             }
                             target.lecture != null && (target.kind == "later" || target.kind == "free") -> {
@@ -281,7 +284,9 @@ fun HomeScreen(
                                     isHappening = false,
                                     onClick = { onOpenLecture(target.lecture!!) },
                                     modifier = androidx.compose.ui.Modifier.padding(horizontal = 20.dp),
-                                    attendance = heroAttendance(target.lecture!!)
+                                    attendance = heroAttendance(target.lecture!!),
+                                    mentorName = settings.mentorName,
+                                    mentorVenue = settings.mentorVenue
                                 )
                             }
                             else -> {
