@@ -154,7 +154,11 @@ fun FacultyDetailScreen(
 
     LaunchedEffect(faculty, refreshTick) {
         val teacher = faculty ?: return@LaunchedEffect
-        loading = true
+        // Keep a cached Ready schedule on screen while a forced refresh runs;
+        // only show the loading card when we have nothing to display yet.
+        if (result == null || refreshTick > 0) {
+            if (result == null) loading = true
+        }
         result = runCatching { container.facultyTimetables.load(teacher, forceRefresh = refreshTick > 0) }
             .getOrElse { FacultyTimetableResult.Unavailable(it.message ?: "Something went wrong") }
         loading = false
@@ -502,7 +506,8 @@ private fun ContactCard(faculty: FacultyRecord) {
                 }
             }
             if (faculty.profileUrl.isNotBlank()) {
-                ContactRow(Icons.Default.School, "Faculty profile", "College website", copyValue = faculty.profileUrl) {
+                // No copy control — the useful action is opening the page.
+                ContactRow(Icons.Default.School, "Faculty profile", "College website", copyValue = null) {
                     runCatching { context.startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(faculty.profileUrl))) }
                 }
             }
@@ -551,7 +556,7 @@ private fun ContactRow(
                     contentDescription = if (copied) "Copied" else "Copy $label",
                     tint = if (copied) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurfaceVariant,
                     modifier = Modifier
-                        .size(38.dp)
+                        .size(28.dp)
                         .clickable(
                             interactionSource = remember { MutableInteractionSource() },
                             indication = null
@@ -560,7 +565,7 @@ private fun ContactRow(
                             clipboard.setText(AnnotatedString(copyValue))
                             copied = true
                         }
-                        .padding(7.dp)
+                        .padding(5.dp)
                 )
             }
         }

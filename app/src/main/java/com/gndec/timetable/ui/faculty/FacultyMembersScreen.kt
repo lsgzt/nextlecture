@@ -14,8 +14,10 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
@@ -82,29 +84,26 @@ fun FacultyMembersScreen(
     // The teacher whose photo the user tapped open in the zoomable viewer.
     var photoViewerFor by remember { mutableStateOf<FacultyRecord?>(null) }
 
-    // Bundled directory — parsed once per process, read off the main thread.
-    // The list grows with the timetable-only teachers: the department files
-    // list some teachers (visiting faculty, new joiners) the official
-    // directory does not carry, and this browser is exactly where they belong.
-    // Seeded SYNCHRONOUSLY from the manager's cached pool when one exists, so
-    // returning from a detail page renders the list instantly with its scroll
-    // position intact (an empty first frame would clamp the restored scroll
-    // back to the top).
+    // Process-wide pool: prefer the in-memory snapshot so returning from a
+    // detail page never flashes the empty "Loading…" card. Build synchronously
+    // from the APK-bundled directory when the snapshot is still cold.
     var faculty by remember {
-        mutableStateOf(container.facultyTimetables.combinedFacultyFast() ?: emptyList<FacultyRecord>())
+        mutableStateOf(
+            container.facultyTimetables.combinedFacultyFast()
+                ?: container.facultyTimetables.combinedFaculty()
+        )
     }
+    // Survives navigation to a profile and back (this composable is disposed
+    // while the detail route is on top of the stack).
+    val listState = rememberSaveable(saver = LazyListState.Saver) { LazyListState() }
+
     LaunchedEffect(Unit) {
-        if (faculty.isEmpty()) {
-            faculty = withContext(Dispatchers.Default) { container.facultyTimetables.combinedFaculty() }
-            // Cache-first background load of every department's teacher document;
-            // fresh ones are not refetched, and a failed root is skipped quietly.
-            container.facultyTimetables.ensureAllDocs()
-            // The pool may have grown with timetable-only teachers — update in
-            // place; a non-empty list is never blanked, so the scroll survives.
-            withContext(Dispatchers.Default) { container.facultyTimetables.combinedFaculty() }
-                .takeIf { it.size > faculty.size }
-                ?.let { faculty = it }
-        }
+        // Cache-first background load of every department's teacher document;
+        // may grow the pool with timetable-only teachers without blanking it.
+        container.facultyTimetables.ensureAllDocs()
+        withContext(Dispatchers.Default) { container.facultyTimetables.combinedFaculty() }
+            .takeIf { it.size > faculty.size }
+            ?.let { faculty = it }
     }
 
     var filterText by rememberSaveable { mutableStateOf("") }
@@ -130,6 +129,7 @@ fun FacultyMembersScreen(
     Scaffold(containerColor = MaterialTheme.colorScheme.background) { padding ->
         PremiumScreenBackground {
             LazyColumn(
+                state = listState,
                 modifier = Modifier.fillMaxSize().padding(padding),
                 contentPadding = PaddingValues(
                     top = 8.dp,
