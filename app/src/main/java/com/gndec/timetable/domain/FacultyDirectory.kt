@@ -73,10 +73,11 @@ class FacultyDirectoryManager(context: Context) {
 
     /**
      * Best directory match for a timetable teacher label such as
-     * "DR AMANDEEP KAUR" or "ER. MANI BANSAL (EE)".
+     * "DR AMANDEEP KAUR" or "ER. HARDEEPAK SINGH (IT)".
      *
-     * Returns null on ties or weak scores so the UI does not open the wrong
-     * profile. Call from a background dispatcher — walks the full directory.
+     * Strict on purpose: a weak fuzzy hit (Hardeepak → Gurdeepak) must never
+     * open the wrong profile. Parenthetical department codes like "(IT)" break
+     * exact-name ties (several Amandeep Kaurs). Call from a background dispatcher.
      */
     fun findBestByPublishedName(published: String): FacultyRecord? {
         val label = published.trim()
@@ -84,24 +85,71 @@ class FacultyDirectoryManager(context: Context) {
         synchronized(publishedNameCache) {
             if (publishedNameCache.containsKey(label)) return publishedNameCache[label]
         }
+
         val cleaned = label.replace(Regex("""\s*\([^)]*\)\s*$"""), "").trim().ifBlank { label }
-        var best: FacultyRecord? = null
-        var bestScore = 0
-        var tie = false
+        val deptHint = FacultyNameMatcher.deptHintOf(label)
+            ?: FacultyNameMatcher.deptHintOf(cleaned)
+        val publishedTitle = FacultyNameMatcher.titleOf(cleaned)
+        val publishedTokens = FacultyNameMatcher.nameTokens(cleaned)
+
+        data class Candidate(val record: FacultyRecord, val score: Int)
+        val candidates = mutableListOf<Candidate>()
         for (record in directory) {
             val score = maxOf(
                 FacultyNameMatcher.nameScore(cleaned, record.name),
                 FacultyNameMatcher.nameScore(label, record.name)
             )
-            if (score > bestScore) {
-                best = record
-                bestScore = score
-                tie = false
-            } else if (score == bestScore && score > 0) {
-                tie = true
-            }
+            // Reject weak fuzzy / single-letter-initial hits for this UI path.
+            // Lecture labels must be near-certain matches (exact, space-insensitive,
+            // or strong token alignment) — score 65–75 is how Hardeepak became Gurdeepak.
+            if (score < 85) continue
+            candidates += Candidate(record, score)
         }
-        val resolved = if (best == null || bestScore < 65 || tie) null else best
+
+        if (candidates.isEmpty()) {
+            synchronized(publishedNameCache) { publishedNameCache[label] = null }
+            return null
+        }
+
+        val maxScore = candidates.maxOf { it.score }
+        var pool = candidates.filter { it.score == maxScore }.map { it.record }
+
+        // Prefer department from "(IT)" / "(EE)" annotations on the timetable label.
+        if (pool.size > 1 && deptHint != null) {
+            val deptMatches = pool.filter { it.department == deptHint }
+            if (deptMatches.size == 1) {
+                val resolved = deptMatches.first()
+                synchronized(publishedNameCache) { publishedNameCache[label] = resolved }
+                return resolved
+            }
+            if (deptMatches.isNotEmpty()) pool = deptMatches
+        }
+
+        // Prefer same honorific (Dr / Er / Ms) when the label carries one.
+        if (pool.size > 1 && publishedTitle.isNotEmpty()) {
+            val titleMatches = pool.filter { FacultyNameMatcher.titleOf(it.name) == publishedTitle }
+            if (titleMatches.size == 1) {
+                val resolved = titleMatches.first()
+                synchronized(publishedNameCache) { publishedNameCache[label] = resolved }
+                return resolved
+            }
+            if (titleMatches.isNotEmpty()) pool = titleMatches
+        }
+
+        // Prefer same token count (Amandeep Kaur over Amandeep Kaur Sohal).
+        if (pool.size > 1 && publishedTokens.isNotEmpty()) {
+            val sameLen = pool.filter {
+                FacultyNameMatcher.nameTokens(it.name).size == publishedTokens.size
+            }
+            if (sameLen.size == 1) {
+                val resolved = sameLen.first()
+                synchronized(publishedNameCache) { publishedNameCache[label] = resolved }
+                return resolved
+            }
+            if (sameLen.isNotEmpty()) pool = sameLen
+        }
+
+        val resolved = pool.singleOrNull()
         synchronized(publishedNameCache) { publishedNameCache[label] = resolved }
         return resolved
     }
