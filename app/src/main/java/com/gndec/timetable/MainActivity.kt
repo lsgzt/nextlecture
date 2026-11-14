@@ -183,6 +183,7 @@ class MainActivity : ComponentActivity() {
                                             onOpenSearch = { navigate("search") },
                                             onOpenVacantRooms = { navigate("vacant_rooms") },
                                             onOpenFacultyMembers = { navigate("faculty_members") },
+                                            onOpenAttendance = { navigate("attendance") },
                                             onOpenLecture = { selectedLecture = it; selectedLectureDate = LocalDate.now(); navigate("detail") }
                                         )
                                     }

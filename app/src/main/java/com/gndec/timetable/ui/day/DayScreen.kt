@@ -41,7 +41,6 @@ import androidx.compose.material.icons.filled.CalendarMonth
 import androidx.compose.material.icons.filled.CheckCircle
 import androidx.compose.material.icons.filled.CloudDone
 import androidx.compose.material.icons.filled.LocationOn
-import androidx.compose.material.icons.filled.Groups
 import androidx.compose.material.icons.filled.Notifications
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.Settings
@@ -1240,23 +1239,16 @@ private fun androidx.compose.ui.text.AnnotatedString.Builder.appendFriendsAfterD
 private fun FriendAvailabilityNote(windows: List<FriendFreeWindow>, startMinutes: Int, endMinutes: Int) {
     val sentences = friendAvailabilitySentences(windows, startMinutes, endMinutes, ::formatTime)
     if (sentences.isEmpty()) return
-    Row(
-        Modifier
-            .fillMaxWidth()
-            .clip(RoundedCornerShape(12.dp))
-            .background(MaterialTheme.colorScheme.secondaryContainer)
-            .padding(horizontal = 12.dp, vertical = 9.dp),
-        verticalAlignment = Alignment.CenterVertically
-    ) {
-        Icon(Icons.Default.Groups, contentDescription = null, tint = MaterialTheme.colorScheme.onSecondaryContainer, modifier = Modifier.size(17.dp))
-        Spacer(Modifier.width(8.dp))
-        Text(
-            sentences.joinToString(" · "),
-            color = MaterialTheme.colorScheme.onSecondaryContainer,
-            style = MaterialTheme.typography.bodySmall,
-            fontWeight = FontWeight.Medium
-        )
-    }
+    // Plain text, matching the other friend notes ("Also free · …"): a boxed row
+    // under every lecture card read as clutter, so this is just a quiet line.
+    Text(
+        sentences.joinToString(" · "),
+        color = MaterialTheme.colorScheme.onSurfaceVariant,
+        style = MaterialTheme.typography.bodySmall,
+        fontWeight = FontWeight.Medium,
+        textAlign = androidx.compose.ui.text.style.TextAlign.Center,
+        modifier = Modifier.fillMaxWidth().padding(top = 2.dp)
+    )
 }
 
 @Composable

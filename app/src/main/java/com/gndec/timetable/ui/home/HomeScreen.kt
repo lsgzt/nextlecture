@@ -66,7 +66,6 @@ import com.gndec.timetable.ui.PremiumDailyQuote
 import com.gndec.timetable.ui.PremiumNextLectureCard
 import com.gndec.timetable.ui.PremiumOfflineCard
 import com.gndec.timetable.ui.PremiumScreenBackground
-import com.gndec.timetable.ui.PremiumStatusRow
 import com.gndec.timetable.ui.PremiumTodayPreview
 import com.gndec.timetable.ui.isBannerEligibleOn
 import com.gndec.timetable.ui.theme.GndecOrange
@@ -83,6 +82,7 @@ import java.time.ZoneId
 /** How many notice banners the homepage carousel will show at once. */
 private const val MAX_HOME_NOTICE_BANNERS = 4
 
+@OptIn(androidx.compose.material3.ExperimentalMaterial3Api::class)
 @Composable
 fun HomeScreen(
     container: AppContainer,
@@ -96,6 +96,7 @@ fun HomeScreen(
     onOpenSearch: () -> Unit,
     onOpenVacantRooms: () -> Unit,
     onOpenFacultyMembers: () -> Unit,
+    onOpenAttendance: () -> Unit,
     onOpenLecture: (LectureEntity) -> Unit
 ) {
     val vm = remember { HomeViewModel(container) }
@@ -148,7 +149,6 @@ fun HomeScreen(
     val dateLabel = Instant.ofEpochMilli(state.nowMillis).atZone(ZoneId.systemDefault()).let {
         "${it.dayOfWeek.name.lowercase().replaceFirstChar(Char::uppercase)} ${it.dayOfMonth} ${it.month.name.lowercase().replaceFirstChar(Char::uppercase)}"
     }
-    val updatedText = state.lastFetch?.let { Formatters.freshnessText(it, state.nowMillis).removePrefix("Updated ") } ?: "No sync yet"
     val todayIso = Instant.ofEpochMilli(state.nowMillis).atZone(ZoneId.systemDefault()).toLocalDate().toString()
     // Holiday banners (today / tomorrow) plus notices from every feed source that
     // is still current. Holidays first, then the freshest notices — all share the
@@ -169,202 +169,204 @@ fun HomeScreen(
 
     Scaffold(containerColor = MaterialTheme.colorScheme.background) { padding ->
         PremiumScreenBackground {
-            LazyColumn(
-                modifier = androidx.compose.ui.Modifier.fillMaxSize().padding(padding),
-                contentPadding = PaddingValues(top = 8.dp, bottom = 22.dp + PremiumBottomBarContentClearance),
-                verticalArrangement = Arrangement.spacedBy(18.dp)
+            // Pull-to-refresh replaces the old "Using saved timetable" card: the
+            // refresh affordance lives in the gesture every other app uses, and the
+            // fetch-message row below reports the outcome in text.
+            val pullState = androidx.compose.material3.pulltorefresh.rememberPullToRefreshState()
+            androidx.compose.material3.pulltorefresh.PullToRefreshBox(
+                isRefreshing = fetchState is FetchState.Running,
+                onRefresh = { vm.fetchAgain() },
+                state = pullState,
+                modifier = androidx.compose.ui.Modifier.fillMaxSize().padding(padding)
             ) {
-                item(key = "header") {
-                    PremiumBrandHeader(
-                        group = state.group ?: "ITB2",
-                        greeting = greeting,
-                        studentName = studentName,
-                        title = "NextLecture",
-                        onSettings = onOpenSettings,
-                        onProfile = onOpenProfile,
-                        onSearch = onOpenSearch,
-                        modifier = androidx.compose.ui.Modifier.itemEntrance(0)
-                    )
-                }
-                if (homeBanners.isNotEmpty()) {
-                    item(key = "homepage-notices") {
-                        PremiumHomeBannerCarousel(
-                            items = homeBanners,
-                            onOpen = { item ->
-                                if (item.isHoliday) {
-                                    onOpenHolidays()
-                                } else {
-                                    val noticeId = item.noticeId
-                                    val notice = if (noticeId != null) {
-                                        erpNotices.firstOrNull { it.id == noticeId }
-                                    } else null
-                                    if (notice != null) {
-                                        onOpenNoticeDetail(notice)
-                                    } else if (!item.url.isNullOrBlank()) {
-                                        context.startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(item.url)))
+                LazyColumn(
+                    modifier = androidx.compose.ui.Modifier.fillMaxSize(),
+                    contentPadding = PaddingValues(top = 8.dp, bottom = 22.dp + PremiumBottomBarContentClearance),
+                    verticalArrangement = Arrangement.spacedBy(18.dp)
+                ) {
+                    item(key = "header") {
+                        PremiumBrandHeader(
+                            group = state.group ?: "ITB2",
+                            greeting = greeting,
+                            studentName = studentName,
+                            title = "NextLecture",
+                            onSettings = onOpenSettings,
+                            onProfile = onOpenProfile,
+                            onSearch = onOpenSearch,
+                            modifier = androidx.compose.ui.Modifier.itemEntrance(0)
+                        )
+                    }
+                    if (homeBanners.isNotEmpty()) {
+                        item(key = "homepage-notices") {
+                            PremiumHomeBannerCarousel(
+                                items = homeBanners,
+                                onOpen = { item ->
+                                    if (item.isHoliday) {
+                                        onOpenHolidays()
                                     } else {
-                                        onOpenNotice()
-                                    }
-                                }
-                            },
-                            modifier = androidx.compose.ui.Modifier.itemEntrance(1).padding(horizontal = 20.dp).animateItem()
-                        )
-                    }
-                }
-                item(key = "status") {
-                    Box(androidx.compose.ui.Modifier.itemEntrance(2).animateItem()) {
-                        PremiumStatusRow(
-                            updatedText = updatedText,
-                            onFetch = vm::fetchAgain,
-                            fetchEnabled = fetchState !is FetchState.Running
-                        )
-                    }
-                }
-                if (fetchState !is FetchState.Idle) {
-                    item(key = "fetch-message") {
-                        val swapIn = motionTween<Float>(Motion.Normal)
-                        val swapOut = motionTween<Float>(Motion.Fast)
-                        AnimatedContent(
-                            targetState = fetchState,
-                            modifier = androidx.compose.ui.Modifier.animateItem(),
-                            transitionSpec = { fadeIn(swapIn) togetherWith fadeOut(swapOut) },
-                            label = "fetchMessage"
-                        ) { current ->
-                            when (current) {
-                                FetchState.Idle -> {}
-                                FetchState.Running -> FetchMessage("Refreshing your timetable…", false)
-                                is FetchState.Ok -> FetchMessage("Timetable updated", false)
-                                FetchState.UpToDate -> FetchMessage("Already up to date", false)
-                                is FetchState.Failed -> FetchMessage("Couldn’t refresh timetable", true)
-                            }
-                        }
-                    }
-                }
-                if (releaseUpdate.updateAvailable) {
-                    item(key = "release-update") {
-                        ReleaseUpdateCard(
-                            releaseUpdate = releaseUpdate,
-                            onDownload = { context.startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(com.gndec.timetable.domain.ReleaseUpdateManager.DOWNLOAD_URL))) },
-                            modifier = androidx.compose.ui.Modifier.padding(horizontal = 20.dp).animateItem()
-                        )
-                    }
-                }
-                item(key = "hero") {
-                    val heroIn = motionTween<Float>(Motion.Emphasized)
-                    val heroOut = motionTween<Float>(Motion.Fast)
-                    val heroSlide = motionTween<IntOffset>(Motion.Emphasized, Motion.EasingEnter)
-                    AnimatedContent(
-                        targetState = hero,
-                        modifier = androidx.compose.ui.Modifier.fillMaxWidth().animateItem().itemEntrance(3),
-                        transitionSpec = {
-                            (fadeIn(heroIn) + slideInVertically(heroSlide) { it / 10 }) togetherWith fadeOut(heroOut)
-                        },
-                        label = "homeHero"
-                    ) { target ->
-                        when {
-                            (target.kind == "next" || target.kind == "happening") && target.lecture != null -> {
-                                val happening = target.kind == "happening"
-                                PremiumNextLectureCard(
-                                    lecture = target.lecture!!,
-                                    dayLabel = if (happening) "Now" else "Today",
-                                    countdown = countdown,
-                                    isHappening = happening,
-                                    onClick = { onOpenLecture(target.lecture!!) },
-                                    modifier = androidx.compose.ui.Modifier.padding(horizontal = 20.dp),
-                                    attendance = heroAttendance(target.lecture!!),
-                                    mentorName = settings.mentorName,
-                                    mentorVenue = settings.mentorVenue
-                                )
-                            }
-                            target.lecture != null && (target.kind == "later" || target.kind == "free") -> {
-                                PremiumNextLectureCard(
-                                    lecture = target.lecture!!,
-                                    dayLabel = if (target.daysAhead == 1) "Tomorrow" else "In ${target.daysAhead} days",
-                                    countdown = "",
-                                    isHappening = false,
-                                    onClick = { onOpenLecture(target.lecture!!) },
-                                    modifier = androidx.compose.ui.Modifier.padding(horizontal = 20.dp),
-                                    attendance = heroAttendance(target.lecture!!),
-                                    mentorName = settings.mentorName,
-                                    mentorVenue = settings.mentorVenue
-                                )
-                            }
-                            else -> {
-                                androidx.compose.material3.Card(
-                                    modifier = androidx.compose.ui.Modifier.fillMaxWidth().padding(horizontal = 20.dp),
-                                    shape = androidx.compose.foundation.shape.RoundedCornerShape(30.dp),
-                                    colors = androidx.compose.material3.CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.secondaryContainer),
-                                    elevation = androidx.compose.material3.CardDefaults.cardElevation(0.dp)
-                                ) {
-                                    Column(
-                                        Modifier.fillMaxWidth().padding(horizontal = 26.dp, vertical = 30.dp),
-                                        horizontalAlignment = Alignment.CenterHorizontally
-                                    ) {
-                                        Box(
-                                            Modifier.size(56.dp).background(MaterialTheme.colorScheme.primary.copy(alpha = 0.12f), CircleShape),
-                                            contentAlignment = Alignment.Center
-                                        ) {
-                                            Icon(Icons.Default.WbSunny, contentDescription = null, tint = MaterialTheme.colorScheme.primary, modifier = Modifier.size(28.dp))
+                                        val noticeId = item.noticeId
+                                        val notice = if (noticeId != null) {
+                                            erpNotices.firstOrNull { it.id == noticeId }
+                                        } else null
+                                        if (notice != null) {
+                                            onOpenNoticeDetail(notice)
+                                        } else if (!item.url.isNullOrBlank()) {
+                                            context.startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(item.url)))
+                                        } else {
+                                            onOpenNotice()
                                         }
-                                        Spacer(Modifier.height(14.dp))
-                                        Text("A clear day ahead", style = MaterialTheme.typography.headlineSmall, fontWeight = androidx.compose.ui.text.font.FontWeight.Bold)
-                                        Spacer(Modifier.height(6.dp))
-                                        Text("No upcoming lecture is scheduled. Enjoy the breathing room.", color = MaterialTheme.colorScheme.onSurfaceVariant, textAlign = androidx.compose.ui.text.style.TextAlign.Center)
+                                    }
+                                },
+                                modifier = androidx.compose.ui.Modifier.itemEntrance(1).padding(horizontal = 20.dp).animateItem()
+                            )
+                        }
+                    }
+                    if (fetchState !is FetchState.Idle) {
+                        item(key = "fetch-message") {
+                            val swapIn = motionTween<Float>(Motion.Normal)
+                            val swapOut = motionTween<Float>(Motion.Fast)
+                            AnimatedContent(
+                                targetState = fetchState,
+                                modifier = androidx.compose.ui.Modifier.animateItem(),
+                                transitionSpec = { fadeIn(swapIn) togetherWith fadeOut(swapOut) },
+                                label = "fetchMessage"
+                            ) { current ->
+                                when (current) {
+                                    FetchState.Idle -> {}
+                                    FetchState.Running -> FetchMessage("Refreshing your timetable…", false)
+                                    is FetchState.Ok -> FetchMessage("Timetable updated just now", false)
+                                    FetchState.UpToDate -> FetchMessage("Already up to date", false)
+                                    is FetchState.Failed -> FetchMessage("Couldn’t refresh timetable", true)
+                                }
+                            }
+                        }
+                    }
+                    if (releaseUpdate.updateAvailable) {
+                        item(key = "release-update") {
+                            ReleaseUpdateCard(
+                                releaseUpdate = releaseUpdate,
+                                onDownload = { context.startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(com.gndec.timetable.domain.ReleaseUpdateManager.DOWNLOAD_URL))) },
+                                modifier = androidx.compose.ui.Modifier.padding(horizontal = 20.dp).animateItem()
+                            )
+                        }
+                    }
+                    item(key = "hero") {
+                        val heroIn = motionTween<Float>(Motion.Emphasized)
+                        val heroOut = motionTween<Float>(Motion.Fast)
+                        val heroSlide = motionTween<IntOffset>(Motion.Emphasized, Motion.EasingEnter)
+                        AnimatedContent(
+                            targetState = hero,
+                            modifier = androidx.compose.ui.Modifier.fillMaxWidth().animateItem().itemEntrance(3),
+                            transitionSpec = {
+                                (fadeIn(heroIn) + slideInVertically(heroSlide) { it / 10 }) togetherWith fadeOut(heroOut)
+                            },
+                            label = "homeHero"
+                        ) { target ->
+                            when {
+                                (target.kind == "next" || target.kind == "happening") && target.lecture != null -> {
+                                    val happening = target.kind == "happening"
+                                    PremiumNextLectureCard(
+                                        lecture = target.lecture!!,
+                                        dayLabel = if (happening) "Now" else "Today",
+                                        countdown = countdown,
+                                        isHappening = happening,
+                                        onClick = { onOpenLecture(target.lecture!!) },
+                                        modifier = androidx.compose.ui.Modifier.padding(horizontal = 20.dp),
+                                        attendance = heroAttendance(target.lecture!!),
+                                        mentorName = settings.mentorName,
+                                        mentorVenue = settings.mentorVenue
+                                    )
+                                }
+                                target.lecture != null && (target.kind == "later" || target.kind == "free") -> {
+                                    PremiumNextLectureCard(
+                                        lecture = target.lecture!!,
+                                        dayLabel = if (target.daysAhead == 1) "Tomorrow" else "In ${target.daysAhead} days",
+                                        countdown = "",
+                                        isHappening = false,
+                                        onClick = { onOpenLecture(target.lecture!!) },
+                                        modifier = androidx.compose.ui.Modifier.padding(horizontal = 20.dp),
+                                        attendance = heroAttendance(target.lecture!!),
+                                        mentorName = settings.mentorName,
+                                        mentorVenue = settings.mentorVenue
+                                    )
+                                }
+                                else -> {
+                                    androidx.compose.material3.Card(
+                                        modifier = androidx.compose.ui.Modifier.fillMaxWidth().padding(horizontal = 20.dp),
+                                        shape = androidx.compose.foundation.shape.RoundedCornerShape(30.dp),
+                                        colors = androidx.compose.material3.CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.secondaryContainer),
+                                        elevation = androidx.compose.material3.CardDefaults.cardElevation(0.dp)
+                                    ) {
+                                        Column(
+                                            Modifier.fillMaxWidth().padding(horizontal = 26.dp, vertical = 30.dp),
+                                            horizontalAlignment = Alignment.CenterHorizontally
+                                        ) {
+                                            Box(
+                                                Modifier.size(56.dp).background(MaterialTheme.colorScheme.primary.copy(alpha = 0.12f), CircleShape),
+                                                contentAlignment = Alignment.Center
+                                            ) {
+                                                Icon(Icons.Default.WbSunny, contentDescription = null, tint = MaterialTheme.colorScheme.primary, modifier = Modifier.size(28.dp))
+                                            }
+                                            Spacer(Modifier.height(14.dp))
+                                            Text("A clear day ahead", style = MaterialTheme.typography.headlineSmall, fontWeight = androidx.compose.ui.text.font.FontWeight.Bold)
+                                            Spacer(Modifier.height(6.dp))
+                                            Text("No upcoming lecture is scheduled. Enjoy the breathing room.", color = MaterialTheme.colorScheme.onSurfaceVariant, textAlign = androidx.compose.ui.text.style.TextAlign.Center)
+                                        }
                                     }
                                 }
                             }
                         }
                     }
-                }
-                // Rendered only once a quote has been fetched: before the first successful
-                // call there is nothing to say, and a placeholder would just be a gap.
-                quote?.let { current ->
-                    item(key = "daily-quote") {
-                        PremiumDailyQuote(current, androidx.compose.ui.Modifier.itemEntrance(4).animateItem())
+                    // Rendered only once a quote has been fetched: before the first successful
+                    // call there is nothing to say, and a placeholder would just be a gap.
+                    quote?.let { current ->
+                        item(key = "daily-quote") {
+                            PremiumDailyQuote(current, androidx.compose.ui.Modifier.itemEntrance(4).animateItem())
+                        }
                     }
-                }
-                // Every eligible announcement, newest first, stacked in feed order.
-                announcements.forEachIndexed { index, current ->
-                    item(key = "announcement-${current.id}") {
-                        PremiumAnnouncementCard(
-                            announcement = current,
-                            modifier = androidx.compose.ui.Modifier
-                                .itemEntrance(5 + index)
-                                .padding(horizontal = 20.dp)
-                                .animateItem()
+                    // Every eligible announcement, newest first, stacked in feed order.
+                    announcements.forEachIndexed { index, current ->
+                        item(key = "announcement-${current.id}") {
+                            PremiumAnnouncementCard(
+                                announcement = current,
+                                modifier = androidx.compose.ui.Modifier
+                                    .itemEntrance(5 + index)
+                                    .padding(horizontal = 20.dp)
+                                    .animateItem()
+                            )
+                        }
+                    }
+                    item(key = "attendance-summary") {
+                        Box(androidx.compose.ui.Modifier.itemEntrance(6).padding(horizontal = 20.dp).animateItem()) {
+                            AttendanceHomeSummary(state = attendanceState, onClick = onOpenAttendance)
+                        }
+                    }
+                    item(key = "today-preview") {
+                        Box(androidx.compose.ui.Modifier.itemEntrance(6).animateItem()) {
+                            PremiumTodayPreview(
+                                lectures = state.todayLectures,
+                                dateLabel = dateLabel,
+                                onOpen = onOpenToday,
+                                onLecture = onOpenLecture,
+                                modifier = androidx.compose.ui.Modifier.padding(horizontal = 20.dp)
+                            )
+                        }
+                    }
+                    item(key = "vacant-rooms") {
+                        VacantRoomsEntryCard(
+                            onOpen = onOpenVacantRooms,
+                            modifier = androidx.compose.ui.Modifier.itemEntrance(7).padding(horizontal = 20.dp).animateItem()
                         )
                     }
-                }
-                item(key = "attendance-summary") {
-                    Box(androidx.compose.ui.Modifier.itemEntrance(6).padding(horizontal = 20.dp).animateItem()) {
-                        AttendanceHomeSummary(state = attendanceState)
-                    }
-                }
-                item(key = "today-preview") {
-                    Box(androidx.compose.ui.Modifier.itemEntrance(6).animateItem()) {
-                        PremiumTodayPreview(
-                            lectures = state.todayLectures,
-                            dateLabel = dateLabel,
-                            onOpen = onOpenToday,
-                            onLecture = onOpenLecture,
-                            modifier = androidx.compose.ui.Modifier.padding(horizontal = 20.dp)
+                    item(key = "faculty-members") {
+                        FacultyMembersEntryCard(
+                            onOpen = onOpenFacultyMembers,
+                            modifier = androidx.compose.ui.Modifier.itemEntrance(8).padding(horizontal = 20.dp).animateItem()
                         )
                     }
-                }
-                item(key = "vacant-rooms") {
-                    VacantRoomsEntryCard(
-                        onOpen = onOpenVacantRooms,
-                        modifier = androidx.compose.ui.Modifier.itemEntrance(7).padding(horizontal = 20.dp).animateItem()
-                    )
-                }
-                item(key = "faculty-members") {
-                    FacultyMembersEntryCard(
-                        onOpen = onOpenFacultyMembers,
-                        modifier = androidx.compose.ui.Modifier.itemEntrance(8).padding(horizontal = 20.dp).animateItem()
-                    )
-                }
-                item(key = "offline") {
-                    PremiumOfflineCard(androidx.compose.ui.Modifier.itemEntrance(9).padding(horizontal = 20.dp).animateItem())
+                    item(key = "offline") {
+                        PremiumOfflineCard(androidx.compose.ui.Modifier.itemEntrance(9).padding(horizontal = 20.dp).animateItem())
+                    }
                 }
             }
         }

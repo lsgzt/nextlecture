@@ -34,12 +34,15 @@ import androidx.compose.material.icons.filled.Description
 import androidx.compose.material.icons.filled.OpenInNew
 import androidx.compose.material.icons.filled.Refresh
 import androidx.compose.material.icons.filled.Send
+import androidx.compose.material.icons.filled.Tune
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.AssistChip
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.DropdownMenu
+import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -53,9 +56,11 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -65,6 +70,7 @@ import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
@@ -93,6 +99,7 @@ import kotlinx.coroutines.flow.emptyFlow
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.withContext
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
@@ -235,6 +242,7 @@ fun SyllabusScreen(
     var question by rememberSaveable { mutableStateOf("") }
     var chatStarted by rememberSaveable { mutableStateOf(false) }
     var historyOpen by rememberSaveable { mutableStateOf(false) }
+    var aiSettingsOpen by rememberSaveable { mutableStateOf(false) }
     var deleteId by remember { mutableStateOf<String?>(null) }
     val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
 
@@ -314,6 +322,10 @@ fun SyllabusScreen(
         )
     }
 
+    if (aiSettingsOpen) {
+        AiQuickSettingsSheet(container = container, onDismiss = { aiSettingsOpen = false })
+    }
+
     val firstChat = !chatStarted && !sending && selectedId == null
 
     Surface(Modifier.fillMaxSize(), color = MaterialTheme.colorScheme.background) {
@@ -343,6 +355,11 @@ fun SyllabusScreen(
                     Modifier.align(Alignment.CenterEnd),
                     verticalAlignment = Alignment.CenterVertically
                 ) {
+                    // Quick AI settings: provider, key and model without the detour
+                    // through Settings — the chat is unusable without them.
+                    IconButton(onClick = { aiSettingsOpen = true }) {
+                        Icon(Icons.Default.Tune, contentDescription = "AI settings")
+                    }
                     IconButton(onClick = { historyOpen = true }) {
                         Icon(Icons.Default.History, contentDescription = "Previous chats")
                     }
@@ -560,5 +577,186 @@ private fun SourcePdfButton() {
         context.startActivity(android.content.Intent(android.content.Intent.ACTION_VIEW, android.net.Uri.parse(SYLLABUS_SOURCE_URL)))
     }) {
         Icon(Icons.Default.OpenInNew, contentDescription = "Open official syllabus PDF")
+    }
+}
+
+/**
+ * Quick AI settings sheet: provider, API key and model in one place, reached
+ * directly from the Syllabus AI header instead of the long detour through
+ * Settings. Edits the same preferences and encrypted key store the Settings
+ * screen uses, so both views always agree.
+ */
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+private fun AiQuickSettingsSheet(container: AppContainer, onDismiss: () -> Unit) {
+    val scope = rememberCoroutineScope()
+    val settings by container.settings.flow.collectAsStateWithLifecycle(initialValue = null)
+    val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
+
+    var keyStatus by remember { mutableStateOf<Map<AiProvider, Boolean>>(emptyMap()) }
+    var models by remember { mutableStateOf<List<String>>(emptyList()) }
+    var providerMenu by remember { mutableStateOf(false) }
+    var modelMenu by remember { mutableStateOf(false) }
+    var keyInput by rememberSaveable { mutableStateOf("") }
+    var customModel by rememberSaveable { mutableStateOf("") }
+    var message by remember { mutableStateOf<String?>(null) }
+    var busy by remember { mutableStateOf(false) }
+
+    // The encrypted store is disk work; never read it on the composition thread.
+    suspend fun refreshKeyStatus() = withContext(Dispatchers.IO) {
+        AiProvider.values().associateWith { runCatching { container.keys.getApiKey(it) != null }.getOrDefault(false) }
+    }
+    LaunchedEffect(Unit) { keyStatus = refreshKeyStatus() }
+
+    val cfg = settings
+    ModalBottomSheet(onDismissRequest = onDismiss, sheetState = sheetState) {
+        if (cfg == null) {
+            // One frame before DataStore emits — keep the sheet from flashing empty content.
+            Box(Modifier.fillMaxWidth().height(120.dp))
+            return@ModalBottomSheet
+        }
+        Column(
+            Modifier.fillMaxWidth().padding(horizontal = 20.dp).navigationBarsPadding(),
+            verticalArrangement = Arrangement.spacedBy(10.dp)
+        ) {
+            Text("AI settings", style = MaterialTheme.typography.titleLarge, fontWeight = FontWeight.Bold)
+            Text(
+                "Provider, API key and model for syllabus answers. Keys are stored encrypted on this device.",
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                style = MaterialTheme.typography.bodySmall
+            )
+
+            // Provider
+            Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                Text("Provider", style = MaterialTheme.typography.labelLarge, modifier = Modifier.weight(1f))
+                TealOutlineButton(cfg.provider.label, modifier = Modifier, onClick = { providerMenu = true })
+                DropdownMenu(expanded = providerMenu, onDismissRequest = { providerMenu = false }) {
+                    AiProvider.values().forEach { option ->
+                        DropdownMenuItem(
+                            text = { Text(option.label) },
+                            onClick = {
+                                providerMenu = false
+                                if (option != cfg.provider) {
+                                    // IDs belong to the provider just left; a stale list
+                                    // would offer models the new one does not have.
+                                    models = emptyList()
+                                    scope.launch { withContext(Dispatchers.IO) { container.settings.setAiProvider(option.id) } }
+                                    message = "AI provider set to ${option.label}"
+                                }
+                            }
+                        )
+                    }
+                }
+            }
+            Text(
+                "Each provider keeps its own key and model, so switching back restores your earlier choice.",
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                style = MaterialTheme.typography.bodySmall
+            )
+
+            // API key
+            val saved = keyStatus[cfg.provider] == true
+            OutlinedTextField(
+                keyInput, { keyInput = it },
+                label = { Text(if (saved) "${cfg.provider.label} API key · saved" else "${cfg.provider.label} API key") },
+                singleLine = true,
+                visualTransformation = PasswordVisualTransformation(),
+                modifier = Modifier.fillMaxWidth()
+            )
+            Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                TextButton(
+                    onClick = {
+                        if (keyInput.isBlank()) return@TextButton
+                        scope.launch {
+                            busy = true
+                            withContext(Dispatchers.IO) { container.keys.setApiKey(cfg.provider, keyInput) }
+                            keyStatus = refreshKeyStatus()
+                            message = "${cfg.provider.label} API key saved (stored encrypted on this device)"
+                            keyInput = ""
+                            busy = false
+                        }
+                    },
+                    enabled = !busy && keyInput.isNotBlank()
+                ) { Text("Save key") }
+                if (saved) {
+                    TextButton(
+                        onClick = {
+                            scope.launch {
+                                busy = true
+                                withContext(Dispatchers.IO) { container.keys.removeApiKey(cfg.provider) }
+                                keyStatus = refreshKeyStatus()
+                                message = "${cfg.provider.label} API key removed"
+                                busy = false
+                            }
+                        },
+                        enabled = !busy
+                    ) { Text("Remove key") }
+                }
+            }
+
+            // Model
+            Text("${cfg.provider.label} model", color = MaterialTheme.colorScheme.onSurfaceVariant)
+            Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                TealOutlineButton(cfg.model, modifier = Modifier, onClick = { modelMenu = true })
+                DropdownMenu(expanded = modelMenu, onDismissRequest = { modelMenu = false }) {
+                    if (models.isEmpty()) {
+                        DropdownMenuItem(text = { Text("Load models first") }, onClick = { modelMenu = false })
+                    } else {
+                        models.forEach { model ->
+                            DropdownMenuItem(
+                                text = { Text(model) },
+                                onClick = {
+                                    modelMenu = false
+                                    scope.launch { withContext(Dispatchers.IO) { container.settings.setModel(model) } }
+                                    message = "Model set to $model"
+                                }
+                            )
+                        }
+                    }
+                }
+                TextButton(onClick = {
+                    scope.launch {
+                        busy = true
+                        try {
+                            val key = withContext(Dispatchers.IO) { container.keys.getApiKey(cfg.provider) }
+                            if (key == null) {
+                                message = "Save a ${cfg.provider.label} API key first"
+                            } else {
+                                val list = withContext(Dispatchers.IO) { container.aiClients[cfg.provider].listModels(key).map { it.id } }
+                                models = list
+                                message = if (list.isEmpty()) "No models returned" else "✓ ${list.size} models loaded"
+                            }
+                        } catch (e: Exception) {
+                            message = "Couldn't fetch models (${e.message})"
+                        }
+                        busy = false
+                    }
+                }, enabled = !busy) { Text("Refresh models") }
+            }
+
+            // Custom model ID
+            Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                OutlinedTextField(
+                    customModel, { customModel = it },
+                    label = { Text("Custom model ID") },
+                    singleLine = true,
+                    modifier = Modifier.weight(1f)
+                )
+                TextButton(
+                    onClick = {
+                        if (customModel.isNotBlank()) {
+                            val m = customModel.trim()
+                            scope.launch { withContext(Dispatchers.IO) { container.settings.setModel(m) } }
+                            customModel = ""
+                            message = "Model set to $m"
+                        }
+                    },
+                    enabled = customModel.isNotBlank()
+                ) { Text("Save") }
+            }
+
+            message?.let { Text(it, color = MaterialTheme.colorScheme.onSurfaceVariant, style = MaterialTheme.typography.bodySmall) }
+            Spacer(Modifier.height(10.dp))
+        }
     }
 }

@@ -97,16 +97,16 @@ fun rememberAttendanceHomeState(container: AppContainer): AttendanceHomeState {
  * network still looks exactly as it did before attendance existed.
  */
 @Composable
-fun AttendanceHomeSummary(state: AttendanceHomeState, modifier: Modifier = Modifier) {
+fun AttendanceHomeSummary(state: AttendanceHomeState, modifier: Modifier = Modifier, onClick: () -> Unit = {}) {
     when (state) {
-        AttendanceHomeState.Loading -> AttendanceSummaryCard(modifier = modifier) {
+        AttendanceHomeState.Loading -> AttendanceSummaryCard(modifier = modifier, onClick = onClick) {
             Text(
                 "Loading your attendance…",
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
                 style = MaterialTheme.typography.bodySmall
             )
         }
-        is AttendanceHomeState.Ready -> AttendanceSummaryCard(modifier = modifier) {
+        is AttendanceHomeState.Ready -> AttendanceSummaryCard(modifier = modifier, onClick = onClick) {
             AttendanceSummaryContent(state.response, state.target)
         }
         AttendanceHomeState.Unavailable -> Unit
@@ -196,8 +196,9 @@ fun AttendanceHomeState.subjectAttendance(subject: String?): SubjectAttendance? 
 }
 
 @Composable
-private fun AttendanceSummaryCard(modifier: Modifier = Modifier, content: @Composable () -> Unit) {
+private fun AttendanceSummaryCard(modifier: Modifier = Modifier, onClick: () -> Unit = {}, content: @Composable () -> Unit) {
     Card(
+        onClick = onClick,
         modifier = modifier.fillMaxWidth(),
         colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
         shape = RoundedCornerShape(20.dp),

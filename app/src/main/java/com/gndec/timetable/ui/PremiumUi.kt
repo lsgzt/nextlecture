@@ -9,7 +9,6 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
@@ -29,16 +28,12 @@ import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.AccessTime
 import androidx.compose.material.icons.filled.CalendarMonth
 import androidx.compose.material.icons.filled.Campaign
-import androidx.compose.material.icons.filled.CheckCircle
-import androidx.compose.material.icons.filled.WarningAmber
 import androidx.compose.material.icons.filled.ChevronRight
 import androidx.compose.material.icons.filled.CloudDone
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.LocationOn
 import androidx.compose.material.icons.filled.MenuBook
 import androidx.compose.material.icons.filled.Person
-import androidx.compose.material.icons.filled.Refresh
-import androidx.compose.material.icons.filled.Star
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material.icons.filled.Today
@@ -49,7 +44,6 @@ import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -194,42 +188,6 @@ fun PremiumPageHeader(
 }
 
 @Composable
-fun PremiumStatusRow(
-    updatedText: String,
-    onFetch: () -> Unit,
-    fetchEnabled: Boolean,
-    modifier: Modifier = Modifier
-) {
-    Row(
-        modifier.fillMaxWidth().padding(horizontal = 20.dp).clip(RoundedCornerShape(18.dp))
-            .background(premiumAquaBrush(), RoundedCornerShape(18.dp))
-            .padding(horizontal = 14.dp, vertical = 11.dp),
-        verticalAlignment = Alignment.CenterVertically
-    ) {
-        Icon(Icons.Default.CloudDone, contentDescription = null, tint = MaterialTheme.colorScheme.primary, modifier = Modifier.size(21.dp))
-        Spacer(Modifier.width(9.dp))
-        Column(Modifier.weight(1f)) {
-            Text("Using saved timetable", fontWeight = FontWeight.SemiBold, maxLines = 1)
-            Text(updatedText, color = MaterialTheme.colorScheme.onSurfaceVariant, style = MaterialTheme.typography.bodySmall, maxLines = 1, overflow = TextOverflow.Ellipsis)
-        }
-        val updatePress = remember { MutableInteractionSource() }
-        OutlinedButton(
-            onClick = onFetch,
-            enabled = fetchEnabled,
-            contentPadding = PaddingValues(horizontal = 10.dp, vertical = 0.dp),
-            border = BorderStroke(1.dp, MaterialTheme.colorScheme.primary),
-            shape = RoundedCornerShape(14.dp),
-            modifier = Modifier.height(38.dp).pressFeedback(updatePress, pressedScale = 0.96f),
-            interactionSource = updatePress
-        ) {
-            Icon(Icons.Default.Refresh, contentDescription = null, modifier = Modifier.size(17.dp))
-            Spacer(Modifier.width(5.dp))
-            Text("Update", maxLines = 1)
-        }
-    }
-}
-
-@Composable
 fun PremiumNextLectureCard(
     lecture: LectureEntity,
     dayLabel: String,
@@ -332,7 +290,7 @@ private fun SubjectAttendanceStrip(attendance: SubjectAttendance, lectureType: S
         else -> "lecture"
     }
     val subject = attendance.subject
-    val (container, content, icon) = when {
+    val content = when {
         attendance.canAffordToMiss && attendance.isComfortable -> ComfortTone()
         attendance.canAffordToMiss -> SafeTone()
         else -> DangerTone()
@@ -365,50 +323,31 @@ private fun SubjectAttendanceStrip(attendance: SubjectAttendance, lectureType: S
             withStyle(normal) { append(" in $subject.") }
         }
     }
-    Row(
-        Modifier
-            .fillMaxWidth()
-            .clip(RoundedCornerShape(14.dp))
-            .background(container)
-            .padding(horizontal = 12.dp, vertical = 10.dp),
-        verticalAlignment = Alignment.CenterVertically
-    ) {
-        Icon(icon, contentDescription = null, tint = content, modifier = Modifier.size(19.dp))
-        Spacer(Modifier.width(9.dp))
-        Text(
-            verdict,
-            style = MaterialTheme.typography.bodySmall
-        )
-    }
+    // Plain text, no chip or container: inside the hero card a wrapped box read as
+    // clutter, so the verdict is just a line whose keywords carry the tone color.
+    Text(
+        verdict,
+        color = content,
+        style = MaterialTheme.typography.bodySmall,
+        modifier = Modifier.fillMaxWidth()
+    )
 }
 
 /**
- * Container / content pairs for the three verdicts. Danger and Safe come from
- * the Material roles, so they follow the app's own palette; Comfort has no such
- * role and is pinned here, chosen to clear AA on its own container in both modes.
+ * Text colors for the three verdicts. Danger and Safe come from the Material
+ * roles, so they follow the app's own palette; Comfort has no such role and is
+ * pinned here, chosen to read clearly on the hero card in both modes.
  */
 @Composable
-private fun DangerTone(): Triple<Color, Color, ImageVector> = Triple(
-    MaterialTheme.colorScheme.errorContainer,
-    MaterialTheme.colorScheme.onErrorContainer,
-    Icons.Default.WarningAmber
-)
+private fun DangerTone(): Color = MaterialTheme.colorScheme.onErrorContainer
 
 @Composable
-private fun SafeTone(): Triple<Color, Color, ImageVector> = Triple(
-    MaterialTheme.colorScheme.secondaryContainer,
-    MaterialTheme.colorScheme.onSecondaryContainer,
-    Icons.Default.CheckCircle
-)
+private fun SafeTone(): Color = MaterialTheme.colorScheme.onSecondaryContainer
 
 @Composable
-private fun ComfortTone(): Triple<Color, Color, ImageVector> {
+private fun ComfortTone(): Color {
     val light = MaterialTheme.colorScheme.background.luminance() > 0.5f
-    return Triple(
-        if (light) Color(0xFFD9F2E2) else Color(0xFF123A28),
-        if (light) Color(0xFF0E5132) else Color(0xFF9EE6C0),
-        Icons.Default.Star
-    )
+    return if (light) Color(0xFF0E5132) else Color(0xFF9EE6C0)
 }
 
 /**
