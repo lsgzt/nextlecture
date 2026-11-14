@@ -42,7 +42,10 @@ data class SearchResult(
     val title: String,
     val subtitle: String,
     val score: Int,
-    val action: SearchAction = SearchAction.None
+    val action: SearchAction = SearchAction.None,
+    /** Faculty results only: the teacher's photo from the college website,
+     * rendered as the row's circular avatar. */
+    val photoUrl: String = ""
 )
 
 /**
@@ -545,7 +548,8 @@ private fun facultyResults(query: String, snapshot: SearchSnapshot, departmentFi
                 title = faculty.name,
                 subtitle = subtitle,
                 score = if (best.second) best.first else best.first - 10,
-                action = SearchAction.OpenFaculty(faculty.profileId)
+                action = SearchAction.OpenFaculty(faculty.profileId),
+                photoUrl = faculty.imageUrl
             )
         }
     return hits.sortedWith(compareByDescending<SearchResult> { it.score }.thenBy { it.title }).take(8)
@@ -590,7 +594,8 @@ private fun departmentBrowse(department: String, snapshot: SearchSnapshot): List
                 title = faculty.name,
                 subtitle = subtitle,
                 score = SCORE_PREFIX,
-                action = SearchAction.OpenFaculty(faculty.profileId)
+                action = SearchAction.OpenFaculty(faculty.profileId),
+                photoUrl = faculty.imageUrl
             )
         }
 

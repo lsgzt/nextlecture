@@ -92,6 +92,9 @@ fun SearchScreen(
     val focusManager = LocalFocusManager.current
     var query by remember { mutableStateOf("") }
 
+    // Non-null while a faculty photo is open in the zoomable viewer.
+    var photoViewerFor by remember { mutableStateOf<Pair<String, String>?>(null) }
+
     val settings by container.settings.flow.collectAsStateWithLifecycle(initialValue = AppSettings())
     val notices by container.erpNoticeManager.notices.collectAsStateWithLifecycle()
     val holidays by container.holidayManager.holidays.collectAsStateWithLifecycle()
@@ -302,6 +305,8 @@ fun SearchScreen(
                     item(key = result.id) {
                         SearchResultRow(
                             result = result,
+                            photoStore = container.facultyPhotos,
+                            onOpenPhoto = { url, name -> photoViewerFor = url to name },
                             onClick = { run(result.action) }
                         )
                     }
@@ -309,10 +314,25 @@ fun SearchScreen(
             }
         }
     }
+
+    // Zoomable photo viewer — opened by tapping a teacher's avatar in the results.
+    photoViewerFor?.let { (url, name) ->
+        com.gndec.timetable.ui.faculty.FacultyPhotoViewer(
+            store = container.facultyPhotos,
+            url = url,
+            name = com.gndec.timetable.ui.faculty.prettyName(name),
+            onDismiss = { photoViewerFor = null }
+        )
+    }
 }
 
 @Composable
-private fun SearchResultRow(result: SearchResult, onClick: () -> Unit) {
+private fun SearchResultRow(
+    result: SearchResult,
+    photoStore: com.gndec.timetable.domain.FacultyPhotoStore,
+    onOpenPhoto: (url: String, name: String) -> Unit,
+    onClick: () -> Unit
+) {
     val loading = result.id == ROOMS_LOADING_HINT
     Card(
         modifier = Modifier.fillMaxWidth().padding(horizontal = 20.dp),
@@ -332,12 +352,25 @@ private fun SearchResultRow(result: SearchResult, onClick: () -> Unit) {
                 Modifier.size(36.dp).background(MaterialTheme.colorScheme.primary.copy(alpha = 0.12f), CircleShape),
                 contentAlignment = Alignment.Center
             ) {
-                Icon(
-                    iconFor(result.group),
-                    contentDescription = null,
-                    tint = MaterialTheme.colorScheme.primary,
-                    modifier = Modifier.size(19.dp)
-                )
+                if (result.group == SearchGroup.FACULTY && result.photoUrl.isNotBlank()) {
+                    // The teacher's own photo replaces the generic person
+                    // icon; tapping the PHOTO opens the zoomable viewer
+                    // instead of the detail page.
+                    com.gndec.timetable.ui.faculty.FacultyAvatar(
+                        store = photoStore,
+                        url = result.photoUrl,
+                        name = result.title,
+                        size = 36.dp,
+                        onPhotoClick = { onOpenPhoto(result.photoUrl, result.title) }
+                    )
+                } else {
+                    Icon(
+                        iconFor(result.group),
+                        contentDescription = null,
+                        tint = MaterialTheme.colorScheme.primary,
+                        modifier = Modifier.size(19.dp)
+                    )
+                }
             }
             Spacer(Modifier.width(11.dp))
             Column(Modifier.weight(1f)) {

@@ -92,7 +92,9 @@ import com.gndec.timetable.domain.AppContainer
 import com.gndec.timetable.domain.Friend
 import com.gndec.timetable.domain.FriendDay
 import com.gndec.timetable.domain.FriendEarlySlot
+import com.gndec.timetable.domain.FriendLateSlot
 import com.gndec.timetable.domain.earlySlotsBefore
+import com.gndec.timetable.domain.lateSlotsAfter
 import com.gndec.timetable.domain.FriendFreeWindow
 import com.gndec.timetable.domain.friendAvailabilitySentences
 import com.gndec.timetable.domain.friendsFreeWithin
@@ -251,6 +253,14 @@ fun DayScreen(
                                 } else {
                                     emptyList()
                                 }
+                                // Mirror of the top note: friends still in class after
+                                // the student's last lecture of the day ends.
+                                val myLastEnd = modeLectures.maxOfOrNull { it.endMinutes }
+                                val lateFriendSlots = if (myLastEnd != null) {
+                                    modeFriends.lateSlotsAfter(myLastEnd)
+                                } else {
+                                    emptyList()
+                                }
                                 DaySummary(
                                     lectures = modeLectures.size,
                                     freeMinutes = modeFreeMinutes,
@@ -312,6 +322,13 @@ fun DayScreen(
                                             onOpenLecture = onOpenLecture
                                         )
                                     }
+                                }
+                                if (lateFriendSlots.isNotEmpty()) {
+                                    FriendsAfterDayNote(
+                                        slots = lateFriendSlots,
+                                        accent = accent,
+                                        muted = muted
+                                    )
                                 }
                             }
                         }
@@ -997,6 +1014,88 @@ private fun androidx.compose.ui.text.AnnotatedString.Builder.appendFriendsBefore
             withStyle(body) {
                 append(" at ")
                 append(formatTime(startMinutes))
+            }
+        }
+    }
+}
+
+/**
+ * Compact note BELOW the student's timeline when friends are still in class
+ * after the student's last lecture of the day ends — the bottom mirror of
+ * [FriendsBeforeDayNote].
+ *
+ * Examples:
+ * - "Vishal has a lecture until 5:30 PM"
+ * - "Vishal and Prince have a lecture until 5:30 PM"
+ * - "Vishal has a lecture and Prince has a practical until 5:30 PM"
+ * Names and activity types are bold; "until" carries the class END time
+ * because the student's day is already over at that point.
+ */
+@Composable
+private fun FriendsAfterDayNote(slots: List<FriendLateSlot>, accent: Color, muted: Color) {
+    if (slots.isEmpty()) return
+    val bold = SpanStyle(fontWeight = FontWeight.Bold, color = accent)
+    val body = SpanStyle(fontWeight = FontWeight.Medium, color = muted)
+    val text = buildAnnotatedString {
+        withStyle(body) {
+            appendFriendsAfterDay(slots, bold, body)
+        }
+    }
+    Text(
+        text = text,
+        style = MaterialTheme.typography.bodySmall,
+        textAlign = androidx.compose.ui.text.style.TextAlign.Center,
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(horizontal = TimelineHorizontalPadding)
+    )
+}
+
+/**
+ * Builds the spoken clause(s) for [slots], applying [bold] to names and type
+ * labels. Groups by END time so friends finishing together share one
+ * "until …".
+ */
+private fun androidx.compose.ui.text.AnnotatedString.Builder.appendFriendsAfterDay(
+    slots: List<FriendLateSlot>,
+    bold: SpanStyle,
+    body: SpanStyle
+) {
+    val byEnd = slots.groupBy { it.endMinutes }.toSortedMap()
+    byEnd.entries.forEachIndexed { timeIndex, (endMinutes, group) ->
+        if (timeIndex > 0) {
+            withStyle(body) { append(" · ") }
+        }
+        val types = group.map { it.typeLabel }.distinct()
+        if (types.size == 1) {
+            // Same type: "Vishal and Prince have a lecture until 5:30 PM"
+            group.forEachIndexed { i, slot ->
+                if (i > 0) {
+                    withStyle(body) {
+                        append(if (i == group.lastIndex) " and " else ", ")
+                    }
+                }
+                withStyle(bold) { append(slot.name) }
+            }
+            withStyle(body) {
+                append(if (group.size == 1) " has a " else " have a ")
+            }
+            withStyle(bold) { append(types.first()) }
+            withStyle(body) {
+                append(" until ")
+                append(formatTime(endMinutes))
+            }
+        } else {
+            // Mixed types at the same end: "Vishal has a lecture and Prince has a practical until 5:30 PM"
+            group.forEachIndexed { i, slot ->
+                if (i > 0) withStyle(body) { append(" and ") }
+                withStyle(bold) { append(slot.name) }
+                withStyle(body) { append(" has a ") }
+                withStyle(bold) { append(slot.typeLabel) }
+            }
+            withStyle(body) {
+                append(" until ")
+                append(formatTime(endMinutes))
             }
         }
     }

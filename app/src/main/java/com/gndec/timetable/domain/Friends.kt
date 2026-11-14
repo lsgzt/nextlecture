@@ -181,3 +181,39 @@ fun List<FriendDay>.earlySlotsBefore(beforeMinutes: Int): List<FriendEarlySlot> 
             FriendEarlySlot(day.friend.name, typeLabel, first.startMinutes)
         }
         .sortedWith(compareBy({ it.startMinutes }, { it.name }))
+
+/**
+ * A friend's latest class that still runs after the student's last lecture of
+ * the day ends. The mirror of [FriendEarlySlot]: it surfaces below the
+ * Today/Tomorrow timeline as "Vishal has a lecture until 5:30 PM" once the
+ * student's own day is over.
+ */
+data class FriendLateSlot(
+    val name: String,
+    /** Canonical type label: lecture / tutorial / practical. */
+    val typeLabel: String,
+    /** When that class ends — the time the bottom note displays. */
+    val endMinutes: Int
+)
+
+/**
+ * For each friend with timetable data, pick their latest-ending lecture that
+ * ends strictly after [afterMinutes] (touching endpoints do not count, so a
+ * class ending exactly when the student's day ends is not "after"). Sorted by
+ * end time, then name.
+ */
+fun List<FriendDay>.lateSlotsAfter(afterMinutes: Int): List<FriendLateSlot> =
+    filter { it.hasData }
+        .mapNotNull { day ->
+            val last = day.lectures
+                .filter { it.endMinutes > afterMinutes }
+                .maxByOrNull { it.endMinutes }
+                ?: return@mapNotNull null
+            val typeLabel = when (last.lectureType?.trim()?.uppercase()) {
+                "TUTORIAL" -> "tutorial"
+                "PRACTICAL" -> "practical"
+                else -> "lecture"
+            }
+            FriendLateSlot(day.friend.name, typeLabel, last.endMinutes)
+        }
+        .sortedWith(compareBy({ it.endMinutes }, { it.name }))

@@ -1,10 +1,8 @@
 package com.gndec.timetable.ui.faculty
 
 import androidx.compose.foundation.BorderStroke
-import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
@@ -18,7 +16,6 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
@@ -79,6 +76,9 @@ fun FacultyMembersScreen(
     onOpenSettings: () -> Unit
 ) {
     val focusManager = LocalFocusManager.current
+
+    // The teacher whose photo the user tapped open in the zoomable viewer.
+    var photoViewerFor by remember { mutableStateOf<FacultyRecord?>(null) }
 
     // Bundled directory — parsed once per process, read off the main thread.
     // The list grows with the timetable-only teachers: the department files
@@ -250,7 +250,12 @@ fun FacultyMembersScreen(
                         // One department picked: a flat alphabetical list, the
                         // chip already says which department we are in.
                         items(visible, key = { "faculty-${it.profileId}" }) { record ->
-                            FacultyRow(record = record, onClick = { onOpenFaculty(record.profileId) })
+                            FacultyRow(
+                                record = record,
+                                store = container.facultyPhotos,
+                                onClick = { onOpenFaculty(record.profileId) },
+                                onPhotoClick = { photoViewerFor = record }
+                            )
                         }
                     } else {
                         // "All": grouped by department, canonical order.
@@ -269,7 +274,12 @@ fun FacultyMembersScreen(
                                     )
                                 }
                                 items(records, key = { "faculty-${it.profileId}" }) { record ->
-                                    FacultyRow(record = record, onClick = { onOpenFaculty(record.profileId) })
+                                    FacultyRow(
+                                        record = record,
+                                        store = container.facultyPhotos,
+                                        onClick = { onOpenFaculty(record.profileId) },
+                                        onPhotoClick = { photoViewerFor = record }
+                                    )
                                 }
                             }
                         }
@@ -278,12 +288,29 @@ fun FacultyMembersScreen(
             }
         }
     }
+
+    // Zoomable photo viewer — opened by tapping a teacher's avatar.
+    photoViewerFor?.let { record ->
+        FacultyPhotoViewer(
+            store = container.facultyPhotos,
+            url = record.imageUrl,
+            name = prettyName(record.name),
+            onDismiss = { photoViewerFor = null }
+        )
+    }
 }
 
 /** One teacher of the directory — the group header or chip carries the
- * department, so the subtitle pairs the designation with the email. */
+ * department, so the subtitle pairs the designation with the email. The
+ * avatar shows the teacher's website photo when one exists; tapping the
+ * PHOTO (not the row) opens the zoomable viewer. */
 @Composable
-private fun FacultyRow(record: FacultyRecord, onClick: () -> Unit) {
+private fun FacultyRow(
+    record: FacultyRecord,
+    store: com.gndec.timetable.domain.FacultyPhotoStore,
+    onClick: () -> Unit,
+    onPhotoClick: () -> Unit
+) {
     Card(
         modifier = Modifier.fillMaxWidth().padding(horizontal = 20.dp).clickable(onClick = onClick),
         colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
@@ -295,17 +322,13 @@ private fun FacultyRow(record: FacultyRecord, onClick: () -> Unit) {
             Modifier.fillMaxWidth().padding(14.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
-            Box(
-                Modifier.size(38.dp).background(MaterialTheme.colorScheme.primary.copy(alpha = 0.12f), CircleShape),
-                contentAlignment = Alignment.Center
-            ) {
-                Text(
-                    initials(record.name),
-                    color = MaterialTheme.colorScheme.primary,
-                    style = MaterialTheme.typography.titleSmall,
-                    fontWeight = FontWeight.Bold
-                )
-            }
+            FacultyAvatar(
+                store = store,
+                url = record.imageUrl,
+                name = record.name,
+                size = 38.dp,
+                onPhotoClick = if (record.imageUrl.isNotBlank()) onPhotoClick else null
+            )
             Spacer(Modifier.width(11.dp))
             Column(Modifier.weight(1f)) {
                 Text(
@@ -371,17 +394,3 @@ private fun DeptChip(label: String, count: Int, selected: Boolean, onClick: () -
     }
 }
 
-/**
- * Two-letter avatar initials: the first letters of the first two non-honorific
- * name words ("DR. HARPREET KAUR GREWAL" → "HK").
- */
-private fun initials(name: String): String {
-    val words = name.split(Regex("[^A-Za-z]+"))
-        .filter { it.isNotBlank() }
-        .map { it.trim('.', ',') }
-        .filter { !it.lowercase().matches(Regex("dr|er|prof|professor|pf|ms|mrs|mr|sgs|sggs")) }
-    val letters = words.mapNotNull { it.firstOrNull()?.uppercase() }
-    val first = letters.getOrNull(0) ?: "?"
-    val second = letters.getOrNull(1) ?: ""
-    return first + second
-}

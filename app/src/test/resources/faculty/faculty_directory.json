@@ -10,7 +10,8 @@
   "phone_office": "0161-5064529",
   "phone_mobile": "98156-57551",
   "admin_roles": "HOD - Applied Sciences; Indian Knowledge System Cell",
-  "phone_source": "Information Brochure 2026"
+  "phone_source": "Information Brochure 2026",
+  "image_url": "https://gndec.ac.in/images/drhkgrewal%20pic.jpg"
  },
  {
   "name": "DR AMANPREET KAUR SODHI",
@@ -23,7 +24,8 @@
   "phone_office": "",
   "phone_mobile": "",
   "admin_roles": "Internal Complaint Committee",
-  "phone_source": "Information Brochure 2026"
+  "phone_source": "Information Brochure 2026",
+  "image_url": "https://gndec.ac.in/images/passport%20size%20photo%20APK_11zon%20%281%29.jpg"
  },
  {
   "name": "DR. DEVINDER SINGH PATHANIA",
@@ -32,7 +34,8 @@
   "profile_id": "45",
   "department": "Applied Science",
   "dept_id": 1,
-  "profile_url": "https://gndec.ac.in/faculty/?id=45"
+  "profile_url": "https://gndec.ac.in/faculty/?id=45",
+  "image_url": "https://gndec.ac.in/images/dsp%20photo.jpg"
  },
  {
   "name": "DR. RANDHIR SINGH",
@@ -45,7 +48,8 @@
   "phone_office": "0161-2502700",
   "phone_mobile": "98761-91987",
   "admin_roles": "Deputy Controller (Examination)",
-  "phone_source": "Information Brochure 2026"
+  "phone_source": "Information Brochure 2026",
+  "image_url": "https://gndec.ac.in/images/rs%20pic.jpg"
  },
  {
   "name": "DR.PUNEET NARANG",
@@ -58,7 +62,8 @@
   "phone_office": "0161-5064551",
   "phone_mobile": "94174-88017",
   "admin_roles": "Assistant Controller (Examination)",
-  "phone_source": "Information Brochure 2026"
+  "phone_source": "Information Brochure 2026",
+  "image_url": "https://gndec.ac.in/images/PUNEET%20NARANG%20PHOTO_page-0001%20%283%29%20%281%29.jpg"
  },
  {
   "name": "SATWINDER JIT KAUR",
@@ -67,7 +72,8 @@
   "profile_id": "2",
   "department": "Applied Science",
   "dept_id": 1,
-  "profile_url": "https://gndec.ac.in/faculty/?id=2"
+  "profile_url": "https://gndec.ac.in/faculty/?id=2",
+  "image_url": "https://gndec.ac.in/images/sjk.jpg"
  },
  {
   "name": "AASTIK SHARMA",
@@ -76,7 +82,8 @@
   "profile_id": "449",
   "department": "Applied Science",
   "dept_id": 1,
-  "profile_url": "https://gndec.ac.in/faculty/?id=449"
+  "profile_url": "https://gndec.ac.in/faculty/?id=449",
+  "image_url": "https://gndec.ac.in/images/file_0000000025bc71faa8bd5b85ff2bf92c.png"
  },
  {
   "name": "DR. GAGANDEEP KAUR LOTEY",
@@ -85,7 +92,8 @@
   "profile_id": "380",
   "department": "Applied Science",
   "dept_id": 1,
-  "profile_url": "https://gndec.ac.in/faculty/?id=380"
+  "profile_url": "https://gndec.ac.in/faculty/?id=380",
+  "image_url": "https://gndec.ac.in/images/Screenshot_20250606_215034_WhatsApp.jpg"
  },
  {
   "name": "DR. PURAN SINGH",
@@ -94,7 +102,8 @@
   "profile_id": "440",
   "department": "Applied Science",
   "dept_id": 1,
-  "profile_url": "https://gndec.ac.in/faculty/?id=440"
+  "profile_url": "https://gndec.ac.in/faculty/?id=440",
+  "image_url": "https://gndec.ac.in/images/Puran%20S%20Pic.jpg"
  },
  {
   "name": "DR. AMANDEEP KAUR",
@@ -103,7 +112,8 @@
   "profile_id": "494",
   "department": "Applied Science",
   "dept_id": 1,
-  "profile_url": "https://gndec.ac.in/faculty/?id=494"
+  "profile_url": "https://gndec.ac.in/faculty/?id=494",
+  "image_url": "https://gndec.ac.in/images/IMG_4526.jpeg"
  },
  {
   "name": "DR. AMARJOT KAUR RANDHAWA",
@@ -112,7 +122,8 @@
   "profile_id": "407",
   "department": "Applied Science",
   "dept_id": 1,
-  "profile_url": "https://gndec.ac.in/faculty/?id=407"
+  "profile_url": "https://gndec.ac.in/faculty/?id=407",
+  "image_url": "https://gndec.ac.in/images/AMARJOTPIC.jpeg"
  },
  {
   "name": "DR. ISHA DUDEJA",
@@ -121,7 +132,8 @@
   "profile_id": "495",
   "department": "Applied Science",
   "dept_id": 1,
-  "profile_url": "https://gndec.ac.in/faculty/?id=495"
+  "profile_url": "https://gndec.ac.in/faculty/?id=495",
+  "image_url": "https://gndec.ac.in/images/Isha%20ap.jpg"
  },
  {
   "name": "DR. JASMEET KAUR DAYAL",
@@ -130,7 +142,8 @@
   "profile_id": "469",
   "department": "Applied Science",
   "dept_id": 1,
-  "profile_url": "https://gndec.ac.in/faculty/?id=469"
+  "profile_url": "https://gndec.ac.in/faculty/?id=469",
+  "image_url": "https://gndec.ac.in/images/as_jasmeet.png"
  },
  {
   "name": "DR. JASPREET SINGH",
@@ -139,7 +152,8 @@
   "profile_id": "493",
   "department": "Applied Science",
   "dept_id": 1,
-  "profile_url": "https://gndec.ac.in/faculty/?id=493"
+  "profile_url": "https://gndec.ac.in/faculty/?id=493",
+  "image_url": "https://gndec.ac.in/images/profile_pic.png"
  },
  {
   "name": "DR. PARAMJIT SINGH",
@@ -148,7 +162,8 @@
   "profile_id": "388",
   "department": "Applied Science",
   "dept_id": 1,
-  "profile_url": "https://gndec.ac.in/faculty/?id=388"
+  "profile_url": "https://gndec.ac.in/faculty/?id=388",
+  "image_url": "https://gndec.ac.in/images/pstarsikka.jpg"
  },
  {
   "name": "DR. RAJBIR KAUR",
@@ -157,7 +172,8 @@
   "profile_id": "313",
   "department": "Applied Science",
   "dept_id": 1,
-  "profile_url": "https://gndec.ac.in/faculty/?id=313"
+  "profile_url": "https://gndec.ac.in/faculty/?id=313",
+  "image_url": "https://gndec.ac.in/images/F26BE1F5-BDE5-432B-ACCF-0CD1F352B195.png"
  },
  {
   "name": "DR. RAJVIR KAUR SRAW",
@@ -166,7 +182,8 @@
   "profile_id": "28",
   "department": "Applied Science",
   "dept_id": 1,
-  "profile_url": "https://gndec.ac.in/faculty/?id=28"
+  "profile_url": "https://gndec.ac.in/faculty/?id=28",
+  "image_url": "https://gndec.ac.in/images/IMG_4339.JPG"
  },
  {
   "name": "DR. SANDEEP KAUR GILL",
@@ -175,7 +192,8 @@
   "profile_id": "327",
   "department": "Applied Science",
   "dept_id": 1,
-  "profile_url": "https://gndec.ac.in/faculty/?id=327"
+  "profile_url": "https://gndec.ac.in/faculty/?id=327",
+  "image_url": "https://gndec.ac.in/images/20220209_214129.jpg"
  },
  {
   "name": "HITIKA DHAWAN",
@@ -184,7 +202,8 @@
   "profile_id": "452",
   "department": "Applied Science",
   "dept_id": 1,
-  "profile_url": "https://gndec.ac.in/faculty/?id=452"
+  "profile_url": "https://gndec.ac.in/faculty/?id=452",
+  "image_url": "https://gndec.ac.in/images/Screenshot_20260829_170901.jpg"
  },
  {
   "name": "JASMINE KAUR MAKKAR",
@@ -193,7 +212,8 @@
   "profile_id": "375",
   "department": "Applied Science",
   "dept_id": 1,
-  "profile_url": "https://gndec.ac.in/faculty/?id=375"
+  "profile_url": "https://gndec.ac.in/faculty/?id=375",
+  "image_url": "https://gndec.ac.in/images/IMG-20220324-WA0008.jpg"
  },
  {
   "name": "KARAN BHALLA",
@@ -202,7 +222,8 @@
   "profile_id": "273",
   "department": "Applied Science",
   "dept_id": 1,
-  "profile_url": "https://gndec.ac.in/faculty/?id=273"
+  "profile_url": "https://gndec.ac.in/faculty/?id=273",
+  "image_url": "https://gndec.ac.in/images/karanbhalla.jpg"
  },
  {
   "name": "KOMALPREET KAUR",
@@ -211,7 +232,8 @@
   "profile_id": "509",
   "department": "Applied Science",
   "dept_id": 1,
-  "profile_url": "https://gndec.ac.in/faculty/?id=509"
+  "profile_url": "https://gndec.ac.in/faculty/?id=509",
+  "image_url": "https://gndec.ac.in/images/WhatsApp%20Image%202026-09-22%20at%209.22.37%20AM.jpeg"
  },
  {
   "name": "MANDEEP KAUR",
@@ -220,7 +242,8 @@
   "profile_id": "319",
   "department": "Applied Science",
   "dept_id": 1,
-  "profile_url": "https://gndec.ac.in/faculty/?id=319"
+  "profile_url": "https://gndec.ac.in/faculty/?id=319",
+  "image_url": "https://gndec.ac.in/images/mandeep%20photo.jpg"
  },
  {
   "name": "MANJOT KAUR",
@@ -229,7 +252,8 @@
   "profile_id": "381",
   "department": "Applied Science",
   "dept_id": 1,
-  "profile_url": "https://gndec.ac.in/faculty/?id=381"
+  "profile_url": "https://gndec.ac.in/faculty/?id=381",
+  "image_url": "https://gndec.ac.in/images/IMG-20230704-WA0013.jpg"
  },
  {
   "name": "NEERAJ KUMAR",
@@ -238,7 +262,8 @@
   "profile_id": "402",
   "department": "Applied Science",
   "dept_id": 1,
-  "profile_url": "https://gndec.ac.in/faculty/?id=402"
+  "profile_url": "https://gndec.ac.in/faculty/?id=402",
+  "image_url": "https://gndec.ac.in/images/jkkj.jpg.jpeg"
  },
  {
   "name": "NISHA MASSON",
@@ -247,7 +272,8 @@
   "profile_id": "377",
   "department": "Applied Science",
   "dept_id": 1,
-  "profile_url": "https://gndec.ac.in/faculty/?id=377"
+  "profile_url": "https://gndec.ac.in/faculty/?id=377",
+  "image_url": "https://gndec.ac.in/images/IMG_20230220_111724.jpg"
  },
  {
   "name": "PARAMJIT KAUR",
@@ -256,7 +282,8 @@
   "profile_id": "508",
   "department": "Applied Science",
   "dept_id": 1,
-  "profile_url": "https://gndec.ac.in/faculty/?id=508"
+  "profile_url": "https://gndec.ac.in/faculty/?id=508",
+  "image_url": "https://gndec.ac.in/images/IMG_3372.jpeg"
  },
  {
   "name": "PARNEET KAUR",
@@ -265,7 +292,8 @@
   "profile_id": "473",
   "department": "Applied Science",
   "dept_id": 1,
-  "profile_url": "https://gndec.ac.in/faculty/?id=473"
+  "profile_url": "https://gndec.ac.in/faculty/?id=473",
+  "image_url": "https://gndec.ac.in/images/WhatsApp%20Image%202026-01-03%20at%209.38.18%20PM.jpeg"
  },
  {
   "name": "PRAGYA GOYAL",
@@ -274,7 +302,8 @@
   "profile_id": "78",
   "department": "Applied Science",
   "dept_id": 1,
-  "profile_url": "https://gndec.ac.in/faculty/?id=78"
+  "profile_url": "https://gndec.ac.in/faculty/?id=78",
+  "image_url": "https://gndec.ac.in/images/pragya.jpg"
  },
  {
   "name": "SAHIL",
@@ -283,7 +312,8 @@
   "profile_id": "510",
   "department": "Applied Science",
   "dept_id": 1,
-  "profile_url": "https://gndec.ac.in/faculty/?id=510"
+  "profile_url": "https://gndec.ac.in/faculty/?id=510",
+  "image_url": "https://gndec.ac.in/images/Sahil5901.jpg"
  },
  {
   "name": "SANJAM KAUR SIDHU",
@@ -292,7 +322,8 @@
   "profile_id": "470",
   "department": "Applied Science",
   "dept_id": 1,
-  "profile_url": "https://gndec.ac.in/faculty/?id=470"
+  "profile_url": "https://gndec.ac.in/faculty/?id=470",
+  "image_url": "https://gndec.ac.in/images/IMG_9104.JPG"
  },
  {
   "name": "SHREYA",
@@ -301,7 +332,8 @@
   "profile_id": "467",
   "department": "Applied Science",
   "dept_id": 1,
-  "profile_url": "https://gndec.ac.in/faculty/?id=467"
+  "profile_url": "https://gndec.ac.in/faculty/?id=467",
+  "image_url": "https://gndec.ac.in/images/Snapchat-705250158.jpg"
  },
  {
   "name": "SUKHMINDER SINGH",
@@ -310,7 +342,8 @@
   "profile_id": "29",
   "department": "Applied Science",
   "dept_id": 1,
-  "profile_url": "https://gndec.ac.in/faculty/?id=29"
+  "profile_url": "https://gndec.ac.in/faculty/?id=29",
+  "image_url": "https://gndec.ac.in/images/WhatsApp%20Image%202025-06-06%20at%2009.38.18_82ddcd68.jpg"
  },
  {
   "name": "SUMANPREET KAUR",
@@ -319,7 +352,8 @@
   "profile_id": "466",
   "department": "Applied Science",
   "dept_id": 1,
-  "profile_url": "https://gndec.ac.in/faculty/?id=466"
+  "profile_url": "https://gndec.ac.in/faculty/?id=466",
+  "image_url": "https://gndec.ac.in/images/Suman10432%20gndec.jpg"
  },
  {
   "name": "SUNIL KUMAR",
@@ -328,7 +362,8 @@
   "profile_id": "471",
   "department": "Applied Science",
   "dept_id": 1,
-  "profile_url": "https://gndec.ac.in/faculty/?id=471"
+  "profile_url": "https://gndec.ac.in/faculty/?id=471",
+  "image_url": "https://gndec.ac.in/images/WhatsApp%20Image%202026-06-09%20at%209.53.43%20AM.jpeg"
  },
  {
   "name": "UPKARJEET KAUR",
@@ -337,7 +372,8 @@
   "profile_id": "498",
   "department": "Applied Science",
   "dept_id": 1,
-  "profile_url": "https://gndec.ac.in/faculty/?id=498"
+  "profile_url": "https://gndec.ac.in/faculty/?id=498",
+  "image_url": "https://gndec.ac.in/images/Upk%2003.png"
  },
  {
   "name": "DR, JASBIR SINGH SAINI",
@@ -350,7 +386,8 @@
   "phone_office": "0161-5061314",
   "phone_mobile": "98767-00810",
   "admin_roles": "HOD - Computer Applications; Head of Department, Computer Applications",
-  "phone_source": "Information Brochure 2026, Statutory Committees (conflicts with IB26)"
+  "phone_source": "Information Brochure 2026, Statutory Committees (conflicts with IB26)",
+  "image_url": "https://gndec.ac.in/images/jss.jpeg"
  },
  {
   "name": "DR. JAGDEEP SINGH",
@@ -363,7 +400,8 @@
   "phone_office": "",
   "phone_mobile": "",
   "admin_roles": "Industrial Relation Cell",
-  "phone_source": "Information Brochure 2026"
+  "phone_source": "Information Brochure 2026",
+  "image_url": "https://gndec.ac.in/images/IMG_1971.JPG"
  },
  {
   "name": "DR. SATINDERPAL SINGH",
@@ -372,7 +410,8 @@
   "profile_id": "229",
   "department": "Computer Center",
   "dept_id": 2,
-  "profile_url": "https://gndec.ac.in/faculty/?id=229"
+  "profile_url": "https://gndec.ac.in/faculty/?id=229",
+  "image_url": "https://gndec.ac.in/images/satinderpal_singh.jpeg"
  },
  {
   "name": "AMANDEEP SINGH BHATHAL",
@@ -381,7 +420,8 @@
   "profile_id": "54",
   "department": "Computer Center",
   "dept_id": 2,
-  "profile_url": "https://gndec.ac.in/faculty/?id=54"
+  "profile_url": "https://gndec.ac.in/faculty/?id=54",
+  "image_url": "https://gndec.ac.in/sites/default/files/amandeep.jpg"
  },
  {
   "name": "GURMUKH SINGH KHURAL",
@@ -390,7 +430,8 @@
   "profile_id": "103",
   "department": "Computer Center",
   "dept_id": 2,
-  "profile_url": "https://gndec.ac.in/faculty/?id=103"
+  "profile_url": "https://gndec.ac.in/faculty/?id=103",
+  "image_url": "https://gndec.ac.in/images/gurmukh.jpg"
  },
  {
   "name": "JASMANINDER SINGH GREWAL",
@@ -403,7 +444,8 @@
   "phone_office": "0161-5064724",
   "phone_mobile": "98153-23023",
   "admin_roles": "Controller of Examinations",
-  "phone_source": "Information Brochure 2026"
+  "phone_source": "Information Brochure 2026",
+  "image_url": "https://gndec.ac.in/images/jasman.jpg"
  },
  {
   "name": "NAVPREET SINGH DHILLON",
@@ -412,7 +454,8 @@
   "profile_id": "16",
   "department": "Workshops",
   "dept_id": 3,
-  "profile_url": "https://gndec.ac.in/faculty/?id=16"
+  "profile_url": "https://gndec.ac.in/faculty/?id=16",
+  "image_url": ""
  },
  {
   "name": "AMRITPAL SINGH",
@@ -421,7 +464,8 @@
   "profile_id": "91",
   "department": "Workshops",
   "dept_id": 3,
-  "profile_url": "https://gndec.ac.in/faculty/?id=91"
+  "profile_url": "https://gndec.ac.in/faculty/?id=91",
+  "image_url": "https://gndec.ac.in/images/amritpal.jpg"
  },
  {
   "name": "BALWANT RAJ",
@@ -430,7 +474,8 @@
   "profile_id": "93",
   "department": "Workshops",
   "dept_id": 3,
-  "profile_url": "https://gndec.ac.in/faculty/?id=93"
+  "profile_url": "https://gndec.ac.in/faculty/?id=93",
+  "image_url": "https://gndec.ac.in/images/balwant.jpg"
  },
  {
   "name": "CHARANJIT SINGH",
@@ -439,7 +484,8 @@
   "profile_id": "89",
   "department": "Workshops",
   "dept_id": 3,
-  "profile_url": "https://gndec.ac.in/faculty/?id=89"
+  "profile_url": "https://gndec.ac.in/faculty/?id=89",
+  "image_url": "https://gndec.ac.in/images/cshara.jpg"
  },
  {
   "name": "GURMEET SINGH",
@@ -448,7 +494,8 @@
   "profile_id": "88",
   "department": "Workshops",
   "dept_id": 3,
-  "profile_url": "https://gndec.ac.in/faculty/?id=88"
+  "profile_url": "https://gndec.ac.in/faculty/?id=88",
+  "image_url": "https://gndec.ac.in/images/gurmeet.jpg"
  },
  {
   "name": "HAKAM SINGH",
@@ -457,7 +504,8 @@
   "profile_id": "85",
   "department": "Workshops",
   "dept_id": 3,
-  "profile_url": "https://gndec.ac.in/faculty/?id=85"
+  "profile_url": "https://gndec.ac.in/faculty/?id=85",
+  "image_url": "https://gndec.ac.in/images/hakam.jpg"
  },
  {
   "name": "JASBIR SINGH",
@@ -466,7 +514,8 @@
   "profile_id": "83",
   "department": "Workshops",
   "dept_id": 3,
-  "profile_url": "https://gndec.ac.in/faculty/?id=83"
+  "profile_url": "https://gndec.ac.in/faculty/?id=83",
+  "image_url": "https://gndec.ac.in/images/jasbir.jpg"
  },
  {
   "name": "JASGUR SINGH",
@@ -475,7 +524,8 @@
   "profile_id": "86",
   "department": "Workshops",
   "dept_id": 3,
-  "profile_url": "https://gndec.ac.in/faculty/?id=86"
+  "profile_url": "https://gndec.ac.in/faculty/?id=86",
+  "image_url": "https://gndec.ac.in/images/jasgur.jpg"
  },
  {
   "name": "RAJINDER SINGH",
@@ -484,7 +534,8 @@
   "profile_id": "94",
   "department": "Workshops",
   "dept_id": 3,
-  "profile_url": "https://gndec.ac.in/faculty/?id=94"
+  "profile_url": "https://gndec.ac.in/faculty/?id=94",
+  "image_url": "https://gndec.ac.in/images/rajind.jpg"
  },
  {
   "name": "RAM PARTAP SINGH",
@@ -493,7 +544,8 @@
   "profile_id": "84",
   "department": "Workshops",
   "dept_id": 3,
-  "profile_url": "https://gndec.ac.in/faculty/?id=84"
+  "profile_url": "https://gndec.ac.in/faculty/?id=84",
+  "image_url": "https://gndec.ac.in/images/rampar.jpg"
  },
  {
   "name": "SUKHPAL SINGH",
@@ -502,7 +554,8 @@
   "profile_id": "90",
   "department": "Workshops",
   "dept_id": 3,
-  "profile_url": "https://gndec.ac.in/faculty/?id=90"
+  "profile_url": "https://gndec.ac.in/faculty/?id=90",
+  "image_url": "https://gndec.ac.in/images/sukhpal.jpg"
  },
  {
   "name": "VARINDER SINGH",
@@ -511,7 +564,8 @@
   "profile_id": "92",
   "department": "Workshops",
   "dept_id": 3,
-  "profile_url": "https://gndec.ac.in/faculty/?id=92"
+  "profile_url": "https://gndec.ac.in/faculty/?id=92",
+  "image_url": "https://gndec.ac.in/images/varinder.jpg"
  },
  {
   "name": "DR. GUNJAN BHARDWAJ",
@@ -520,7 +574,8 @@
   "profile_id": "33",
   "department": "Sports",
   "dept_id": 4,
-  "profile_url": "https://gndec.ac.in/faculty/?id=33"
+  "profile_url": "https://gndec.ac.in/faculty/?id=33",
+  "image_url": "https://gndec.ac.in/images/gunjan.jpg"
  },
  {
   "name": "SUMINDER SINGH",
@@ -529,7 +584,8 @@
   "profile_id": "255",
   "department": "Sports",
   "dept_id": 4,
-  "profile_url": "https://gndec.ac.in/faculty/?id=255"
+  "profile_url": "https://gndec.ac.in/faculty/?id=255",
+  "image_url": "https://gndec.ac.in/images/suminder%20singh.jpg"
  },
  {
   "name": "JAGBIR SINGH",
@@ -542,7 +598,8 @@
   "phone_office": "0161-5064536",
   "phone_mobile": "92164-08335",
   "admin_roles": "HOD - Civil Engineering",
-  "phone_source": "Information Brochure 2026"
+  "phone_source": "Information Brochure 2026",
+  "image_url": "https://gndec.ac.in/images/Photograph.png"
  },
  {
   "name": "GURDEEPAK SINGH",
@@ -551,7 +608,8 @@
   "profile_id": "69",
   "department": "Civil Engineering",
   "dept_id": 14,
-  "profile_url": "https://gndec.ac.in/faculty/?id=69"
+  "profile_url": "https://gndec.ac.in/faculty/?id=69",
+  "image_url": "https://gndec.ac.in/images/file_00000000fb0c720ba19b7ded92d7d9e4.png"
  },
  {
   "name": "HARDEEP SINGH RAI",
@@ -560,7 +618,8 @@
   "profile_id": "268",
   "department": "Civil Engineering",
   "dept_id": 14,
-  "profile_url": "https://gndec.ac.in/faculty/?id=268"
+  "profile_url": "https://gndec.ac.in/faculty/?id=268",
+  "image_url": "https://gndec.ac.in/images/hsraiPP.jpg"
  },
  {
   "name": "HARVINDER SINGH",
@@ -569,7 +628,8 @@
   "profile_id": "23",
   "department": "Civil Engineering",
   "dept_id": 14,
-  "profile_url": "https://gndec.ac.in/faculty/?id=23"
+  "profile_url": "https://gndec.ac.in/faculty/?id=23",
+  "image_url": "https://gndec.ac.in/images/HVS_1_photo.jpg"
  },
  {
   "name": "PRASHANT GARG",
@@ -578,7 +638,8 @@
   "profile_id": "13",
   "department": "Civil Engineering",
   "dept_id": 14,
-  "profile_url": "https://gndec.ac.in/faculty/?id=13"
+  "profile_url": "https://gndec.ac.in/faculty/?id=13",
+  "image_url": "https://gndec.ac.in/images/WhatsApp%20Image%202026-03-18%20at%203.45.57%20PM.jpeg"
  },
  {
   "name": "PUNEET PAL SINGH CHEEMA",
@@ -591,7 +652,8 @@
   "phone_office": "0161-5064738",
   "phone_mobile": "97818-16320",
   "admin_roles": "Officer I/C M.Tech - Civil Engg.",
-  "phone_source": "Information Brochure 2026"
+  "phone_source": "Information Brochure 2026",
+  "image_url": "https://gndec.ac.in/images/IMG_0701%20%281%29.jpg"
  },
  {
   "name": "AMANDEEP SINGH",
@@ -600,7 +662,8 @@
   "profile_id": "266",
   "department": "Civil Engineering",
   "dept_id": 14,
-  "profile_url": "https://gndec.ac.in/faculty/?id=266"
+  "profile_url": "https://gndec.ac.in/faculty/?id=266",
+  "image_url": "https://gndec.ac.in/images/aman%20pic.jpg"
  },
  {
   "name": "AS SIDHU",
@@ -609,7 +672,8 @@
   "profile_id": "418",
   "department": "Civil Engineering",
   "dept_id": 14,
-  "profile_url": "https://gndec.ac.in/faculty/?id=418"
+  "profile_url": "https://gndec.ac.in/faculty/?id=418",
+  "image_url": "https://gndec.ac.in/images/IMG_20250529_102537.jpg"
  },
  {
   "name": "AVNEET KAUR SEKHON",
@@ -618,7 +682,8 @@
   "profile_id": "350",
   "department": "Civil Engineering",
   "dept_id": 14,
-  "profile_url": "https://gndec.ac.in/faculty/?id=350"
+  "profile_url": "https://gndec.ac.in/faculty/?id=350",
+  "image_url": "https://gndec.ac.in/images/IMG_4235.jpg"
  },
  {
   "name": "BALIHAR SINGH",
@@ -627,7 +692,8 @@
   "profile_id": "348",
   "department": "Civil Engineering",
   "dept_id": 14,
-  "profile_url": "https://gndec.ac.in/faculty/?id=348"
+  "profile_url": "https://gndec.ac.in/faculty/?id=348",
+  "image_url": "https://gndec.ac.in/images/IMG_4244.jpg"
  },
  {
   "name": "CHARNJEET SINGH",
@@ -636,7 +702,8 @@
   "profile_id": "122",
   "department": "Civil Engineering",
   "dept_id": 14,
-  "profile_url": "https://gndec.ac.in/faculty/?id=122"
+  "profile_url": "https://gndec.ac.in/faculty/?id=122",
+  "image_url": "https://gndec.ac.in/images/CJS_Profile_Pic_GNE.jpg"
  },
  {
   "name": "HEENA MALHOTRA",
@@ -645,7 +712,8 @@
   "profile_id": "289",
   "department": "Civil Engineering",
   "dept_id": 14,
-  "profile_url": "https://gndec.ac.in/faculty/?id=289"
+  "profile_url": "https://gndec.ac.in/faculty/?id=289",
+  "image_url": "https://gndec.ac.in/images/8B774E6F-A9E8-4635-B484-AE35FBD11D66.jpeg"
  },
  {
   "name": "JASHANDEEP SINGH",
@@ -654,7 +722,8 @@
   "profile_id": "417",
   "department": "Civil Engineering",
   "dept_id": 14,
-  "profile_url": "https://gndec.ac.in/faculty/?id=417"
+  "profile_url": "https://gndec.ac.in/faculty/?id=417",
+  "image_url": "https://gndec.ac.in/images/IMG_4213%20%281%29.jpg"
  },
  {
   "name": "MANDEEP KAUR",
@@ -663,7 +732,8 @@
   "profile_id": "249",
   "department": "Civil Engineering",
   "dept_id": 14,
-  "profile_url": "https://gndec.ac.in/faculty/?id=249"
+  "profile_url": "https://gndec.ac.in/faculty/?id=249",
+  "image_url": "https://gndec.ac.in/images/IMG_4241.jpg"
  },
  {
   "name": "MANVINDER KINGRA",
@@ -672,7 +742,8 @@
   "profile_id": "247",
   "department": "Civil Engineering",
   "dept_id": 14,
-  "profile_url": "https://gndec.ac.in/faculty/?id=247"
+  "profile_url": "https://gndec.ac.in/faculty/?id=247",
+  "image_url": "https://gndec.ac.in/images/AM1706..jpg"
  },
  {
   "name": "PARDEEP SINGH JOIA",
@@ -681,7 +752,8 @@
   "profile_id": "241",
   "department": "Civil Engineering",
   "dept_id": 14,
-  "profile_url": "https://gndec.ac.in/faculty/?id=241"
+  "profile_url": "https://gndec.ac.in/faculty/?id=241",
+  "image_url": "https://gndec.ac.in/images/IMG_3879.jpeg"
  },
  {
   "name": "PRABHJOT SINGH",
@@ -690,7 +762,8 @@
   "profile_id": "360",
   "department": "Civil Engineering",
   "dept_id": 14,
-  "profile_url": "https://gndec.ac.in/faculty/?id=360"
+  "profile_url": "https://gndec.ac.in/faculty/?id=360",
+  "image_url": "https://gndec.ac.in/images/Latest%20Pic%28pannu%29.jpg"
  },
  {
   "name": "PRITPAL KAUR",
@@ -699,7 +772,8 @@
   "profile_id": "129",
   "department": "Civil Engineering",
   "dept_id": 14,
-  "profile_url": "https://gndec.ac.in/faculty/?id=129"
+  "profile_url": "https://gndec.ac.in/faculty/?id=129",
+  "image_url": "https://gndec.ac.in/images/IMG_20180307_142551.jpg"
  },
  {
   "name": "PUSHPINDER SINGH",
@@ -708,7 +782,8 @@
   "profile_id": "436",
   "department": "Civil Engineering",
   "dept_id": 14,
-  "profile_url": "https://gndec.ac.in/faculty/?id=436"
+  "profile_url": "https://gndec.ac.in/faculty/?id=436",
+  "image_url": "https://gndec.ac.in/images/IMG_4212.jpg"
  },
  {
   "name": "SANDEEP KAUR",
@@ -717,7 +792,8 @@
   "profile_id": "291",
   "department": "Civil Engineering",
   "dept_id": 14,
-  "profile_url": "https://gndec.ac.in/faculty/?id=291"
+  "profile_url": "https://gndec.ac.in/faculty/?id=291",
+  "image_url": "https://gndec.ac.in/images/new%20doc%202018-07-09%2011.49.30-1.jpg"
  },
  {
   "name": "SAVLEEN TAKKAR",
@@ -726,7 +802,8 @@
   "profile_id": "349",
   "department": "Civil Engineering",
   "dept_id": 14,
-  "profile_url": "https://gndec.ac.in/faculty/?id=349"
+  "profile_url": "https://gndec.ac.in/faculty/?id=349",
+  "image_url": "https://gndec.ac.in/images/0356B163-1994-4CEB-AA62-436E0656A8D7.jpeg"
  },
  {
   "name": "SUKHWINDER SINGH",
@@ -735,7 +812,8 @@
   "profile_id": "406",
   "department": "Civil Engineering",
   "dept_id": 14,
-  "profile_url": "https://gndec.ac.in/faculty/?id=406"
+  "profile_url": "https://gndec.ac.in/faculty/?id=406",
+  "image_url": "https://gndec.ac.in/images/WhatsApp%20Image%202023-10-06%20at%2012.08.50%20PM.jpeg"
  },
  {
   "name": "SUKHWINDERPAL SINGH",
@@ -744,7 +822,8 @@
   "profile_id": "248",
   "department": "Civil Engineering",
   "dept_id": 14,
-  "profile_url": "https://gndec.ac.in/faculty/?id=248"
+  "profile_url": "https://gndec.ac.in/faculty/?id=248",
+  "image_url": "https://gndec.ac.in/images/IMG_20260319_185414.jpg"
  },
  {
   "name": "VARINDER SINGH",
@@ -753,7 +832,8 @@
   "profile_id": "405",
   "department": "Civil Engineering",
   "dept_id": 14,
-  "profile_url": "https://gndec.ac.in/faculty/?id=405"
+  "profile_url": "https://gndec.ac.in/faculty/?id=405",
+  "image_url": "https://gndec.ac.in/images/IMG_4252.jpg"
  },
  {
   "name": "YUVRAJ SINGH",
@@ -762,7 +842,8 @@
   "profile_id": "244",
   "department": "Civil Engineering",
   "dept_id": 14,
-  "profile_url": "https://gndec.ac.in/faculty/?id=244"
+  "profile_url": "https://gndec.ac.in/faculty/?id=244",
+  "image_url": "https://gndec.ac.in/images/IMG_20260324_022833_903.jpg"
  },
  {
   "name": "DR. KIRAN JYOTI",
@@ -775,7 +856,8 @@
   "phone_office": "0161-5064547",
   "phone_mobile": "98722-24422",
   "admin_roles": "HOD - Computer Science & Engg.",
-  "phone_source": "Information Brochure 2026"
+  "phone_source": "Information Brochure 2026",
+  "image_url": "https://gndec.ac.in/images/Kj-Pic%20Website.JPG"
  },
  {
   "name": "DR. PARMINDER SINGH",
@@ -784,7 +866,8 @@
   "profile_id": "4",
   "department": "Computer Science & Engg.",
   "dept_id": 15,
-  "profile_url": "https://gndec.ac.in/faculty/?id=4"
+  "profile_url": "https://gndec.ac.in/faculty/?id=4",
+  "image_url": "https://gndec.ac.in/images/Parminder%20Singh.jpg"
  },
  {
   "name": "AMANPREET SINGH BRAR",
@@ -793,7 +876,8 @@
   "profile_id": "50",
   "department": "Computer Science & Engg.",
   "dept_id": 15,
-  "profile_url": "https://gndec.ac.in/faculty/?id=50"
+  "profile_url": "https://gndec.ac.in/faculty/?id=50",
+  "image_url": "https://gndec.ac.in/images/brar.jpg"
  },
  {
   "name": "DR. JASBIR SINGH SAINI",
@@ -806,7 +890,8 @@
   "phone_office": "0161-5061314",
   "phone_mobile": "98767-00810",
   "admin_roles": "HOD - Computer Applications; Head of Department, Computer Applications",
-  "phone_source": "Information Brochure 2026, Statutory Committees (conflicts with IB26)"
+  "phone_source": "Information Brochure 2026, Statutory Committees (conflicts with IB26)",
+  "image_url": "https://gndec.ac.in/images/jss.jpeg"
  },
  {
   "name": "DR. VIVEK THAPAR",
@@ -815,7 +900,8 @@
   "profile_id": "11",
   "department": "Computer Science & Engg.",
   "dept_id": 15,
-  "profile_url": "https://gndec.ac.in/faculty/?id=11"
+  "profile_url": "https://gndec.ac.in/faculty/?id=11",
+  "image_url": "https://gndec.ac.in/images/vivek.jpg"
  },
  {
   "name": "ER. KHUSHI DHUNNA",
@@ -824,7 +910,8 @@
   "profile_id": "445",
   "department": "Computer Science & Engg.",
   "dept_id": 15,
-  "profile_url": "https://gndec.ac.in/faculty/?id=445"
+  "profile_url": "https://gndec.ac.in/faculty/?id=445",
+  "image_url": "https://gndec.ac.in/images/Screenshot%202025-04-20%20at%203.15.55%20PM.png"
  },
  {
   "name": "DR. AMANDEEP KAUR SOHAL",
@@ -837,7 +924,8 @@
   "phone_office": "0161-5064547",
   "phone_mobile": "95011-99815",
   "admin_roles": "Officer I/C M.Tech - Computer Science & Engg.",
-  "phone_source": "Information Brochure 2026"
+  "phone_source": "Information Brochure 2026",
+  "image_url": "https://gndec.ac.in/images/AKS.jpg.jpeg"
  },
  {
   "name": "DR. AMIT JAIN",
@@ -846,7 +934,8 @@
   "profile_id": "332",
   "department": "Computer Science & Engg.",
   "dept_id": 15,
-  "profile_url": "https://gndec.ac.in/faculty/?id=332"
+  "profile_url": "https://gndec.ac.in/faculty/?id=332",
+  "image_url": "https://gndec.ac.in/images/PRE04261.JPG"
  },
  {
   "name": "DR. DALJEET SINGH",
@@ -855,7 +944,8 @@
   "profile_id": "127",
   "department": "Computer Science & Engg.",
   "dept_id": 15,
-  "profile_url": "https://gndec.ac.in/faculty/?id=127"
+  "profile_url": "https://gndec.ac.in/faculty/?id=127",
+  "image_url": "https://gndec.ac.in/images/PHOTO.jpg"
  },
  {
   "name": "DR. DIANA NAGPAL",
@@ -864,7 +954,8 @@
   "profile_id": "131",
   "department": "Computer Science & Engg.",
   "dept_id": 15,
-  "profile_url": "https://gndec.ac.in/faculty/?id=131"
+  "profile_url": "https://gndec.ac.in/faculty/?id=131",
+  "image_url": "https://gndec.ac.in/images/photo.png"
  },
  {
   "name": "DR. HARDEEP SINGH KANG",
@@ -873,7 +964,8 @@
   "profile_id": "160",
   "department": "Computer Science & Engg.",
   "dept_id": 15,
-  "profile_url": "https://gndec.ac.in/faculty/?id=160"
+  "profile_url": "https://gndec.ac.in/faculty/?id=160",
+  "image_url": "https://gndec.ac.in/images/Hardeep%20singh.jpg"
  },
  {
   "name": "DR. INDERJIT SINGH DHANOA",
@@ -882,7 +974,8 @@
   "profile_id": "251",
   "department": "Computer Science & Engg.",
   "dept_id": 15,
-  "profile_url": "https://gndec.ac.in/faculty/?id=251"
+  "profile_url": "https://gndec.ac.in/faculty/?id=251",
+  "image_url": "https://gndec.ac.in/images/InderjitDhanoaCSE.jpg"
  },
  {
   "name": "DR. KAMALDEEP KAUR",
@@ -891,7 +984,8 @@
   "profile_id": "143",
   "department": "Computer Science & Engg.",
   "dept_id": 15,
-  "profile_url": "https://gndec.ac.in/faculty/?id=143"
+  "profile_url": "https://gndec.ac.in/faculty/?id=143",
+  "image_url": "https://gndec.ac.in/images/passport%20pic.jpg"
  },
  {
   "name": "DR. KAPIL SHARMA",
@@ -900,7 +994,8 @@
   "profile_id": "209",
   "department": "Computer Science & Engg.",
   "dept_id": 15,
-  "profile_url": "https://gndec.ac.in/faculty/?id=209"
+  "profile_url": "https://gndec.ac.in/faculty/?id=209",
+  "image_url": "https://gndec.ac.in/images/WhatsApp%20Image%202026-10-02%20at%203.37.22%20PM.jpeg"
  },
  {
   "name": "DR. LOVEJIT SINGH",
@@ -909,7 +1004,8 @@
   "profile_id": "497",
   "department": "Computer Science & Engg.",
   "dept_id": 15,
-  "profile_url": "https://gndec.ac.in/faculty/?id=497"
+  "profile_url": "https://gndec.ac.in/faculty/?id=497",
+  "image_url": "https://gndec.ac.in/images/Lovejit_25_Aug.jpeg"
  },
  {
   "name": "DR. MANPREET KAUR MAND",
@@ -918,7 +1014,8 @@
   "profile_id": "172",
   "department": "Computer Science & Engg.",
   "dept_id": 15,
-  "profile_url": "https://gndec.ac.in/faculty/?id=172"
+  "profile_url": "https://gndec.ac.in/faculty/?id=172",
+  "image_url": "https://gndec.ac.in/images/photo_my.jpg"
  },
  {
   "name": "DR. PRIYANKA ARORA",
@@ -927,7 +1024,8 @@
   "profile_id": "120",
   "department": "Computer Science & Engg.",
   "dept_id": 15,
-  "profile_url": "https://gndec.ac.in/faculty/?id=120"
+  "profile_url": "https://gndec.ac.in/faculty/?id=120",
+  "image_url": "https://gndec.ac.in/images/priyanka%20arora.jpg"
  },
  {
   "name": "DR. SATINDERPAL SINGH",
@@ -936,7 +1034,8 @@
   "profile_id": "338",
   "department": "Computer Science & Engg.",
   "dept_id": 15,
-  "profile_url": "https://gndec.ac.in/faculty/?id=338"
+  "profile_url": "https://gndec.ac.in/faculty/?id=338",
+  "image_url": "https://gndec.ac.in/images/satinderpal_singh.jpeg"
  },
  {
   "name": "DR. SITA RANI",
@@ -945,7 +1044,8 @@
   "profile_id": "383",
   "department": "Computer Science & Engg.",
   "dept_id": 15,
-  "profile_url": "https://gndec.ac.in/faculty/?id=383"
+  "profile_url": "https://gndec.ac.in/faculty/?id=383",
+  "image_url": "https://gndec.ac.in/images/Dr.%20Sita%20Rani_Photo.jpg"
  },
  {
   "name": "ER. MANINDER KAUR",
@@ -954,7 +1054,8 @@
   "profile_id": "447",
   "department": "Computer Science & Engg.",
   "dept_id": 15,
-  "profile_url": "https://gndec.ac.in/faculty/?id=447"
+  "profile_url": "https://gndec.ac.in/faculty/?id=447",
+  "image_url": "https://gndec.ac.in/images/csefaculty.jpeg"
  },
  {
   "name": "ER. DIKSHA SHARMA",
@@ -963,7 +1064,8 @@
   "profile_id": "501",
   "department": "Computer Science & Engg.",
   "dept_id": 15,
-  "profile_url": "https://gndec.ac.in/faculty/?id=501"
+  "profile_url": "https://gndec.ac.in/faculty/?id=501",
+  "image_url": "https://gndec.ac.in/images/IMG_0066.JPG.jpeg"
  },
  {
   "name": "ER. GOLDENDEEP KAUR",
@@ -972,7 +1074,8 @@
   "profile_id": "206",
   "department": "Computer Science & Engg.",
   "dept_id": 15,
-  "profile_url": "https://gndec.ac.in/faculty/?id=206"
+  "profile_url": "https://gndec.ac.in/faculty/?id=206",
+  "image_url": "https://gndec.ac.in/images/2604.JPG"
  },
  {
   "name": "ER. JASDEEP KAUR JOIA",
@@ -981,7 +1084,8 @@
   "profile_id": "139",
   "department": "Computer Science & Engg.",
   "dept_id": 15,
-  "profile_url": "https://gndec.ac.in/faculty/?id=139"
+  "profile_url": "https://gndec.ac.in/faculty/?id=139",
+  "image_url": "https://gndec.ac.in/images/IMG_4159.jpeg"
  },
  {
   "name": "ER. JASMINE KAUR",
@@ -990,7 +1094,8 @@
   "profile_id": "76",
   "department": "Computer Science & Engg.",
   "dept_id": 15,
-  "profile_url": "https://gndec.ac.in/faculty/?id=76"
+  "profile_url": "https://gndec.ac.in/faculty/?id=76",
+  "image_url": "https://gndec.ac.in/images/jasmine%20photo.JPG"
  },
  {
   "name": "ER. JASWANT SINGH",
@@ -999,7 +1104,8 @@
   "profile_id": "333",
   "department": "Computer Science & Engg.",
   "dept_id": 15,
-  "profile_url": "https://gndec.ac.in/faculty/?id=333"
+  "profile_url": "https://gndec.ac.in/faculty/?id=333",
+  "image_url": "https://gndec.ac.in/images/735A903F-7460-4E9F-8115-B2670F02E4D9.png"
  },
  {
   "name": "ER. KAJAL CHUGH",
@@ -1008,7 +1114,8 @@
   "profile_id": "507",
   "department": "Computer Science & Engg.",
   "dept_id": 15,
-  "profile_url": "https://gndec.ac.in/faculty/?id=507"
+  "profile_url": "https://gndec.ac.in/faculty/?id=507",
+  "image_url": "https://gndec.ac.in/images/kajal.JPG"
  },
  {
   "name": "ER. KAMALJEET KAUR",
@@ -1017,7 +1124,8 @@
   "profile_id": "425",
   "department": "Computer Science & Engg.",
   "dept_id": 15,
-  "profile_url": "https://gndec.ac.in/faculty/?id=425"
+  "profile_url": "https://gndec.ac.in/faculty/?id=425",
+  "image_url": "https://gndec.ac.in/images/IMG_20211212_202135_829.JPG"
  },
  {
   "name": "ER. KULJIT KAUR",
@@ -1026,7 +1134,8 @@
   "profile_id": "226",
   "department": "Computer Science & Engg.",
   "dept_id": 15,
-  "profile_url": "https://gndec.ac.in/faculty/?id=226"
+  "profile_url": "https://gndec.ac.in/faculty/?id=226",
+  "image_url": "https://gndec.ac.in/images/91855451-D4C8-4C06-8661-31B8A8632A0C.jpeg"
  },
  {
   "name": "ER. LAKHVIR KAUR GREWAL",
@@ -1035,7 +1144,8 @@
   "profile_id": "432",
   "department": "Computer Science & Engg.",
   "dept_id": 15,
-  "profile_url": "https://gndec.ac.in/faculty/?id=432"
+  "profile_url": "https://gndec.ac.in/faculty/?id=432",
+  "image_url": "https://gndec.ac.in/images/lucky%20pic.jpg"
  },
  {
   "name": "ER. MANJOT KAUR GILL",
@@ -1044,7 +1154,8 @@
   "profile_id": "112",
   "department": "Computer Science & Engg.",
   "dept_id": 15,
-  "profile_url": "https://gndec.ac.in/faculty/?id=112"
+  "profile_url": "https://gndec.ac.in/faculty/?id=112",
+  "image_url": "https://gndec.ac.in/images/CamScanner%2008-14-2020%2011.20.48_1.jpg"
  },
  {
   "name": "ER. MEETALI",
@@ -1053,7 +1164,8 @@
   "profile_id": "382",
   "department": "Computer Science & Engg.",
   "dept_id": 15,
-  "profile_url": "https://gndec.ac.in/faculty/?id=382"
+  "profile_url": "https://gndec.ac.in/faculty/?id=382",
+  "image_url": "https://gndec.ac.in/images/r.jpg"
  },
  {
   "name": "ER. PALAK SOOD",
@@ -1062,7 +1174,8 @@
   "profile_id": "427",
   "department": "Computer Science & Engg.",
   "dept_id": 15,
-  "profile_url": "https://gndec.ac.in/faculty/?id=427"
+  "profile_url": "https://gndec.ac.in/faculty/?id=427",
+  "image_url": "https://gndec.ac.in/images/WhatsApp%20Image%202024-08-08%20at%2010.07.32%20AM.jpeg"
  },
  {
   "name": "ER. SHAILJA",
@@ -1071,7 +1184,8 @@
   "profile_id": "146",
   "department": "Computer Science & Engg.",
   "dept_id": 15,
-  "profile_url": "https://gndec.ac.in/faculty/?id=146"
+  "profile_url": "https://gndec.ac.in/faculty/?id=146",
+  "image_url": "https://gndec.ac.in/images/IMG-20210211-WA0029.jpg"
  },
  {
   "name": "ER.HARKOMAL PREET KAUR",
@@ -1080,7 +1194,8 @@
   "profile_id": "228",
   "department": "Computer Science & Engg.",
   "dept_id": 15,
-  "profile_url": "https://gndec.ac.in/faculty/?id=228"
+  "profile_url": "https://gndec.ac.in/faculty/?id=228",
+  "image_url": "https://gndec.ac.in/images/CCF06012018.jpg"
  },
  {
   "name": "ER.HARMAN PREET KAUR",
@@ -1089,7 +1204,8 @@
   "profile_id": "500",
   "department": "Computer Science & Engg.",
   "dept_id": 15,
-  "profile_url": "https://gndec.ac.in/faculty/?id=500"
+  "profile_url": "https://gndec.ac.in/faculty/?id=500",
+  "image_url": "https://gndec.ac.in/images/Screenshot_20260825_142157_One%20UI%20Home.jpg"
  },
  {
   "name": "GAGNEET KAUR",
@@ -1098,7 +1214,8 @@
   "profile_id": "504",
   "department": "Computer Science & Engg.",
   "dept_id": 15,
-  "profile_url": "https://gndec.ac.in/faculty/?id=504"
+  "profile_url": "https://gndec.ac.in/faculty/?id=504",
+  "image_url": "https://gndec.ac.in/images/Gagneet.jpeg"
  },
  {
   "name": "HONEY RAWAT",
@@ -1107,7 +1224,8 @@
   "profile_id": "499",
   "department": "Computer Science & Engg.",
   "dept_id": 15,
-  "profile_url": "https://gndec.ac.in/faculty/?id=499"
+  "profile_url": "https://gndec.ac.in/faculty/?id=499",
+  "image_url": "https://gndec.ac.in/images/pss_photo.jpg"
  },
  {
   "name": "JAGDEEP KAUR",
@@ -1116,7 +1234,8 @@
   "profile_id": "446",
   "department": "Computer Science & Engg.",
   "dept_id": 15,
-  "profile_url": "https://gndec.ac.in/faculty/?id=446"
+  "profile_url": "https://gndec.ac.in/faculty/?id=446",
+  "image_url": "https://gndec.ac.in/images/pic1.jpeg"
  },
  {
   "name": "JASJIT KAUR",
@@ -1125,7 +1244,8 @@
   "profile_id": "505",
   "department": "Computer Science & Engg.",
   "dept_id": 15,
-  "profile_url": "https://gndec.ac.in/faculty/?id=505"
+  "profile_url": "https://gndec.ac.in/faculty/?id=505",
+  "image_url": "https://gndec.ac.in/images/image.png"
  },
  {
   "name": "KANWARDEEP SINGH",
@@ -1138,7 +1258,8 @@
   "phone_office": "0161-5064559",
   "phone_mobile": "95014-11533",
   "admin_roles": "HOD - Electrical Engg.",
-  "phone_source": "Information Brochure 2026"
+  "phone_source": "Information Brochure 2026",
+  "image_url": "https://gndec.ac.in/images/kds.jpg"
  },
  {
   "name": "ARVIND DHINGRA",
@@ -1151,7 +1272,8 @@
   "phone_office": "0161-5064560",
   "phone_mobile": "98141-63429",
   "admin_roles": "Officer I/C M.Tech - Electrical Engg.; Executive Director, STEP; Institution Innovation Council",
-  "phone_source": "Information Brochure 2026"
+  "phone_source": "Information Brochure 2026",
+  "image_url": "https://gndec.ac.in/images/Latest%20Photo.jpg"
  },
  {
   "name": "HARMEET SINGH GILL",
@@ -1164,7 +1286,8 @@
   "phone_office": "0161-5064756",
   "phone_mobile": "95010-95000",
   "admin_roles": "Deputy Registrar",
-  "phone_source": "Information Brochure 2026"
+  "phone_source": "Information Brochure 2026",
+  "image_url": "https://gndec.ac.in/images/827D0DFC-EEF8-49EA-90BB-A56EF67DA03C.jpeg"
  },
  {
   "name": "NAVNEET SINGH BHANGU",
@@ -1173,7 +1296,8 @@
   "profile_id": "63",
   "department": "Electrical Engineering",
   "dept_id": 16,
-  "profile_url": "https://gndec.ac.in/faculty/?id=63"
+  "profile_url": "https://gndec.ac.in/faculty/?id=63",
+  "image_url": "https://gndec.ac.in/images/IMG_7900.JPG"
  },
  {
   "name": "PREETINDER SINGH",
@@ -1182,7 +1306,8 @@
   "profile_id": "57",
   "department": "Electrical Engineering",
   "dept_id": 16,
-  "profile_url": "https://gndec.ac.in/faculty/?id=57"
+  "profile_url": "https://gndec.ac.in/faculty/?id=57",
+  "image_url": "https://gndec.ac.in/images/PTS%20passport%20photo.jpg"
  },
  {
   "name": "RUPINDERJIT SINGH KATHURIA",
@@ -1191,7 +1316,8 @@
   "profile_id": "58",
   "department": "Electrical Engineering",
   "dept_id": 16,
-  "profile_url": "https://gndec.ac.in/faculty/?id=58"
+  "profile_url": "https://gndec.ac.in/faculty/?id=58",
+  "image_url": "https://gndec.ac.in/images/IMG_1915.jpeg"
  },
  {
   "name": "ARSHDEEP KAUR",
@@ -1200,7 +1326,8 @@
   "profile_id": "271",
   "department": "Electrical Engineering",
   "dept_id": 16,
-  "profile_url": "https://gndec.ac.in/faculty/?id=271"
+  "profile_url": "https://gndec.ac.in/faculty/?id=271",
+  "image_url": "https://gndec.ac.in/images/IMG_4210.jpg"
  },
  {
   "name": "BALJEET SINGH",
@@ -1209,7 +1336,8 @@
   "profile_id": "275",
   "department": "Electrical Engineering",
   "dept_id": 16,
-  "profile_url": "https://gndec.ac.in/faculty/?id=275"
+  "profile_url": "https://gndec.ac.in/faculty/?id=275",
+  "image_url": "https://gndec.ac.in/images/20260201_133418.jpg"
  },
  {
   "name": "BALWINDER SINGH",
@@ -1218,7 +1346,8 @@
   "profile_id": "438",
   "department": "Electrical Engineering",
   "dept_id": 16,
-  "profile_url": "https://gndec.ac.in/faculty/?id=438"
+  "profile_url": "https://gndec.ac.in/faculty/?id=438",
+  "image_url": "https://gndec.ac.in/images/IMG_4219.jpg"
  },
  {
   "name": "BHAWNA",
@@ -1227,7 +1356,8 @@
   "profile_id": "277",
   "department": "Electrical Engineering",
   "dept_id": 16,
-  "profile_url": "https://gndec.ac.in/faculty/?id=277"
+  "profile_url": "https://gndec.ac.in/faculty/?id=277",
+  "image_url": "https://gndec.ac.in/images/IMG_4214.jpg"
  },
  {
   "name": "GAGANDEEP SINGH SODHI",
@@ -1240,7 +1370,8 @@
   "phone_office": "0161-5064507",
   "phone_mobile": "85280-02375",
   "admin_roles": "Training & Placement Officer",
-  "phone_source": "Information Brochure 2026"
+  "phone_source": "Information Brochure 2026",
+  "image_url": "https://gndec.ac.in/images/sodhi.jpg"
  },
  {
   "name": "KARANBIR SINGH",
@@ -1249,7 +1380,8 @@
   "profile_id": "341",
   "department": "Electrical Engineering",
   "dept_id": 16,
-  "profile_url": "https://gndec.ac.in/faculty/?id=341"
+  "profile_url": "https://gndec.ac.in/faculty/?id=341",
+  "image_url": "https://gndec.ac.in/images/IMG_1901.JPG"
  },
  {
   "name": "KULDEEP SINGH KOONER",
@@ -1258,7 +1390,8 @@
   "profile_id": "276",
   "department": "Electrical Engineering",
   "dept_id": 16,
-  "profile_url": "https://gndec.ac.in/faculty/?id=276"
+  "profile_url": "https://gndec.ac.in/faculty/?id=276",
+  "image_url": "https://gndec.ac.in/images/IMG_2607.jpeg"
  },
  {
   "name": "MANDEEP KAUR",
@@ -1267,7 +1400,8 @@
   "profile_id": "426",
   "department": "Electrical Engineering",
   "dept_id": 16,
-  "profile_url": "https://gndec.ac.in/faculty/?id=426"
+  "profile_url": "https://gndec.ac.in/faculty/?id=426",
+  "image_url": "https://gndec.ac.in/images/IMG_4208.jpg"
  },
  {
   "name": "RANVIR KAUR",
@@ -1276,7 +1410,8 @@
   "profile_id": "428",
   "department": "Electrical Engineering",
   "dept_id": 16,
-  "profile_url": "https://gndec.ac.in/faculty/?id=428"
+  "profile_url": "https://gndec.ac.in/faculty/?id=428",
+  "image_url": "https://gndec.ac.in/images/IMG_4209.jpg"
  },
  {
   "name": "RAVINDER KAUR RANDHAWA",
@@ -1285,7 +1420,8 @@
   "profile_id": "155",
   "department": "Electrical Engineering",
   "dept_id": 16,
-  "profile_url": "https://gndec.ac.in/faculty/?id=155"
+  "profile_url": "https://gndec.ac.in/faculty/?id=155",
+  "image_url": "https://gndec.ac.in/images/rr.jpg"
  },
  {
   "name": "SAMREET KAUR",
@@ -1294,7 +1430,8 @@
   "profile_id": "152",
   "department": "Electrical Engineering",
   "dept_id": 16,
-  "profile_url": "https://gndec.ac.in/faculty/?id=152"
+  "profile_url": "https://gndec.ac.in/faculty/?id=152",
+  "image_url": "https://gndec.ac.in/images/sm.jpg"
  },
  {
   "name": "SUKHPAL SINGH",
@@ -1303,7 +1440,8 @@
   "profile_id": "365",
   "department": "Electrical Engineering",
   "dept_id": 16,
-  "profile_url": "https://gndec.ac.in/faculty/?id=365"
+  "profile_url": "https://gndec.ac.in/faculty/?id=365",
+  "image_url": "https://gndec.ac.in/images/IMG_4226%20%283%29.jpg"
  },
  {
   "name": "SWAPANDEEP KAUR",
@@ -1312,7 +1450,8 @@
   "profile_id": "356",
   "department": "Electrical Engineering",
   "dept_id": 16,
-  "profile_url": "https://gndec.ac.in/faculty/?id=356"
+  "profile_url": "https://gndec.ac.in/faculty/?id=356",
+  "image_url": "https://gndec.ac.in/images/IMG_4207%20%281%29.jpg"
  },
  {
   "name": "NARWANT SINGH GREWAL",
@@ -1321,7 +1460,8 @@
   "profile_id": "41",
   "department": "Electronics & Communication Engineering",
   "dept_id": 17,
-  "profile_url": "https://gndec.ac.in/faculty/?id=41"
+  "profile_url": "https://gndec.ac.in/faculty/?id=41",
+  "image_url": "https://gndec.ac.in/images/narwant_3.jpg"
  },
  {
   "name": "AMEETA SEEHRA",
@@ -1330,7 +1470,8 @@
   "profile_id": "44",
   "department": "Electronics & Communication Engineering",
   "dept_id": 17,
-  "profile_url": "https://gndec.ac.in/faculty/?id=44"
+  "profile_url": "https://gndec.ac.in/faculty/?id=44",
+  "image_url": "https://gndec.ac.in/images/aks.png"
  },
  {
   "name": "DR. MUNISH RATTAN",
@@ -1343,7 +1484,8 @@
   "phone_office": "0161-5064570",
   "phone_mobile": "98550-04325",
   "admin_roles": "HOD - Electronics & Comm. Engg.",
-  "phone_source": "Information Brochure 2026"
+  "phone_source": "Information Brochure 2026",
+  "image_url": "https://gndec.ac.in/images/75972.JPG"
  },
  {
   "name": "BALJEET KAUR WADHWA",
@@ -1352,7 +1494,8 @@
   "profile_id": "43",
   "department": "Electronics & Communication Engineering",
   "dept_id": 17,
-  "profile_url": "https://gndec.ac.in/faculty/?id=43"
+  "profile_url": "https://gndec.ac.in/faculty/?id=43",
+  "image_url": "https://gndec.ac.in/images/baljeet%20pic.jpg"
  },
  {
   "name": "DALJIT SINGH DEOSI",
@@ -1361,7 +1504,8 @@
   "profile_id": "149",
   "department": "Electronics & Communication Engineering",
   "dept_id": 17,
-  "profile_url": "https://gndec.ac.in/faculty/?id=149"
+  "profile_url": "https://gndec.ac.in/faculty/?id=149",
+  "image_url": "https://gndec.ac.in/images/PP_Photo_DS.jpg"
  },
  {
   "name": "DR. CHAHAT JAIN",
@@ -1370,7 +1514,8 @@
   "profile_id": "126",
   "department": "Electronics & Communication Engineering",
   "dept_id": 17,
-  "profile_url": "https://gndec.ac.in/faculty/?id=126"
+  "profile_url": "https://gndec.ac.in/faculty/?id=126",
+  "image_url": "https://gndec.ac.in/images/photo.jpg"
  },
  {
   "name": "DR. GURJOT KAUR WALIA",
@@ -1379,7 +1524,8 @@
   "profile_id": "117",
   "department": "Electronics & Communication Engineering",
   "dept_id": 17,
-  "profile_url": "https://gndec.ac.in/faculty/?id=117"
+  "profile_url": "https://gndec.ac.in/faculty/?id=117",
+  "image_url": "https://gndec.ac.in/images/Screenshot_20250828_112443_Gallery.jpg"
  },
  {
   "name": "DR. GURPURNEET KAUR",
@@ -1392,7 +1538,8 @@
   "phone_office": "0161-5064570",
   "phone_mobile": "99888-25855",
   "admin_roles": "Officer I/C M.Tech - Electronics & Comm. Engg.",
-  "phone_source": "Information Brochure 2026"
+  "phone_source": "Information Brochure 2026",
+  "image_url": "https://gndec.ac.in/images/WhatsApp%20Image%202026-01-24%20at%209.59.16%20PM.jpeg"
  },
  {
   "name": "DR. NAVNEET KAUR",
@@ -1405,7 +1552,8 @@
   "phone_office": "0161-5064549",
   "phone_mobile": "82838-44114, 98142-29753",
   "admin_roles": "Assistant Registrar; National Education Policy Cell; AP (ECE), Academic Council member",
-  "phone_source": "Information Brochure 2026, Statutory Committees"
+  "phone_source": "Information Brochure 2026, Statutory Committees",
+  "image_url": "https://gndec.ac.in/images/NAVNEET.jpeg"
  },
  {
   "name": "DR. SHIVMANMEET SINGH",
@@ -1414,7 +1562,8 @@
   "profile_id": "323",
   "department": "Electronics & Communication Engineering",
   "dept_id": 17,
-  "profile_url": "https://gndec.ac.in/faculty/?id=323"
+  "profile_url": "https://gndec.ac.in/faculty/?id=323",
+  "image_url": "https://gndec.ac.in/images/shiv.jpg"
  },
  {
   "name": "GURLEEN KAUR",
@@ -1423,7 +1572,8 @@
   "profile_id": "479",
   "department": "Electronics & Communication Engineering",
   "dept_id": 17,
-  "profile_url": "https://gndec.ac.in/faculty/?id=479"
+  "profile_url": "https://gndec.ac.in/faculty/?id=479",
+  "image_url": "https://gndec.ac.in/images/IMG_20251116_073126.jpg"
  },
  {
   "name": "HARLEEN KAUR",
@@ -1432,7 +1582,8 @@
   "profile_id": "358",
   "department": "Electronics & Communication Engineering",
   "dept_id": 17,
-  "profile_url": "https://gndec.ac.in/faculty/?id=358"
+  "profile_url": "https://gndec.ac.in/faculty/?id=358",
+  "image_url": "https://gndec.ac.in/images/PHOTO.jpeg"
  },
  {
   "name": "HARMINDER KAUR",
@@ -1441,7 +1592,8 @@
   "profile_id": "118",
   "department": "Electronics & Communication Engineering",
   "dept_id": 17,
-  "profile_url": "https://gndec.ac.in/faculty/?id=118"
+  "profile_url": "https://gndec.ac.in/faculty/?id=118",
+  "image_url": "https://gndec.ac.in/images/image%20hk1.jpeg"
  },
  {
   "name": "HARMINDER KAUR",
@@ -1450,7 +1602,8 @@
   "profile_id": "116",
   "department": "Electronics & Communication Engineering",
   "dept_id": 17,
-  "profile_url": "https://gndec.ac.in/faculty/?id=116"
+  "profile_url": "https://gndec.ac.in/faculty/?id=116",
+  "image_url": "https://gndec.ac.in/images/WhatsApp%20Image%202026-02-10%20at%209.17.50%20PM.jpeg"
  },
  {
   "name": "KAMALPREET KAUR",
@@ -1459,7 +1612,8 @@
   "profile_id": "482",
   "department": "Electronics & Communication Engineering",
   "dept_id": 17,
-  "profile_url": "https://gndec.ac.in/faculty/?id=482"
+  "profile_url": "https://gndec.ac.in/faculty/?id=482",
+  "image_url": "https://gndec.ac.in/images/pic.jpeg"
  },
  {
   "name": "KULDEEPAK SINGH",
@@ -1468,7 +1622,8 @@
   "profile_id": "115",
   "department": "Electronics & Communication Engineering",
   "dept_id": 17,
-  "profile_url": "https://gndec.ac.in/faculty/?id=115"
+  "profile_url": "https://gndec.ac.in/faculty/?id=115",
+  "image_url": "https://gndec.ac.in/images/Kuldeepak%20Singh-%20old.jpg"
  },
  {
   "name": "KUNWAR PARTAP SINGH",
@@ -1477,7 +1632,8 @@
   "profile_id": "368",
   "department": "Electronics & Communication Engineering",
   "dept_id": 17,
-  "profile_url": "https://gndec.ac.in/faculty/?id=368"
+  "profile_url": "https://gndec.ac.in/faculty/?id=368",
+  "image_url": "https://gndec.ac.in/images/WhatsApp%20Image%202021-12-29%20at%204.23.55%20PM.jpeg"
  },
  {
   "name": "SIMRANJIT KAUR",
@@ -1486,7 +1642,8 @@
   "profile_id": "37",
   "department": "Electronics & Communication Engineering",
   "dept_id": 17,
-  "profile_url": "https://gndec.ac.in/faculty/?id=37"
+  "profile_url": "https://gndec.ac.in/faculty/?id=37",
+  "image_url": "https://gndec.ac.in/images/1sim_%20compressed.jpg"
  },
  {
   "name": "DR. KULVINDER SINGH MANN",
@@ -1499,7 +1656,8 @@
   "phone_office": "0161-5064510",
   "phone_mobile": "99155-07920",
   "admin_roles": "HOD - Information Technology",
-  "phone_source": "Information Brochure 2026"
+  "phone_source": "Information Brochure 2026",
+  "image_url": "https://gndec.ac.in/images/IMG_1639.jpeg"
  },
  {
   "name": "DR. AKSHAY GIRDHAR",
@@ -1512,7 +1670,8 @@
   "phone_office": "0161-5064704",
   "phone_mobile": "98559-61620",
   "admin_roles": "Dean - Academics",
-  "phone_source": "Information Brochure 2026"
+  "phone_source": "Information Brochure 2026",
+  "image_url": "https://gndec.ac.in/sites/default/files/DSC_0477.JPG"
  },
  {
   "name": "DR. AMIT KAMRA",
@@ -1525,7 +1684,8 @@
   "phone_office": "0161-5064549",
   "phone_mobile": "98142-29753",
   "admin_roles": "Officer I/C M.Tech - Information Technology",
-  "phone_source": "Information Brochure 2026"
+  "phone_source": "Information Brochure 2026",
+  "image_url": "https://gndec.ac.in/images/WhatsApp%20Image%202025-10-27%20at%2011.38.01%20AM.jpeg"
  },
  {
   "name": "DR. KAMALJIT KAUR DHILLON",
@@ -1534,7 +1694,8 @@
   "profile_id": "12",
   "department": "Information Technology",
   "dept_id": 21,
-  "profile_url": "https://gndec.ac.in/faculty/?id=12"
+  "profile_url": "https://gndec.ac.in/faculty/?id=12",
+  "image_url": "https://gndec.ac.in/images/IMG_8850.JPG.jpeg"
  },
  {
   "name": "DR. PANKAJ BHAMBRI",
@@ -1543,7 +1704,8 @@
   "profile_id": "52",
   "department": "Information Technology",
   "dept_id": 21,
-  "profile_url": "https://gndec.ac.in/faculty/?id=52"
+  "profile_url": "https://gndec.ac.in/faculty/?id=52",
+  "image_url": "https://gndec.ac.in/images/Photo-17.png"
  },
  {
   "name": "DR. PRADEEP JASWAL",
@@ -1552,7 +1714,8 @@
   "profile_id": "223",
   "department": "Information Technology",
   "dept_id": 21,
-  "profile_url": "https://gndec.ac.in/faculty/?id=223"
+  "profile_url": "https://gndec.ac.in/faculty/?id=223",
+  "image_url": "https://gndec.ac.in/images/FB_IMG_1506436954027.jpg"
  },
  {
   "name": "DR. SANDEEP KUMAR SINGLA",
@@ -1561,7 +1724,8 @@
   "profile_id": "224",
   "department": "Information Technology",
   "dept_id": 21,
-  "profile_url": "https://gndec.ac.in/faculty/?id=224"
+  "profile_url": "https://gndec.ac.in/faculty/?id=224",
+  "image_url": "https://gndec.ac.in/images/IMG_1651.jpeg"
  },
  {
   "name": "DR. JAGDEEP SINGH",
@@ -1574,7 +1738,8 @@
   "phone_office": "",
   "phone_mobile": "",
   "admin_roles": "Industrial Relation Cell",
-  "phone_source": "Information Brochure 2026"
+  "phone_source": "Information Brochure 2026",
+  "image_url": "https://gndec.ac.in/images/jagdeep.jpg"
  },
  {
   "name": "ER. RUPINDER KAUR",
@@ -1583,7 +1748,8 @@
   "profile_id": "198",
   "department": "Information Technology",
   "dept_id": 21,
-  "profile_url": "https://gndec.ac.in/faculty/?id=198"
+  "profile_url": "https://gndec.ac.in/faculty/?id=198",
+  "image_url": "https://gndec.ac.in/images/IMG_20250216_085112.jpg"
  },
  {
   "name": "DR. PALWINDER KAUR BHANGU",
@@ -1592,7 +1758,8 @@
   "profile_id": "442",
   "department": "Information Technology",
   "dept_id": 21,
-  "profile_url": "https://gndec.ac.in/faculty/?id=442"
+  "profile_url": "https://gndec.ac.in/faculty/?id=442",
+  "image_url": "https://gndec.ac.in/images/mypic.jpeg"
  },
  {
   "name": "DR. PREET KAMAL SINGH",
@@ -1601,7 +1768,8 @@
   "profile_id": "444",
   "department": "Information Technology",
   "dept_id": 21,
-  "profile_url": "https://gndec.ac.in/faculty/?id=444"
+  "profile_url": "https://gndec.ac.in/faculty/?id=444",
+  "image_url": "https://gndec.ac.in/images/6f023565-cb16-4371-9cef-85e6fc6caaf2.jpg"
  },
  {
   "name": "DR. RANDEEP KAUR",
@@ -1610,7 +1778,8 @@
   "profile_id": "422",
   "department": "Information Technology",
   "dept_id": 21,
-  "profile_url": "https://gndec.ac.in/faculty/?id=422"
+  "profile_url": "https://gndec.ac.in/faculty/?id=422",
+  "image_url": "https://gndec.ac.in/images/randeep.jpeg"
  },
  {
   "name": "DR. SIDHARATH JAIN",
@@ -1619,7 +1788,8 @@
   "profile_id": "199",
   "department": "Information Technology",
   "dept_id": 21,
-  "profile_url": "https://gndec.ac.in/faculty/?id=199"
+  "profile_url": "https://gndec.ac.in/faculty/?id=199",
+  "image_url": "https://gndec.ac.in/images/Sidharath%20Pic.jpg"
  },
  {
   "name": "DR.MOHANJIT KAUR KANG",
@@ -1628,7 +1798,8 @@
   "profile_id": "280",
   "department": "Information Technology",
   "dept_id": 21,
-  "profile_url": "https://gndec.ac.in/faculty/?id=280"
+  "profile_url": "https://gndec.ac.in/faculty/?id=280",
+  "image_url": "https://gndec.ac.in/images/WhatsApp%20Image%202022-12-02%20at%207.27.14%20PM.jpeg"
  },
  {
   "name": "DR.SACHIN BAGGA",
@@ -1637,7 +1808,8 @@
   "profile_id": "208",
   "department": "Information Technology",
   "dept_id": 21,
-  "profile_url": "https://gndec.ac.in/faculty/?id=208"
+  "profile_url": "https://gndec.ac.in/faculty/?id=208",
+  "image_url": "https://gndec.ac.in/images/SB.jpg"
  },
  {
   "name": "ER. HIMANI SHARMA",
@@ -1646,7 +1818,8 @@
   "profile_id": "399",
   "department": "Information Technology",
   "dept_id": 21,
-  "profile_url": "https://gndec.ac.in/faculty/?id=399"
+  "profile_url": "https://gndec.ac.in/faculty/?id=399",
+  "image_url": "https://gndec.ac.in/images/himani.jpeg"
  },
  {
   "name": "GITANJALI",
@@ -1655,7 +1828,8 @@
   "profile_id": "387",
   "department": "Information Technology",
   "dept_id": 21,
-  "profile_url": "https://gndec.ac.in/faculty/?id=387"
+  "profile_url": "https://gndec.ac.in/faculty/?id=387",
+  "image_url": "https://gndec.ac.in/images/Snapchat-1506621369.jpg"
  },
  {
   "name": "HARJOT KAUR GILL",
@@ -1664,7 +1838,8 @@
   "profile_id": "207",
   "department": "Information Technology",
   "dept_id": 21,
-  "profile_url": "https://gndec.ac.in/faculty/?id=207"
+  "profile_url": "https://gndec.ac.in/faculty/?id=207",
+  "image_url": "https://gndec.ac.in/images/IMG_7212.jpeg"
  },
  {
   "name": "HARPREET KAUR",
@@ -1673,7 +1848,8 @@
   "profile_id": "463",
   "department": "Information Technology",
   "dept_id": 21,
-  "profile_url": "https://gndec.ac.in/faculty/?id=463"
+  "profile_url": "https://gndec.ac.in/faculty/?id=463",
+  "image_url": "https://gndec.ac.in/images/IMG_8808.JPG.jpeg"
  },
  {
   "name": "HARSHIM",
@@ -1682,7 +1858,8 @@
   "profile_id": "430",
   "department": "Information Technology",
   "dept_id": 21,
-  "profile_url": "https://gndec.ac.in/faculty/?id=430"
+  "profile_url": "https://gndec.ac.in/faculty/?id=430",
+  "image_url": "https://gndec.ac.in/images/268284D3-A8C9-4C6E-86D7-8E71A1A55798.jpeg"
  },
  {
   "name": "JASLEEN KAUR",
@@ -1691,7 +1868,8 @@
   "profile_id": "443",
   "department": "Information Technology",
   "dept_id": 21,
-  "profile_url": "https://gndec.ac.in/faculty/?id=443"
+  "profile_url": "https://gndec.ac.in/faculty/?id=443",
+  "image_url": "https://gndec.ac.in/images/Screenshot_20260806_101527_Gallery.jpg"
  },
  {
   "name": "JASPREET KAUR",
@@ -1700,7 +1878,8 @@
   "profile_id": "454",
   "department": "Information Technology",
   "dept_id": 21,
-  "profile_url": "https://gndec.ac.in/faculty/?id=454"
+  "profile_url": "https://gndec.ac.in/faculty/?id=454",
+  "image_url": "https://gndec.ac.in/images/Snapchat-438796799.jpg"
  },
  {
   "name": "PARMINDER KAUR WADHWA",
@@ -1709,7 +1888,8 @@
   "profile_id": "97",
   "department": "Information Technology",
   "dept_id": 21,
-  "profile_url": "https://gndec.ac.in/faculty/?id=97"
+  "profile_url": "https://gndec.ac.in/faculty/?id=97",
+  "image_url": "https://gndec.ac.in/images/IMG-7273.jpg"
  },
  {
   "name": "RANJODH KAUR",
@@ -1718,7 +1898,8 @@
   "profile_id": "79",
   "department": "Information Technology",
   "dept_id": 21,
-  "profile_url": "https://gndec.ac.in/faculty/?id=79"
+  "profile_url": "https://gndec.ac.in/faculty/?id=79",
+  "image_url": "https://gndec.ac.in/images/IMG_20210618_152129.jpg"
  },
  {
   "name": "DR. AMANJOT KAUR GILL",
@@ -1731,7 +1912,8 @@
   "phone_office": "0161-5064592",
   "phone_mobile": "98761-56364",
   "admin_roles": "HOD - Business Administration",
-  "phone_source": "Information Brochure 2026"
+  "phone_source": "Information Brochure 2026",
+  "image_url": "https://gndec.ac.in/images/amanjot_gill.jpg"
  },
  {
   "name": "DR. PARAMPAL SINGH",
@@ -1740,7 +1922,8 @@
   "profile_id": "168",
   "department": "Business Administration",
   "dept_id": 28,
-  "profile_url": "https://gndec.ac.in/faculty/?id=168"
+  "profile_url": "https://gndec.ac.in/faculty/?id=168",
+  "image_url": "https://gndec.ac.in/images/compressed%20pps.jpg"
  },
  {
   "name": "AMARPREET KAUR",
@@ -1749,7 +1932,8 @@
   "profile_id": "170",
   "department": "Business Administration",
   "dept_id": 28,
-  "profile_url": "https://gndec.ac.in/faculty/?id=170"
+  "profile_url": "https://gndec.ac.in/faculty/?id=170",
+  "image_url": "https://gndec.ac.in/images/70714241-4338-4058-b993-6117b636ce0a.jpg"
  },
  {
   "name": "DR JASPREET KAUR",
@@ -1758,7 +1942,8 @@
   "profile_id": "502",
   "department": "Business Administration",
   "dept_id": 28,
-  "profile_url": "https://gndec.ac.in/faculty/?id=502"
+  "profile_url": "https://gndec.ac.in/faculty/?id=502",
+  "image_url": "https://gndec.ac.in/images/IMG_20260617_151833.jpg"
  },
  {
   "name": "DR. PRABHPREET KAUR",
@@ -1767,7 +1952,8 @@
   "profile_id": "395",
   "department": "Business Administration",
   "dept_id": 28,
-  "profile_url": "https://gndec.ac.in/faculty/?id=395"
+  "profile_url": "https://gndec.ac.in/faculty/?id=395",
+  "image_url": "https://gndec.ac.in/images/blessy.jpeg"
  },
  {
   "name": "DR. KSHMA KAUSHAL",
@@ -1776,7 +1962,8 @@
   "profile_id": "394",
   "department": "Business Administration",
   "dept_id": 28,
-  "profile_url": "https://gndec.ac.in/faculty/?id=394"
+  "profile_url": "https://gndec.ac.in/faculty/?id=394",
+  "image_url": "https://gndec.ac.in/images/kkphoto.jpeg"
  },
  {
   "name": "DR. MANDEEP KAUR KHOSA",
@@ -1785,7 +1972,8 @@
   "profile_id": "353",
   "department": "Business Administration",
   "dept_id": 28,
-  "profile_url": "https://gndec.ac.in/faculty/?id=353"
+  "profile_url": "https://gndec.ac.in/faculty/?id=353",
+  "image_url": "https://gndec.ac.in/images/81b2e25d-866e-42ef-be80-bc38fb5759bc.jpeg"
  },
  {
   "name": "DR. SHIVANGI JAIN SHARMA",
@@ -1794,7 +1982,8 @@
   "profile_id": "503",
   "department": "Business Administration",
   "dept_id": 28,
-  "profile_url": "https://gndec.ac.in/faculty/?id=503"
+  "profile_url": "https://gndec.ac.in/faculty/?id=503",
+  "image_url": "https://gndec.ac.in/images/IMG_9110.jpeg"
  },
  {
   "name": "HARMOHAN SINGH DHALL",
@@ -1803,7 +1992,8 @@
   "profile_id": "15",
   "department": "Business Administration",
   "dept_id": 28,
-  "profile_url": "https://gndec.ac.in/faculty/?id=15"
+  "profile_url": "https://gndec.ac.in/faculty/?id=15",
+  "image_url": ""
  },
  {
   "name": "HARNEET KAUR",
@@ -1812,7 +2002,8 @@
   "profile_id": "461",
   "department": "Business Administration",
   "dept_id": 28,
-  "profile_url": "https://gndec.ac.in/faculty/?id=461"
+  "profile_url": "https://gndec.ac.in/faculty/?id=461",
+  "image_url": "https://gndec.ac.in/images/WhatsApp%20Image%202025-09-11%20at%2010.01.29%20PM.jpeg"
  },
  {
   "name": "MANPREET KAUR",
@@ -1821,7 +2012,8 @@
   "profile_id": "464",
   "department": "Business Administration",
   "dept_id": 28,
-  "profile_url": "https://gndec.ac.in/faculty/?id=464"
+  "profile_url": "https://gndec.ac.in/faculty/?id=464",
+  "image_url": "https://gndec.ac.in/images/manpreet.jpg"
  },
  {
   "name": "NAVJOT KAUR GILL",
@@ -1830,7 +2022,8 @@
   "profile_id": "460",
   "department": "Business Administration",
   "dept_id": 28,
-  "profile_url": "https://gndec.ac.in/faculty/?id=460"
+  "profile_url": "https://gndec.ac.in/faculty/?id=460",
+  "image_url": "https://gndec.ac.in/images/PIC.jpg"
  },
  {
   "name": "PARAMJIT SINGH",
@@ -1839,7 +2032,8 @@
   "profile_id": "441",
   "department": "Business Administration",
   "dept_id": 28,
-  "profile_url": "https://gndec.ac.in/faculty/?id=441"
+  "profile_url": "https://gndec.ac.in/faculty/?id=441",
+  "image_url": "https://gndec.ac.in/images/Paramjit%20Singh%20Passport%20Pic.JPG"
  },
  {
   "name": "RAMANDEEP KAUR",
@@ -1848,7 +2042,8 @@
   "profile_id": "462",
   "department": "Business Administration",
   "dept_id": 28,
-  "profile_url": "https://gndec.ac.in/faculty/?id=462"
+  "profile_url": "https://gndec.ac.in/faculty/?id=462",
+  "image_url": "https://gndec.ac.in/images/rrrrrr.jpg"
  },
  {
   "name": "SIMRANPREET KAUR",
@@ -1857,7 +2052,8 @@
   "profile_id": "496",
   "department": "Business Administration",
   "dept_id": 28,
-  "profile_url": "https://gndec.ac.in/faculty/?id=496"
+  "profile_url": "https://gndec.ac.in/faculty/?id=496",
+  "image_url": "https://gndec.ac.in/images/Screenshot_20230903_214852.jpg"
  },
  {
   "name": "DR. JASBIR SINGH SAINI",
@@ -1870,7 +2066,8 @@
   "phone_office": "0161-5061314",
   "phone_mobile": "98767-00810",
   "admin_roles": "HOD - Computer Applications; Head of Department, Computer Applications",
-  "phone_source": "Information Brochure 2026, Statutory Committees (conflicts with IB26)"
+  "phone_source": "Information Brochure 2026, Statutory Committees (conflicts with IB26)",
+  "image_url": "https://gndec.ac.in/images/jss.jpeg"
  },
  {
   "name": "AMANDEEP KAUR",
@@ -1879,7 +2076,8 @@
   "profile_id": "480",
   "department": "Computer Applications",
   "dept_id": 29,
-  "profile_url": "https://gndec.ac.in/faculty/?id=480"
+  "profile_url": "https://gndec.ac.in/faculty/?id=480",
+  "image_url": "https://gndec.ac.in/images/IMG_7420.JPG"
  },
  {
   "name": "AMANPREET KAUR",
@@ -1888,7 +2086,8 @@
   "profile_id": "390",
   "department": "Computer Applications",
   "dept_id": 29,
-  "profile_url": "https://gndec.ac.in/faculty/?id=390"
+  "profile_url": "https://gndec.ac.in/faculty/?id=390",
+  "image_url": "https://gndec.ac.in/images/IMG-20260209-WA0006.jpg"
  },
  {
   "name": "DINESH ANAND",
@@ -1897,7 +2096,8 @@
   "profile_id": "210",
   "department": "Computer Applications",
   "dept_id": 29,
-  "profile_url": "https://gndec.ac.in/faculty/?id=210"
+  "profile_url": "https://gndec.ac.in/faculty/?id=210",
+  "image_url": "https://gndec.ac.in/images/IMG_7418.jpeg"
  },
  {
   "name": "DR. GEETIKA BHARDWAJ",
@@ -1906,7 +2106,8 @@
   "profile_id": "416",
   "department": "Computer Applications",
   "dept_id": 29,
-  "profile_url": "https://gndec.ac.in/faculty/?id=416"
+  "profile_url": "https://gndec.ac.in/faculty/?id=416",
+  "image_url": "https://gndec.ac.in/images/IMG_7402.JPG"
  },
  {
   "name": "DR. GURVIR KAUR",
@@ -1915,7 +2116,8 @@
   "profile_id": "451",
   "department": "Computer Applications",
   "dept_id": 29,
-  "profile_url": "https://gndec.ac.in/faculty/?id=451"
+  "profile_url": "https://gndec.ac.in/faculty/?id=451",
+  "image_url": "https://gndec.ac.in/images/g%20e.jpg"
  },
  {
   "name": "DR. MANREET SOHAL",
@@ -1924,7 +2126,8 @@
   "profile_id": "391",
   "department": "Computer Applications",
   "dept_id": 29,
-  "profile_url": "https://gndec.ac.in/faculty/?id=391"
+  "profile_url": "https://gndec.ac.in/faculty/?id=391",
+  "image_url": "https://gndec.ac.in/images/IMG_7400.JPG"
  },
  {
   "name": "GAGANDEEP KAUR",
@@ -1933,7 +2136,8 @@
   "profile_id": "476",
   "department": "Computer Applications",
   "dept_id": 29,
-  "profile_url": "https://gndec.ac.in/faculty/?id=476"
+  "profile_url": "https://gndec.ac.in/faculty/?id=476",
+  "image_url": "https://gndec.ac.in/images/IMG_7407.JPG"
  },
  {
   "name": "GURJIWAN SINGH",
@@ -1942,7 +2146,8 @@
   "profile_id": "392",
   "department": "Computer Applications",
   "dept_id": 29,
-  "profile_url": "https://gndec.ac.in/faculty/?id=392"
+  "profile_url": "https://gndec.ac.in/faculty/?id=392",
+  "image_url": "https://gndec.ac.in/images/IMG_7419.JPG"
  },
  {
   "name": "GURLEEN KAUR",
@@ -1951,7 +2156,8 @@
   "profile_id": "474",
   "department": "Computer Applications",
   "dept_id": 29,
-  "profile_url": "https://gndec.ac.in/faculty/?id=474"
+  "profile_url": "https://gndec.ac.in/faculty/?id=474",
+  "image_url": "https://gndec.ac.in/images/IMG_20260209_154602.jpg"
  },
  {
   "name": "HARMANDEEP KAUR",
@@ -1960,7 +2166,8 @@
   "profile_id": "386",
   "department": "Computer Applications",
   "dept_id": 29,
-  "profile_url": "https://gndec.ac.in/faculty/?id=386"
+  "profile_url": "https://gndec.ac.in/faculty/?id=386",
+  "image_url": "https://gndec.ac.in/images/WhatsApp%20Image%202022-09-30%20at%2017.49.51.jpg"
  },
  {
   "name": "KAMALPREET KAUR",
@@ -1969,7 +2176,8 @@
   "profile_id": "393",
   "department": "Computer Applications",
   "dept_id": 29,
-  "profile_url": "https://gndec.ac.in/faculty/?id=393"
+  "profile_url": "https://gndec.ac.in/faculty/?id=393",
+  "image_url": "https://gndec.ac.in/images/IMG_7414.JPG"
  },
  {
   "name": "MANPREET BHATTY",
@@ -1978,7 +2186,8 @@
   "profile_id": "481",
   "department": "Computer Applications",
   "dept_id": 29,
-  "profile_url": "https://gndec.ac.in/faculty/?id=481"
+  "profile_url": "https://gndec.ac.in/faculty/?id=481",
+  "image_url": "https://gndec.ac.in/images/IMG_7410.JPG"
  },
  {
   "name": "MANPREET KAUR",
@@ -1987,7 +2196,8 @@
   "profile_id": "424",
   "department": "Computer Applications",
   "dept_id": 29,
-  "profile_url": "https://gndec.ac.in/faculty/?id=424"
+  "profile_url": "https://gndec.ac.in/faculty/?id=424",
+  "image_url": "https://gndec.ac.in/images/IMG_7412.JPG"
  },
  {
   "name": "MANVIR SINGH",
@@ -1996,7 +2206,8 @@
   "profile_id": "475",
   "department": "Computer Applications",
   "dept_id": 29,
-  "profile_url": "https://gndec.ac.in/faculty/?id=475"
+  "profile_url": "https://gndec.ac.in/faculty/?id=475",
+  "image_url": "https://gndec.ac.in/images/IMG_7405.JPG"
  },
  {
   "name": "NEHA GUPTA",
@@ -2005,7 +2216,8 @@
   "profile_id": "420",
   "department": "Computer Applications",
   "dept_id": 29,
-  "profile_url": "https://gndec.ac.in/faculty/?id=420"
+  "profile_url": "https://gndec.ac.in/faculty/?id=420",
+  "image_url": "https://gndec.ac.in/images/WhatsApp%20Image%202024-07-10%20at%2010.36.17%20AM.jpeg"
  },
  {
   "name": "PRITI AGGARWAL",
@@ -2014,7 +2226,8 @@
   "profile_id": "423",
   "department": "Computer Applications",
   "dept_id": 29,
-  "profile_url": "https://gndec.ac.in/faculty/?id=423"
+  "profile_url": "https://gndec.ac.in/faculty/?id=423",
+  "image_url": "https://gndec.ac.in/images/IMG_7417.JPG"
  },
  {
   "name": "SATVEER KAUR",
@@ -2023,7 +2236,8 @@
   "profile_id": "431",
   "department": "Computer Applications",
   "dept_id": 29,
-  "profile_url": "https://gndec.ac.in/faculty/?id=431"
+  "profile_url": "https://gndec.ac.in/faculty/?id=431",
+  "image_url": "https://gndec.ac.in/images/SATVEER.jpg"
  },
  {
   "name": "SONIA",
@@ -2032,7 +2246,8 @@
   "profile_id": "434",
   "department": "Computer Applications",
   "dept_id": 29,
-  "profile_url": "https://gndec.ac.in/faculty/?id=434"
+  "profile_url": "https://gndec.ac.in/faculty/?id=434",
+  "image_url": "https://gndec.ac.in/images/SONIA-PIC-1.jpeg"
  },
  {
   "name": "DR. HARMEET SINGH",
@@ -2045,7 +2260,8 @@
   "phone_office": "0161-5064583",
   "phone_mobile": "95922-00299",
   "admin_roles": "HOD - Mechanical & Production Engg.",
-  "phone_source": "Information Brochure 2026"
+  "phone_source": "Information Brochure 2026",
+  "image_url": "https://gndec.ac.in/images/me%20new.JPG"
  },
  {
   "name": "DR. DEEPINDER SINGH",
@@ -2054,7 +2270,8 @@
   "profile_id": "177",
   "department": "Mechanical Engineering",
   "dept_id": 30,
-  "profile_url": "https://gndec.ac.in/faculty/?id=177"
+  "profile_url": "https://gndec.ac.in/faculty/?id=177",
+  "image_url": "https://gndec.ac.in/images/1.DS.jpg"
  },
  {
   "name": "DR. HARWINDER SINGH",
@@ -2067,7 +2284,8 @@
   "phone_office": "0161-5064510",
   "phone_mobile": "99155-07920",
   "admin_roles": "President Sports",
-  "phone_source": "Information Brochure 2026"
+  "phone_source": "Information Brochure 2026",
+  "image_url": "https://gndec.ac.in/images/Photo.png"
  },
  {
   "name": "DR. JASMANINDER SINGH GREWAL",
@@ -2080,7 +2298,8 @@
   "phone_office": "0161-5064724",
   "phone_mobile": "98153-23023",
   "admin_roles": "Controller of Examinations",
-  "phone_source": "Information Brochure 2026"
+  "phone_source": "Information Brochure 2026",
+  "image_url": "https://gndec.ac.in/images/JS%20Grewal_0.jpg"
  },
  {
   "name": "DR. JATINDER KAPOOR",
@@ -2089,7 +2308,8 @@
   "profile_id": "297",
   "department": "Mechanical Engineering",
   "dept_id": 30,
-  "profile_url": "https://gndec.ac.in/faculty/?id=297"
+  "profile_url": "https://gndec.ac.in/faculty/?id=297",
+  "image_url": "https://gndec.ac.in/images/photo%20JK.jpg"
  },
  {
   "name": "DR. PARAMJIT SINGH BILGA",
@@ -2098,7 +2318,8 @@
   "profile_id": "175",
   "department": "Mechanical Engineering",
   "dept_id": 30,
-  "profile_url": "https://gndec.ac.in/faculty/?id=175"
+  "profile_url": "https://gndec.ac.in/faculty/?id=175",
+  "image_url": "https://gndec.ac.in/images/Personal%20Photo_PSB1.jpg"
  },
  {
   "name": "DR. SEHIJPAL SINGH KHANGURA",
@@ -2111,7 +2332,8 @@
   "phone_office": "0161-5064500",
   "phone_mobile": "",
   "admin_roles": "Principal",
-  "phone_source": "Information Brochure 2026"
+  "phone_source": "Information Brochure 2026",
+  "image_url": "https://gndec.ac.in/images/Photo.jpg"
  },
  {
   "name": "DR. HARPUNEET SINGH",
@@ -2124,7 +2346,8 @@
   "phone_office": "0161-5064578",
   "phone_mobile": "99142-55011",
   "admin_roles": "Officer I/C M.Tech - Mechanical & Production Engg.",
-  "phone_source": "Information Brochure 2026"
+  "phone_source": "Information Brochure 2026",
+  "image_url": "https://gndec.ac.in/images/WhatsApp%20Image%202022-02-02%20at%203.34.44%20PM.jpeg"
  },
  {
   "name": "DR. PREM SINGH",
@@ -2133,7 +2356,8 @@
   "profile_id": "102",
   "department": "Mechanical Engineering",
   "dept_id": 30,
-  "profile_url": "https://gndec.ac.in/faculty/?id=102"
+  "profile_url": "https://gndec.ac.in/faculty/?id=102",
+  "image_url": "https://gndec.ac.in/images/Prem%20SIngh.jpeg"
  },
  {
   "name": "DR. ARDAMANBIR SINGH SIDHU",
@@ -2142,7 +2366,8 @@
   "profile_id": "287",
   "department": "Mechanical Engineering",
   "dept_id": 30,
-  "profile_url": "https://gndec.ac.in/faculty/?id=287"
+  "profile_url": "https://gndec.ac.in/faculty/?id=287",
+  "image_url": "https://gndec.ac.in/images/A.Sidhu%20%282%29.jpg"
  },
  {
   "name": "DR. AMRINDER SINGH PANNU",
@@ -2151,7 +2376,8 @@
   "profile_id": "154",
   "department": "Mechanical Engineering",
   "dept_id": 30,
-  "profile_url": "https://gndec.ac.in/faculty/?id=154"
+  "profile_url": "https://gndec.ac.in/faculty/?id=154",
+  "image_url": "https://gndec.ac.in/images/Pi7_Passport_Photo.jpeg"
  },
  {
   "name": "DR. BHUPINDER SINGH DHILLON",
@@ -2160,7 +2386,8 @@
   "profile_id": "184",
   "department": "Mechanical Engineering",
   "dept_id": 30,
-  "profile_url": "https://gndec.ac.in/faculty/?id=184"
+  "profile_url": "https://gndec.ac.in/faculty/?id=184",
+  "image_url": "https://gndec.ac.in/images/BSD%20Pic.JPG"
  },
  {
   "name": "DR. CHAMKAUR JINDAL",
@@ -2173,7 +2400,8 @@
   "phone_office": "0161-5064810",
   "phone_mobile": "84276-66994",
   "admin_roles": "Assistant Controller (Examination)",
-  "phone_source": "Information Brochure 2026"
+  "phone_source": "Information Brochure 2026",
+  "image_url": "https://gndec.ac.in/images/unnamed.jpg"
  },
  {
   "name": "DR. CHATWANT SINGH PANDHER",
@@ -2182,7 +2410,8 @@
   "profile_id": "18",
   "department": "Mechanical Engineering",
   "dept_id": 30,
-  "profile_url": "https://gndec.ac.in/faculty/?id=18"
+  "profile_url": "https://gndec.ac.in/faculty/?id=18",
+  "image_url": "https://gndec.ac.in/images/WhatsApp%20Image%202021-04-27%20at%209.28.06%20AM.jpeg"
  },
  {
   "name": "DR. DEEPAK DHAND",
@@ -2195,7 +2424,8 @@
   "phone_office": "0161-5064571",
   "phone_mobile": "98557-26093",
   "admin_roles": "Assistant Controller (Examination)",
-  "phone_source": "Information Brochure 2026"
+  "phone_source": "Information Brochure 2026",
+  "image_url": "https://gndec.ac.in/images/Deep%20pp.jpg"
  },
  {
   "name": "DR. GULRAJ SINGH",
@@ -2204,7 +2434,8 @@
   "profile_id": "379",
   "department": "Mechanical Engineering",
   "dept_id": 30,
-  "profile_url": "https://gndec.ac.in/faculty/?id=379"
+  "profile_url": "https://gndec.ac.in/faculty/?id=379",
+  "image_url": "https://gndec.ac.in/images/IMG-20260412-WA0002.jpg"
  },
  {
   "name": "DR. GULVIR SINGH",
@@ -2213,7 +2444,8 @@
   "profile_id": "492",
   "department": "Mechanical Engineering",
   "dept_id": 30,
-  "profile_url": "https://gndec.ac.in/faculty/?id=492"
+  "profile_url": "https://gndec.ac.in/faculty/?id=492",
+  "image_url": "https://gndec.ac.in/images/40%20KB%20photo_Gulvir.JPG"
  },
  {
   "name": "DR. HARNAM SINGH FARWAHA",
@@ -2226,7 +2458,8 @@
   "phone_office": "0161-5064705",
   "phone_mobile": "99883-32600",
   "admin_roles": "Assistant Registrar (Accounts)",
-  "phone_source": "Information Brochure 2026"
+  "phone_source": "Information Brochure 2026",
+  "image_url": "https://gndec.ac.in/images/Harnam.jpg"
  },
  {
   "name": "DR. JAGDEEP SINGH",
@@ -2239,7 +2472,8 @@
   "phone_office": "",
   "phone_mobile": "",
   "admin_roles": "Industrial Relation Cell",
-  "phone_source": "Information Brochure 2026"
+  "phone_source": "Information Brochure 2026",
+  "image_url": "https://gndec.ac.in/images/Jagdeep.jpg"
  },
  {
   "name": "DR. JATINDER PAL",
@@ -2248,7 +2482,8 @@
   "profile_id": "34",
   "department": "Mechanical Engineering",
   "dept_id": 30,
-  "profile_url": "https://gndec.ac.in/faculty/?id=34"
+  "profile_url": "https://gndec.ac.in/faculty/?id=34",
+  "image_url": "https://gndec.ac.in/images/JP%20%281%29.jpg"
  },
  {
   "name": "DR. RAMAN KUMAR",
@@ -2257,7 +2492,8 @@
   "profile_id": "330",
   "department": "Mechanical Engineering",
   "dept_id": 30,
-  "profile_url": "https://gndec.ac.in/faculty/?id=330"
+  "profile_url": "https://gndec.ac.in/faculty/?id=330",
+  "image_url": "https://gndec.ac.in/images/12%20Raman%20Snap%202019.jpg"
  },
  {
   "name": "DR. SATJOT SINGH DHILLON",
@@ -2270,7 +2506,8 @@
   "phone_office": "0161-5064501, 0161-5064588",
   "phone_mobile": "92920-00089",
   "admin_roles": "HOD - Workshops; Public Relation Officer",
-  "phone_source": "Information Brochure 2026"
+  "phone_source": "Information Brochure 2026",
+  "image_url": "https://gndec.ac.in/images/d6ab2c15-cadf-4a19-956b-1cc9a157955c.jpg"
  },
  {
   "name": "DR. SHEHBAAZ SINGH BRAR",
@@ -2283,7 +2520,8 @@
   "phone_office": "0161-5084523",
   "phone_mobile": "98779-33535",
   "admin_roles": "Chief Warden (Hostels)",
-  "phone_source": "Information Brochure 2026"
+  "phone_source": "Information Brochure 2026",
+  "image_url": "https://gndec.ac.in/images/shehbaaz.jpeg"
  },
  {
   "name": "ER. ARSHPREET KAUR",
@@ -2292,7 +2530,8 @@
   "profile_id": "371",
   "department": "Mechanical Engineering",
   "dept_id": 30,
-  "profile_url": "https://gndec.ac.in/faculty/?id=371"
+  "profile_url": "https://gndec.ac.in/faculty/?id=371",
+  "image_url": "https://gndec.ac.in/images/Arshpreet%20Kaur%20PHOTO%20%283%29.JPG"
  },
  {
   "name": "ER. DAVINDER SINGH BHOGAL",
@@ -2305,7 +2544,8 @@
   "phone_office": "",
   "phone_mobile": "95011-99916",
   "admin_roles": "Assistant Professor, Mechanical & Production",
-  "phone_source": "Statutory Committees"
+  "phone_source": "Statutory Committees",
+  "image_url": "https://gndec.ac.in/images/20220126_204346.jpg"
  },
  {
   "name": "ER. GURMEET KAUR",
@@ -2314,7 +2554,8 @@
   "profile_id": "179",
   "department": "Mechanical Engineering",
   "dept_id": 30,
-  "profile_url": "https://gndec.ac.in/faculty/?id=179"
+  "profile_url": "https://gndec.ac.in/faculty/?id=179",
+  "image_url": "https://gndec.ac.in/images/Er.%20Gurmeet%20Kaur.jpg"
  },
  {
   "name": "ER. GURPREET SINGH",
@@ -2323,7 +2564,8 @@
   "profile_id": "193",
   "department": "Mechanical Engineering",
   "dept_id": 30,
-  "profile_url": "https://gndec.ac.in/faculty/?id=193"
+  "profile_url": "https://gndec.ac.in/faculty/?id=193",
+  "image_url": "https://gndec.ac.in/images/Photograph.jpg"
  },
  {
   "name": "ER. GURWANT SINGH GILL",
@@ -2332,7 +2574,8 @@
   "profile_id": "187",
   "department": "Mechanical Engineering",
   "dept_id": 30,
-  "profile_url": "https://gndec.ac.in/faculty/?id=187"
+  "profile_url": "https://gndec.ac.in/faculty/?id=187",
+  "image_url": "https://gndec.ac.in/images/satwant.jpg"
  },
  {
   "name": "ER. JAGJIT KAUR",
@@ -2341,7 +2584,8 @@
   "profile_id": "162",
   "department": "Mechanical Engineering",
   "dept_id": 30,
-  "profile_url": "https://gndec.ac.in/faculty/?id=162"
+  "profile_url": "https://gndec.ac.in/faculty/?id=162",
+  "image_url": "https://gndec.ac.in/images/pic%201.jpg"
  },
  {
   "name": "ER. JASWINDER SINGH",
@@ -2350,7 +2594,8 @@
   "profile_id": "159",
   "department": "Mechanical Engineering",
   "dept_id": 30,
-  "profile_url": "https://gndec.ac.in/faculty/?id=159"
+  "profile_url": "https://gndec.ac.in/faculty/?id=159",
+  "image_url": "https://gndec.ac.in/images/FB_IMG_1523962984914.jpg"
  },
  {
   "name": "ER. KANWAL PREET SAHNI",
@@ -2359,7 +2604,8 @@
   "profile_id": "378",
   "department": "Mechanical Engineering",
   "dept_id": 30,
-  "profile_url": "https://gndec.ac.in/faculty/?id=378"
+  "profile_url": "https://gndec.ac.in/faculty/?id=378",
+  "image_url": "https://gndec.ac.in/images/kps%20pic.jpg"
  },
  {
   "name": "ER. LAKHVEER SINGH KHANA",
@@ -2368,7 +2614,8 @@
   "profile_id": "270",
   "department": "Mechanical Engineering",
   "dept_id": 30,
-  "profile_url": "https://gndec.ac.in/faculty/?id=270"
+  "profile_url": "https://gndec.ac.in/faculty/?id=270",
+  "image_url": "https://gndec.ac.in/images/IMG_0738.JPG"
  },
  {
   "name": "ER. MANJOT SINGH BEDI",
@@ -2377,7 +2624,8 @@
   "profile_id": "369",
   "department": "Mechanical Engineering",
   "dept_id": 30,
-  "profile_url": "https://gndec.ac.in/faculty/?id=369"
+  "profile_url": "https://gndec.ac.in/faculty/?id=369",
+  "image_url": "https://gndec.ac.in/images/msb.jpeg"
  },
  {
   "name": "ER. MANMOHAN SINGH",
@@ -2386,7 +2634,8 @@
   "profile_id": "197",
   "department": "Mechanical Engineering",
   "dept_id": 30,
-  "profile_url": "https://gndec.ac.in/faculty/?id=197"
+  "profile_url": "https://gndec.ac.in/faculty/?id=197",
+  "image_url": "https://gndec.ac.in/images/picture.jpg"
  },
  {
   "name": "ER. PUSHPINDER SINGH",
@@ -2395,7 +2644,8 @@
   "profile_id": "194",
   "department": "Mechanical Engineering",
   "dept_id": 30,
-  "profile_url": "https://gndec.ac.in/faculty/?id=194"
+  "profile_url": "https://gndec.ac.in/faculty/?id=194",
+  "image_url": "https://gndec.ac.in/images/PPS.jpg"
  },
  {
   "name": "ER. RUPINDER SINGH",
@@ -2404,7 +2654,8 @@
   "profile_id": "189",
   "department": "Mechanical Engineering",
   "dept_id": 30,
-  "profile_url": "https://gndec.ac.in/faculty/?id=189"
+  "profile_url": "https://gndec.ac.in/faculty/?id=189",
+  "image_url": "https://gndec.ac.in/images/23E1CD04-84ED-49AA-957B-4F53DB978E43.jpeg"
  },
  {
   "name": "ER. SATWANT SINGH",
@@ -2413,7 +2664,8 @@
   "profile_id": "166",
   "department": "Mechanical Engineering",
   "dept_id": 30,
-  "profile_url": "https://gndec.ac.in/faculty/?id=166"
+  "profile_url": "https://gndec.ac.in/faculty/?id=166",
+  "image_url": "https://gndec.ac.in/images/WhatsApp%20Image%202022-01-25%20at%2012.12.11%20PM.jpeg"
  },
  {
   "name": "ER. SUKHJEET SINGH",
@@ -2422,7 +2674,8 @@
   "profile_id": "284",
   "department": "Mechanical Engineering",
   "dept_id": 30,
-  "profile_url": "https://gndec.ac.in/faculty/?id=284"
+  "profile_url": "https://gndec.ac.in/faculty/?id=284",
+  "image_url": "https://gndec.ac.in/images/singh%20profile%20pic%2001.jpg"
  },
  {
   "name": "ER.JASVIR SINGH",
@@ -2431,7 +2684,8 @@
   "profile_id": "186",
   "department": "Mechanical Engineering",
   "dept_id": 30,
-  "profile_url": "https://gndec.ac.in/faculty/?id=186"
+  "profile_url": "https://gndec.ac.in/faculty/?id=186",
+  "image_url": "https://gndec.ac.in/images/a63b6f11-2dc1-46ea-8b23-1533d2dc979d.jpg"
  },
  {
   "name": "JASMANINDER SINGH GREWAL",
@@ -2444,7 +2698,8 @@
   "phone_office": "0161-5064724",
   "phone_mobile": "98153-23023",
   "admin_roles": "Controller of Examinations",
-  "phone_source": "Information Brochure 2026"
+  "phone_source": "Information Brochure 2026",
+  "image_url": "https://gndec.ac.in/images/IMG_1855A.jpg"
  },
  {
   "name": "RUPINDER SINGH",
@@ -2453,7 +2708,8 @@
   "profile_id": "164",
   "department": "Production Engineering",
   "dept_id": 31,
-  "profile_url": "https://gndec.ac.in/faculty/?id=164"
+  "profile_url": "https://gndec.ac.in/faculty/?id=164",
+  "image_url": "https://gndec.ac.in/images/Clipboard01.jpg"
  },
  {
   "name": "HARPUNEET SINGH",
@@ -2466,7 +2722,8 @@
   "phone_office": "0161-5064578",
   "phone_mobile": "99142-55011",
   "admin_roles": "Officer I/C M.Tech - Mechanical & Production Engg.",
-  "phone_source": "Information Brochure 2026"
+  "phone_source": "Information Brochure 2026",
+  "image_url": "https://gndec.ac.in/images/WhatsApp%20Image%202022-02-02%20at%203.34.44%20PM.jpeg"
  },
  {
   "name": "ARSHPREET KAUR",
@@ -2475,7 +2732,8 @@
   "profile_id": "156",
   "department": "Production Engineering",
   "dept_id": 31,
-  "profile_url": "https://gndec.ac.in/faculty/?id=156"
+  "profile_url": "https://gndec.ac.in/faculty/?id=156",
+  "image_url": "https://gndec.ac.in/images/IMG-6757.JPG"
  },
  {
   "name": "GULRAJ SINGH",
@@ -2484,7 +2742,8 @@
   "profile_id": "158",
   "department": "Production Engineering",
   "dept_id": 31,
-  "profile_url": "https://gndec.ac.in/faculty/?id=158"
+  "profile_url": "https://gndec.ac.in/faculty/?id=158",
+  "image_url": "https://gndec.ac.in/images/IMG-20260412-WA0002.jpg"
  },
  {
   "name": "GURLEEN SINGH SANDHU",
@@ -2493,7 +2752,8 @@
   "profile_id": "296",
   "department": "Production Engineering",
   "dept_id": 31,
-  "profile_url": "https://gndec.ac.in/faculty/?id=296"
+  "profile_url": "https://gndec.ac.in/faculty/?id=296",
+  "image_url": "https://gndec.ac.in/images/download.png"
  },
  {
   "name": "JAGDEEP SINGH",
@@ -2506,7 +2766,8 @@
   "phone_office": "",
   "phone_mobile": "",
   "admin_roles": "Industrial Relation Cell",
-  "phone_source": "Information Brochure 2026"
+  "phone_source": "Information Brochure 2026",
+  "image_url": "https://gndec.ac.in/images/Jagdeep.jpg"
  },
  {
   "name": "KANWAL PREET SAHNI",
@@ -2515,7 +2776,8 @@
   "profile_id": "163",
   "department": "Production Engineering",
   "dept_id": 31,
-  "profile_url": "https://gndec.ac.in/faculty/?id=163"
+  "profile_url": "https://gndec.ac.in/faculty/?id=163",
+  "image_url": "https://gndec.ac.in/images/kps%20pic.jpg"
  },
  {
   "name": "MANJOT SINGH BEDI",
@@ -2524,7 +2786,8 @@
   "profile_id": "294",
   "department": "Production Engineering",
   "dept_id": 31,
-  "profile_url": "https://gndec.ac.in/faculty/?id=294"
+  "profile_url": "https://gndec.ac.in/faculty/?id=294",
+  "image_url": "https://gndec.ac.in/images/msb.jpeg"
  },
  {
   "name": "AR.AKANKSHA SHARMA",
@@ -2537,7 +2800,8 @@
   "phone_office": "0161-5064801",
   "phone_mobile": "76965-21055",
   "admin_roles": "HOD - GNDEC School of Architecture",
-  "phone_source": "Information Brochure 2026"
+  "phone_source": "Information Brochure 2026",
+  "image_url": "https://gndec.ac.in/images/Akanksha%20Sharma.jpg"
  },
  {
   "name": "AR.VIVEK SEHGAL",
@@ -2546,7 +2810,8 @@
   "profile_id": "491",
   "department": "School of Architecture",
   "dept_id": 99,
-  "profile_url": "https://gndec.ac.in/faculty/?id=491"
+  "profile_url": "https://gndec.ac.in/faculty/?id=491",
+  "image_url": "https://gndec.ac.in/images/WhatsApp%20Image%202020-12-11%20at%2011.07.59%20PM%20%282%29.jpeg"
  },
  {
   "name": "AR. DHARINI MIDDHA",
@@ -2555,7 +2820,8 @@
   "profile_id": "506",
   "department": "School of Architecture",
   "dept_id": 99,
-  "profile_url": "https://gndec.ac.in/faculty/?id=506"
+  "profile_url": "https://gndec.ac.in/faculty/?id=506",
+  "image_url": "https://gndec.ac.in/images/IMG-20260918-WA0002.jpg"
  },
  {
   "name": "AR. HARSIMRANJEET KAUR",
@@ -2564,7 +2830,8 @@
   "profile_id": "488",
   "department": "School of Architecture",
   "dept_id": 99,
-  "profile_url": "https://gndec.ac.in/faculty/?id=488"
+  "profile_url": "https://gndec.ac.in/faculty/?id=488",
+  "image_url": "https://gndec.ac.in/images/WhatsApp%20Image%202026-03-17%20at%2021.02.45.jpeg"
  },
  {
   "name": "AR. MOKSHA BHATIA",
@@ -2573,7 +2840,8 @@
   "profile_id": "487",
   "department": "School of Architecture",
   "dept_id": 99,
-  "profile_url": "https://gndec.ac.in/faculty/?id=487"
+  "profile_url": "https://gndec.ac.in/faculty/?id=487",
+  "image_url": "https://gndec.ac.in/images/Ar%20Moksha%20Bhatia.jpeg"
  },
  {
   "name": "BALJEET SINGH",
@@ -2582,7 +2850,8 @@
   "profile_id": "483",
   "department": "School of Architecture",
   "dept_id": 99,
-  "profile_url": "https://gndec.ac.in/faculty/?id=483"
+  "profile_url": "https://gndec.ac.in/faculty/?id=483",
+  "image_url": "https://gndec.ac.in/images/IMG_20260310_152637.jpg"
  },
  {
   "name": "NAVJOT KAUR SARAO",
@@ -2591,7 +2860,8 @@
   "profile_id": "490",
   "department": "School of Architecture",
   "dept_id": 99,
-  "profile_url": "https://gndec.ac.in/faculty/?id=490"
+  "profile_url": "https://gndec.ac.in/faculty/?id=490",
+  "image_url": "https://gndec.ac.in/images/ar_navjot.jpg"
  },
  {
   "name": "RAMANPREET KAUR",
@@ -2600,6 +2870,7 @@
   "profile_id": "486",
   "department": "School of Architecture",
   "dept_id": 99,
-  "profile_url": "https://gndec.ac.in/faculty/?id=486"
+  "profile_url": "https://gndec.ac.in/faculty/?id=486",
+  "image_url": "https://gndec.ac.in/images/IMG_20260319_175553.jpg"
  }
 ]

@@ -29,6 +29,7 @@ class FacultyDirectoryDecodeTest {
                 "department": "Applied Science",
                 "dept_id": 1,
                 "profile_url": "https://gndec.ac.in/faculty/?id=71",
+                "image_url": "https://gndec.ac.in/images/drhkgrewal%20pic.jpg",
                 "phone_office": "0161-5064529",
                 "phone_mobile": "98156-57551",
                 "admin_roles": "HOD - Applied Sciences",
@@ -46,6 +47,7 @@ class FacultyDirectoryDecodeTest {
         assertEquals("Applied Science", record.department)
         assertEquals(1, record.deptId)
         assertEquals("https://gndec.ac.in/faculty/?id=71", record.profileUrl)
+        assertEquals("https://gndec.ac.in/images/drhkgrewal%20pic.jpg", record.imageUrl)
         assertEquals("0161-5064529", record.phoneOffice)
         assertEquals("98156-57551", record.phoneMobile)
         assertEquals("HOD - Applied Sciences", record.adminRoles)
@@ -57,6 +59,7 @@ class FacultyDirectoryDecodeTest {
         val payload = """[{"name":"SOMEONE","email":"x@gndec.ac.in"}]"""
         val record = json.decodeFromString<List<FacultyRecord>>(payload)[0]
         assertEquals("", record.profileId)
+        assertEquals("", record.imageUrl)
         assertEquals("", record.phoneOffice)
         assertEquals("", record.phoneMobile)
         assertEquals(0, record.deptId)

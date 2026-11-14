@@ -132,6 +132,10 @@ fun FacultyDetailScreen(
     }
     val isExtraTeacher = profileId.startsWith(ExtraTeacherIdPrefix)
 
+    // Non-null while the zoomable photo viewer is open: the teacher's image
+    // URL paired with their display name.
+    var photoViewerFor by remember(profileId) { mutableStateOf<Pair<String, String>?>(null) }
+
     var result by remember(profileId) { mutableStateOf<FacultyTimetableResult?>(null) }
     var loading by remember(profileId) { mutableStateOf(true) }
     var refreshTick by remember(profileId) { mutableStateOf(0) }
@@ -213,18 +217,31 @@ fun FacultyDetailScreen(
                     Header(title = "Faculty details", onBack = onBack, onSettings = onOpenSettings, modifier = Modifier.padding(top = 8.dp))
                 }
 
-                // Identity
+                // Identity — the teacher's website photo when the directory
+                // carries one (tap to open the zoomable viewer); the plain
+                // person badge for everyone else.
                 item {
                     Row(
                         Modifier.fillMaxWidth().padding(horizontal = 24.dp, vertical = 8.dp),
                         verticalAlignment = Alignment.CenterVertically
                     ) {
-                        IconBadge(
-                            Icons.Default.Person,
-                            containerColor = MaterialTheme.colorScheme.primary,
-                            tint = MaterialTheme.colorScheme.onPrimary,
-                            size = 72.dp
-                        )
+                        val photoRecord = record
+                        if (photoRecord.imageUrl.isNotBlank()) {
+                            FacultyAvatar(
+                                store = container.facultyPhotos,
+                                url = photoRecord.imageUrl,
+                                name = photoRecord.name,
+                                size = 72.dp,
+                                onPhotoClick = { photoViewerFor = photoRecord.imageUrl to prettyName(photoRecord.name) }
+                            )
+                        } else {
+                            IconBadge(
+                                Icons.Default.Person,
+                                containerColor = MaterialTheme.colorScheme.primary,
+                                tint = MaterialTheme.colorScheme.onPrimary,
+                                size = 72.dp
+                            )
+                        }
                         Spacer(Modifier.width(16.dp))
                         Column(Modifier.weight(1f)) {
                             Text(
@@ -379,6 +396,16 @@ fun FacultyDetailScreen(
                 }
             }
         }
+    }
+
+    // Zoomable photo viewer — opened by tapping the teacher's avatar above.
+    photoViewerFor?.let { (url, name) ->
+        FacultyPhotoViewer(
+            store = container.facultyPhotos,
+            url = url,
+            name = name,
+            onDismiss = { photoViewerFor = null }
+        )
     }
 }
 
