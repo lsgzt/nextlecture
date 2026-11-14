@@ -12,22 +12,23 @@ import kotlinx.coroutines.withContext
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import java.io.File
+import java.io.FileOutputStream
 import java.security.MessageDigest
 
 /**
- * Loads faculty profile photos from the college website.
+ * Loads faculty profile photos from the college website with durable local cache.
  *
- * The bundled directory carries each teacher's absolute `image_url` (scraped
- * from their profile page — the site exposes photos like
- * `https://gndec.ac.in/images/drhkgrewal%20pic.jpg`, typically ~1000px JPEGs,
- * big enough to zoom into). Photos stream through a small disk cache under
- * `cacheDir/faculty_photos` and an in-memory LruCache, so a photo loads over
- * the network exactly once and then renders instantly from disk while the
- * list scrolls.
+ * Strategy (data-saving):
+ * - List / avatar rows request [THUMB_MAX_DIM]: a small JPEG is kept under
+ *   [filesDir] (survives cache clears) and is what scrolling lists always use.
+ * - Fullscreen viewer requests [MAX_DETAIL_DIM]: the original bytes are kept
+ *   under [filesDir] as well and only downloaded when the user opens the photo
+ *   (or when a missing thumb forces a one-time fetch that also seeds the thumb).
+ * - Network is used at most once per URL for the original; after that list and
+ *   viewer both hit disk. No bulk prefetch of every teacher on open.
  *
- * Decode is bounds-first with `inSampleSize`, so a 1200×900 source renders as
- * a ~256px thumbnail in rows without ever allocating the full bitmap. The
- * zoomable viewer asks for the larger [MAX_DETAIL_DIM] decode.
+ * Legacy files under cacheDir/faculty_photos are still read once and migrated
+ * into the permanent dirs so existing installs do not re-download everything.
  */
 class FacultyPhotoStore(
     context: Context,
@@ -40,14 +41,27 @@ class FacultyPhotoStore(
         /** The fullscreen zoomable viewer's decode budget (longest side). */
         const val MAX_DETAIL_DIM = 2048
 
-        /** Cached photos older than this are refreshed from the network. */
-        private const val DISK_TTL_MS = 30L * 24 * 60 * 60 * 1000 // 30 days
+        /** JPEG quality for permanent list thumbs (~5–20 KB typical). */
+        private const val THUMB_JPEG_QUALITY = 80
+
+        /**
+         * Full originals stay valid this long before a quiet re-fetch is allowed.
+         * Thumbs have no expiry — they are cheap and stable enough for icons.
+         */
+        private const val FULL_TTL_MS = 180L * 24 * 60 * 60 * 1000 // 180 days
     }
 
-    private val diskDir = File(context.cacheDir, "faculty_photos").apply { mkdirs() }
+    /** Permanent small avatars — not under cacheDir so the OS will not wipe them. */
+    private val thumbDir = File(context.filesDir, "faculty_photo_thumbs").apply { mkdirs() }
 
-    /** Keyed by "url|maxDim" so the thumbnail and the full decode coexist. */
-    private val memory = object : LruCache<String, Bitmap>(24) {
+    /** Permanent full originals for the zoom viewer. */
+    private val fullDir = File(context.filesDir, "faculty_photo_full").apply { mkdirs() }
+
+    /** Pre-v2 cache location; read-only migration source. */
+    private val legacyDir = File(context.cacheDir, "faculty_photos")
+
+    /** Keyed by "url|thumb" or "url|full" so both sizes coexist in memory. */
+    private val memory = object : LruCache<String, Bitmap>(48) {
         override fun sizeOf(key: String, value: Bitmap): Int = 1
     }
 
@@ -55,56 +69,160 @@ class FacultyPhotoStore(
     private val inFlight = mutableMapOf<String, Mutex>()
     private val inFlightGuard = Mutex()
 
-    /** Photo bitmap for [url] at up to [maxDim] on the longest side, or null. */
+    /**
+     * Photo bitmap for [url] at up to [maxDim] on the longest side, or null.
+     * Callers pass [THUMB_MAX_DIM] for list avatars and [MAX_DETAIL_DIM] for
+     * the fullscreen viewer.
+     */
     suspend fun load(url: String, maxDim: Int = THUMB_MAX_DIM): Bitmap? {
         if (url.isBlank()) return null
-        val key = "$url|$maxDim"
+        return if (maxDim <= THUMB_MAX_DIM) loadThumb(url) else loadFull(url, maxDim)
+    }
+
+    private suspend fun loadThumb(url: String): Bitmap? {
+        val key = "$url|thumb"
         memory.get(key)?.let { return it }
+        return withInFlight(key) {
+            memory.get(key)?.let { return@withInFlight it }
+
+            readThumbFile(url)?.let { bmp ->
+                memory.put(key, bmp)
+                return@withInFlight bmp
+            }
+
+            // Prefer a durable/legacy full file so we never hit the network
+            // just to rebuild a missing thumb after a cache clear.
+            val fullBytes = readFullBytes(url)
+            if (fullBytes != null) {
+                val thumb = withContext(Dispatchers.Default) { decode(fullBytes, THUMB_MAX_DIM) }
+                    ?: return@withInFlight null
+                withContext(Dispatchers.IO) { writeThumbFile(url, thumb) }
+                memory.put(key, thumb)
+                return@withInFlight thumb
+            }
+
+            val bytes = download(url) ?: return@withInFlight null
+            withContext(Dispatchers.IO) {
+                writeFullBytes(url, bytes)
+            }
+            val thumb = withContext(Dispatchers.Default) { decode(bytes, THUMB_MAX_DIM) }
+                ?: return@withInFlight null
+            withContext(Dispatchers.IO) { writeThumbFile(url, thumb) }
+            memory.put(key, thumb)
+            thumb
+        }
+    }
+
+    private suspend fun loadFull(url: String, maxDim: Int): Bitmap? {
+        val key = "$url|full"
+        memory.get(key)?.let { return it }
+        return withInFlight(key) {
+            memory.get(key)?.let { return@withInFlight it }
+
+            val cachedBytes = readFullBytes(url)
+            if (cachedBytes != null) {
+                val bmp = withContext(Dispatchers.Default) { decode(cachedBytes, maxDim) }
+                    ?: return@withInFlight null
+                // Ensure a list thumb exists so later scrolls stay offline.
+                ensureThumbFromBytes(url, cachedBytes)
+                memory.put(key, bmp)
+                return@withInFlight bmp
+            }
+
+            val bytes = download(url) ?: return@withInFlight null
+            withContext(Dispatchers.IO) { writeFullBytes(url, bytes) }
+            val bmp = withContext(Dispatchers.Default) { decode(bytes, maxDim) }
+                ?: return@withInFlight null
+            ensureThumbFromBytes(url, bytes)
+            memory.put(key, bmp)
+            bmp
+        }
+    }
+
+    private suspend fun ensureThumbFromBytes(url: String, bytes: ByteArray) {
+        if (thumbFile(url).isFile) return
+        val thumb = withContext(Dispatchers.Default) { decode(bytes, THUMB_MAX_DIM) } ?: return
+        withContext(Dispatchers.IO) { writeThumbFile(url, thumb) }
+        memory.put("$url|thumb", thumb)
+    }
+
+    private suspend fun <T> withInFlight(key: String, block: suspend () -> T): T {
         val mutex = inFlightGuard.withLock {
             inFlight.getOrPut(key) { Mutex() }
         }
-        // Fast path for whoever already holds the lock: they are loading it.
-        if (!mutex.tryLock()) {
-            mutex.lock()
-            mutex.unlock()
-            memory.get(key)?.let { return it }
-            return diskBitmap(url, maxDim)?.also { memory.put(key, it) }
-        }
+        mutex.lock()
         try {
-            val cached = diskBitmap(url, maxDim)
-            if (cached != null) {
-                memory.put(key, cached)
-                return cached
-            }
-            val bytes = withContext(Dispatchers.IO) {
-                runCatching {
-                    client.newCall(Request.Builder().url(url).build()).execute().use { response ->
-                        if (response.isSuccessful) response.body?.bytes() else null
-                    }
-                }.getOrNull()
-            } ?: return null
-            val bitmap = withContext(Dispatchers.Default) { decode(bytes, maxDim) } ?: return null
-            withContext(Dispatchers.IO) {
-                runCatching { diskFile(url).writeBytes(bytes) }
-            }
-            memory.put(key, bitmap)
-            return bitmap
+            return block()
         } finally {
             mutex.unlock()
             inFlightGuard.withLock { if (inFlight[key] == mutex) inFlight.remove(key) }
         }
     }
 
-    private fun diskFile(url: String): File = File(diskDir, sha256(url) + ".img")
+    private suspend fun download(url: String): ByteArray? = withContext(Dispatchers.IO) {
+        runCatching {
+            client.newCall(Request.Builder().url(url).build()).execute().use { response ->
+                if (response.isSuccessful) response.body?.bytes() else null
+            }
+        }.getOrNull()
+    }
 
-    private fun diskBitmap(url: String, maxDim: Int): Bitmap? {
-        val file = diskFile(url)
+    private fun thumbFile(url: String): File = File(thumbDir, sha256(url) + ".jpg")
+    private fun fullFile(url: String): File = File(fullDir, sha256(url) + ".img")
+    private fun legacyFile(url: String): File = File(legacyDir, sha256(url) + ".img")
+
+    private fun readThumbFile(url: String): Bitmap? {
+        val file = thumbFile(url)
         if (!file.isFile) return null
-        if (System.currentTimeMillis() - file.lastModified() > DISK_TTL_MS) {
-            runCatching { file.delete() }
-            return null
+        return runCatching { decode(file.readBytes(), THUMB_MAX_DIM) }.getOrNull()
+    }
+
+    private fun writeThumbFile(url: String, bitmap: Bitmap) {
+        runCatching {
+            val target = thumbFile(url)
+            val tmp = File(target.parentFile, target.name + ".tmp")
+            FileOutputStream(tmp).use { out ->
+                bitmap.compress(Bitmap.CompressFormat.JPEG, THUMB_JPEG_QUALITY, out)
+            }
+            if (!tmp.renameTo(target)) {
+                tmp.copyTo(target, overwrite = true)
+                tmp.delete()
+            }
         }
-        return runCatching { decode(file.readBytes(), maxDim) }.getOrNull()
+    }
+
+    private fun readFullBytes(url: String): ByteArray? {
+        val primary = fullFile(url)
+        if (primary.isFile) {
+            if (System.currentTimeMillis() - primary.lastModified() > FULL_TTL_MS) {
+                // Soft expiry: still serve the file, but mark for refresh by
+                // touching is skipped — next successful download overwrites.
+                // Returning bytes keeps the UI offline; a background refresh
+                // is intentionally not forced here to avoid surprise data use.
+            }
+            return runCatching { primary.readBytes() }.getOrNull()
+        }
+        val legacy = legacyFile(url)
+        if (legacy.isFile) {
+            val bytes = runCatching { legacy.readBytes() }.getOrNull() ?: return null
+            // Migrate off disposable cacheDir so the next OS clean does not
+            // force a re-download.
+            runCatching { writeFullBytes(url, bytes) }
+            return bytes
+        }
+        return null
+    }
+
+    private fun writeFullBytes(url: String, bytes: ByteArray) {
+        runCatching {
+            val target = fullFile(url)
+            val tmp = File(target.parentFile, target.name + ".tmp")
+            tmp.writeBytes(bytes)
+            if (!tmp.renameTo(target)) {
+                tmp.copyTo(target, overwrite = true)
+                tmp.delete()
+            }
+        }
     }
 
     /** Bounds-first decode with power-of-two sampling down to [maxDim]. */
