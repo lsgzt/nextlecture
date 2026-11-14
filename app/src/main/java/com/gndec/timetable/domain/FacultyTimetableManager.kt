@@ -8,6 +8,9 @@ import com.gndec.timetable.parse.FacultySlot
 import com.gndec.timetable.parse.ParsedFacultyDoc
 import com.gndec.timetable.parse.TeacherTable
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.async
+import kotlinx.coroutines.awaitAll
+import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
 import kotlinx.coroutines.withContext
@@ -97,8 +100,15 @@ class FacultyTimetableManager(
      * timetable return [FacultyTimetableResult.NotPublished] immediately
      * (offline) — the detail screen then shows the directory's contact details
      * plus the "timetable not available" note.
+     *
+     * Teachers that exist only inside a department timetable (synthetic
+     * "tt-…" ids, see [extraTeachersFromMemory]) resolve through the same
+     * discovery that produced their record.
      */
     suspend fun load(faculty: FacultyRecord, forceRefresh: Boolean = false): FacultyTimetableResult {
+        if (faculty.profileId.startsWith(ExtraTeacherIdPrefix)) {
+            return loadExtraTeacher(faculty.profileId, forceRefresh)
+        }
         val root = FacultyDirectoryManager.rootForDepartment(faculty.department)
             ?: return FacultyTimetableResult.NotPublished
 
@@ -124,7 +134,7 @@ class FacultyTimetableManager(
     private suspend fun ensureDoc(root: RoomSourceRoot, force: Boolean): ParsedFacultyDoc? {
         val mutex = synchronized(inFlight) { inFlight.getOrPut(root) { Mutex() } }
         return mutex.withLock {
-            val cached = memory[root]
+            val cached = synchronized(this@FacultyTimetableManager) { memory[root] }
             val fresh = cached != null && System.currentTimeMillis() - cached!!.fetchedAtMillis < FRESH_WINDOW_MS
             if (!force && fresh) return@withLock cached
 
@@ -136,13 +146,73 @@ class FacultyTimetableManager(
             }
             // A failed refresh keeps the previously cached document usable.
             if (fetched != null) {
-                memory[root] = fetched
+                synchronized(this@FacultyTimetableManager) { memory[root] = fetched }
                 runCatching { writeCache(root, fetched) }
                 fetched
             } else {
                 cached
             }
         }
+    }
+
+    /**
+     * Loads every department's teacher document (cache-first, exactly like
+     * [load]) so the teachers that exist only in the timetables can be
+     * discovered. Safe to call repeatedly: fresh documents are not refetched.
+     */
+    suspend fun ensureAllDocs(forceRefresh: Boolean = false): List<ParsedFacultyDoc?> = coroutineScope {
+        ROOTS.map { root ->
+            async(Dispatchers.IO) {
+                runCatching { ensureDoc(root, forceRefresh) }.getOrNull()
+            }
+        }.awaitAll()
+    }
+
+    /**
+     * Teachers the timetables list but the directory does not — computed from
+     * whatever documents are already in memory (the disk cache is warmed at
+     * construction, so this works offline after the first fetch). Cheap string
+     * matching over the cached docs; call from a background dispatcher.
+     */
+    fun extraTeachersFromMemory(): List<ExtraFacultyTeacher> {
+        val docs = synchronized(this@FacultyTimetableManager) { memory.values.filterNotNull().toList() }
+        if (docs.isEmpty()) return emptyList()
+        val directoryRecords = directory.directory
+        val perDoc = docs.map { doc ->
+            val root = ROOTS.firstOrNull { it.id == doc.rootId } ?: return@map emptyList()
+            FacultyExtraDiscovery.discoverForDoc(doc, root, directoryRecords)
+        }
+        return FacultyExtraDiscovery.mergeExtras(perDoc.flatten())
+    }
+
+    /** The timetable-only teacher with this synthetic "tt-…" id, if loaded. */
+    fun extraTeacherById(profileId: String): ExtraFacultyTeacher? =
+        extraTeachersFromMemory().firstOrNull { it.record.profileId == profileId }
+
+    /** Resolves a synthetic "tt-…" teacher back to its table in the live doc. */
+    private suspend fun loadExtraTeacher(profileId: String, force: Boolean): FacultyTimetableResult {
+        val rootId = profileId.removePrefix(ExtraTeacherIdPrefix).substringBefore('-')
+        val root = ROOTS.firstOrNull { it.id == rootId }
+            ?: return FacultyTimetableResult.NotPublished
+        val doc = ensureDoc(root, force)
+            ?: return FacultyTimetableResult.Unavailable(
+                "The teacher timetable could not be loaded. Check your connection and try again."
+            )
+        val extra = FacultyExtraDiscovery.discoverForDoc(doc, root, directory.directory)
+            .firstOrNull { it.record.profileId == profileId }
+            // The college may have renamed or removed the teacher's table in a
+            // newer document; the directory has no record either way.
+            ?: return FacultyTimetableResult.NotPublished
+        return FacultyTimetableResult.Ready(
+            FacultySchedule(
+                faculty = extra.record,
+                table = extra.table,
+                sourceUrl = doc.url,
+                sourceRootId = doc.rootId,
+                generatedAtMillis = doc.generatedAtMillis,
+                fetchedAtMillis = doc.fetchedAtMillis
+            )
+        )
     }
 
     /**

@@ -63,6 +63,9 @@ object FacultyNameMatcher {
     private fun labelTokens(label: String): List<String> =
         label.lowercase().split(Regex("[^a-z0-9]+")).filter { it.isNotEmpty() }
 
+    /** True when [token] is an honorific title ("Dr", "Er", "Ms", …). */
+    fun isTitle(token: String): Boolean = token.lowercase() in TITLES
+
     /** Honorific at the start of the name, or "" when absent. */
     fun titleOf(name: String?): String {
         val first = name.orEmpty().trim().split(Regex("[^A-Za-z]+")).firstOrNull()?.lowercase().orEmpty()
@@ -76,6 +79,17 @@ object FacultyNameMatcher {
         }
         return null
     }
+
+    /**
+     * The department a bare teacher-table code stands for when it is a
+     * DEPARTMENT code ("EE" → Electrical Engineering, "TA" → Workshops).
+     * Real teacher codes ("KDS", "HVS") return null.
+     */
+    fun deptOfCode(code: String?): String? =
+        code?.trim()?.takeIf { it.isNotEmpty() }?.let { DEPT_CODES[it.lowercase()] }
+
+    /** True when a word is a DEPARTMENT code ("me", "ce", "appsc") — not a name. */
+    fun isDeptWord(token: String): Boolean = token.lowercase() in DEPT_CODES
 
     // --- label → (full name, code) --------------------------------------------
 

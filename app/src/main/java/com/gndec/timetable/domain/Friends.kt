@@ -113,6 +113,44 @@ fun friendNameList(names: List<String>): String = when (names.size) {
 fun friendVerb(names: List<String>): String = if (names.size == 1) "is" else "are"
 
 /**
+ * Sentence(s) for the friend note under one of the student's own classes.
+ *
+ * Friends free for the WHOLE class keep the grouped sentence. Friends free for
+ * only part of it are grouped by the exact free window they share, so two
+ * friends free over the same stretch read as one clause with "and" —
+ * "Raman and Prince are free at 11:30 AM - 12:30 PM" — instead of one clause
+ * per friend. Different windows still get their own clause, in time order.
+ *
+ * [timeLabel] renders minutes-since-midnight for display.
+ */
+fun friendAvailabilitySentences(
+    windows: List<FriendFreeWindow>,
+    startMinutes: Int,
+    endMinutes: Int,
+    timeLabel: (Int) -> String
+): List<String> {
+    val fullNames = windows
+        .filter { it.startMinutes <= startMinutes && it.endMinutes >= endMinutes }
+        .map { it.name }
+        .distinct()
+    val sentences = mutableListOf<String>()
+    if (fullNames.isNotEmpty()) {
+        sentences += "${friendNameList(fullNames)} ${friendVerb(fullNames)} free at this time slot " +
+            "${timeLabel(startMinutes)} - ${timeLabel(endMinutes)}"
+    }
+    windows.filter { it.name !in fullNames }
+        .groupBy { it.startMinutes to it.endMinutes }
+        .entries
+        .sortedBy { it.key.first }
+        .forEach { (window, same) ->
+            val names = same.map { it.name }.distinct()
+            sentences += "${friendNameList(names)} ${friendVerb(names)} free at " +
+                "${timeLabel(window.first)} - ${timeLabel(window.second)}"
+        }
+    return sentences
+}
+
+/**
  * A friend's earliest class that starts before the student's first lecture of the day.
  * Used on the Today/Tomorrow timeline to surface "Vishal has a lecture at 8:30 AM"
  * above the student's own rail.

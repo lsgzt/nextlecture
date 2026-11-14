@@ -52,6 +52,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.gndec.timetable.domain.AppContainer
+import com.gndec.timetable.domain.ExtraTeacherIdPrefix
 import com.gndec.timetable.domain.FacultyDirectoryManager
 import com.gndec.timetable.domain.FacultyRecord
 import com.gndec.timetable.ui.Header
@@ -80,9 +81,20 @@ fun FacultyMembersScreen(
     val focusManager = LocalFocusManager.current
 
     // Bundled directory — parsed once per process, read off the main thread.
+    // The list grows with the timetable-only teachers: the department files
+    // list some teachers (visiting faculty, new joiners) the official
+    // directory does not carry, and this browser is exactly where they belong.
     var faculty by remember { mutableStateOf(emptyList<FacultyRecord>()) }
     LaunchedEffect(Unit) {
-        faculty = withContext(Dispatchers.Default) { container.facultyDirectory.directory }
+        faculty = withContext(Dispatchers.Default) {
+            container.facultyDirectory.directory + container.facultyTimetables.extraTeachersFromMemory().map { it.record }
+        }
+        // Cache-first background load of every department's teacher document;
+        // fresh ones are not refetched, and a failed root is skipped quietly.
+        container.facultyTimetables.ensureAllDocs()
+        faculty = withContext(Dispatchers.Default) {
+            container.facultyDirectory.directory + container.facultyTimetables.extraTeachersFromMemory().map { it.record }
+        }
     }
 
     var filterText by rememberSaveable { mutableStateOf("") }
@@ -307,7 +319,10 @@ private fun FacultyRow(record: FacultyRecord, onClick: () -> Unit) {
                     listOfNotNull(
                         record.designation.takeIf { it.isNotBlank() },
                         record.email.takeIf { it.isNotBlank() }
-                    ).joinToString(" · ").ifBlank { "Faculty" },
+                    ).joinToString(" · ").ifBlank {
+                        if (record.profileId.startsWith(ExtraTeacherIdPrefix)) "From the department timetable"
+                        else "Faculty"
+                    },
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                     style = MaterialTheme.typography.bodySmall,
                     maxLines = 1,

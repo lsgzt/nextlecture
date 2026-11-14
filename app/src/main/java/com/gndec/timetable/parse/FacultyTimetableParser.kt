@@ -143,7 +143,10 @@ object FacultyTimetableParser {
     /** Tables like "ME(faculty)", "M.Tech_(ME)" or "SELF STUDY" are not teachers. */
     private val NON_TEACHER_HINTS = listOf(
         "m.tech", "mtech", "self study", "faculty", "deptt", "workshop", "combined",
-        "guide", "detained", "other dept"
+        "guide", "detained", "other dept",
+        // Civil's subject-service tables ("STK(APPLIED SCI.)", "RJK(Applied Sci)",
+        // "PDT2") are first-year service entries, not teachers.
+        "applied", "pdt"
     )
 
     private fun isPseudoTeacher(label: String): Boolean {

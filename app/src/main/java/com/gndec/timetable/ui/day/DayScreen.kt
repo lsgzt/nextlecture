@@ -94,9 +94,8 @@ import com.gndec.timetable.domain.FriendDay
 import com.gndec.timetable.domain.FriendEarlySlot
 import com.gndec.timetable.domain.earlySlotsBefore
 import com.gndec.timetable.domain.FriendFreeWindow
-import com.gndec.timetable.domain.friendNameList
+import com.gndec.timetable.domain.friendAvailabilitySentences
 import com.gndec.timetable.domain.friendsFreeWithin
-import com.gndec.timetable.domain.friendVerb
 import com.gndec.timetable.ui.PremiumBottomBarContentClearance
 import com.gndec.timetable.ui.PremiumPageHeader
 import com.gndec.timetable.ui.PremiumScreenBackground
@@ -947,6 +946,7 @@ private fun FriendsBeforeDayNote(slots: List<FriendEarlySlot>, accent: Color, mu
     Text(
         text = text,
         style = MaterialTheme.typography.bodySmall,
+        textAlign = androidx.compose.ui.text.style.TextAlign.Center,
         modifier = Modifier
             .fillMaxWidth()
             .padding(horizontal = TimelineHorizontalPadding)
@@ -1003,47 +1003,15 @@ private fun androidx.compose.ui.text.AnnotatedString.Builder.appendFriendsBefore
 }
 
 /**
- * Builds the sentence(s) for the friend note under a lecture card.
- *
- * Friends free for the whole class keep the grouped sentence; friends free for
- * only PART of it (free 12:30-1:30 while the class runs 12:30-2:30) now get
- * their actual window spelled out, because that used to be silently hidden.
- * Multiple separate stretches list all of them, comma-separated.
- */
-private fun friendAvailabilitySentences(
-    windows: List<FriendFreeWindow>,
-    startMinutes: Int,
-    endMinutes: Int
-): List<String> {
-    val fullNames = windows
-        .filter { it.startMinutes <= startMinutes && it.endMinutes >= endMinutes }
-        .map { it.name }
-        .distinct()
-    val sentences = mutableListOf<String>()
-    if (fullNames.isNotEmpty()) {
-        sentences += "${friendNameList(fullNames)} ${friendVerb(fullNames)} free at this time slot " +
-            "${formatTime(startMinutes)} - ${formatTime(endMinutes)}"
-    }
-    windows.filter { it.name !in fullNames }
-        .groupBy { it.name }
-        .forEach { (name, stretches) ->
-            val spans = stretches.joinToString(", ") {
-                "${formatTime(it.startMinutes)} - ${formatTime(it.endMinutes)}"
-            }
-            sentences += "$name is free $spans"
-        }
-    return sentences
-}
-
-/**
  * "Aarav and Meera are free at this time slot 9:30 AM - 10:30 AM", shown under
  * the lecture card when a friend happens to be free while the student is in
- * class — now also for friends free for only part of it: "Vishal is free
- * 12:30 PM - 1:30 PM".
+ * class — now also for friends free for only part of it: friends sharing the
+ * same stretch are joined with "and" ("Raman and Prince are free at
+ * 12:30 PM - 1:30 PM"); the clauses come from [friendAvailabilitySentences].
  */
 @Composable
 private fun FriendAvailabilityNote(windows: List<FriendFreeWindow>, startMinutes: Int, endMinutes: Int) {
-    val sentences = friendAvailabilitySentences(windows, startMinutes, endMinutes)
+    val sentences = friendAvailabilitySentences(windows, startMinutes, endMinutes, ::formatTime)
     if (sentences.isEmpty()) return
     Row(
         Modifier

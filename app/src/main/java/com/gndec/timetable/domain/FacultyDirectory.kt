@@ -79,6 +79,23 @@ class FacultyDirectoryManager(context: Context) {
             else -> null
         }
 
+        /**
+         * Inverse of [rootForDepartment]: the directory department name a
+         * timetable root serves. Used to attribute timetable-discovered
+         * teachers to a department when the directory itself has no record
+         * of them.
+         */
+        fun departmentForRoot(root: RoomSourceRoot): String = when (root) {
+            RoomSourceRoot.APPSC -> "Applied Science"
+            RoomSourceRoot.IT -> "Information Technology"
+            RoomSourceRoot.CSE -> "Computer Science & Engg."
+            RoomSourceRoot.EE -> "Electrical Engineering"
+            RoomSourceRoot.ME -> "Mechanical Engineering"
+            RoomSourceRoot.CE -> "Civil Engineering"
+            RoomSourceRoot.ECE -> "Electronics & Communication Engineering"
+            else -> "College"
+        }
+
         /** True for the departments whose teachers live in the ME timetable. */
         val ME_SERVED_DEPARTMENTS = setOf("Mechanical Engineering", "Production Engineering")
 

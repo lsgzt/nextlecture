@@ -117,11 +117,25 @@ fun SearchScreen(
 
     // Bundled faculty directory — read once from the APK as soon as the screen
     // opens (cheap: the manager lazy-parses it once per process), so teacher
-    // results and the department picker appear instantly with no network.
+    // results and the department picker appear instantly with no network. The
+    // list also carries the timetable-only teachers already parsed in this
+    // process, so a "Ms. Manpreet Kaur" that exists in the Applied Science
+    // file but not the directory is still searchable.
     var faculty by remember { mutableStateOf(emptyList<com.gndec.timetable.domain.FacultyRecord>()) }
     LaunchedEffect(Unit) {
         if (faculty.isEmpty()) {
-            faculty = withContext(kotlinx.coroutines.Dispatchers.Default) { container.facultyDirectory.directory }
+            faculty = withContext(kotlinx.coroutines.Dispatchers.Default) { loadFacultyPool(container) }
+        }
+    }
+    // The first real query also loads every department's teacher document in
+    // the background (cache-first, offline-friendly): teachers who appear only
+    // in the timetables then join the results as soon as they are parsed.
+    var timetableTeachersLoaded by remember { mutableStateOf(false) }
+    LaunchedEffect(trimmed) {
+        if (!timetableTeachersLoaded && trimmed.isNotEmpty()) {
+            timetableTeachersLoaded = true
+            container.facultyTimetables.ensureAllDocs()
+            faculty = withContext(kotlinx.coroutines.Dispatchers.Default) { loadFacultyPool(container) }
         }
     }
 
@@ -411,4 +425,15 @@ private fun iconFor(group: SearchGroup): ImageVector = when (group) {
     SearchGroup.NOTICE -> Icons.Default.Campaign
     SearchGroup.HOLIDAY -> Icons.Default.EventAvailable
     SearchGroup.ATTENDANCE -> Icons.Default.FactCheck
+}
+
+/**
+ * The searchable teacher pool: the bundled directory plus every teacher the
+ * parsed department timetables list but the directory does not carry (their
+ * synthetic records carry blank contact fields and a "tt-…" profile id).
+ */
+private fun loadFacultyPool(container: com.gndec.timetable.domain.AppContainer): List<com.gndec.timetable.domain.FacultyRecord> {
+    val extras = runCatching { container.facultyTimetables.extraTeachersFromMemory() }.getOrDefault(emptyList())
+        .map { it.record }
+    return container.facultyDirectory.directory + extras
 }

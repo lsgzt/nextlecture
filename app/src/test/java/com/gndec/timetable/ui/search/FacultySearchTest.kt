@@ -173,4 +173,50 @@ class FacultySearchTest {
         val titles = results.filter { it.group == SearchGroup.FACULTY }.map { it.title }
         assertEquals(titles, titles.sorted())
     }
+
+    // --- timetable-only teachers -----------------------------------------------
+
+    @Test
+    fun timetableOnlyTeacherIsSearchable() {
+        // "Ms. MANPREET KAUR." appears in the Applied Science timetable but has
+        // no directory record — the synthetic record must still be findable.
+        val withExtra = faculty + FacultyRecord(
+            name = "MS. MANPREET KAUR",
+            department = "Applied Science",
+            profileId = "tt-appsc-manpreet-kaur"
+        )
+        val results = search("manpreet kaur", snapshot(queryFaculty = withExtra))
+        val titles = results.filter { it.group == SearchGroup.FACULTY }.map { it.title }
+        assertTrue("MS. MANPREET KAUR" in titles)
+        val result = results.first { it.title == "MS. MANPREET KAUR" }
+        assertEquals("Applied Science", result.subtitle)
+        assertEquals(SearchAction.OpenFaculty("tt-appsc-manpreet-kaur"), result.action)
+    }
+
+    @Test
+    fun timetableOnlyTeacherJoinsTheDepartmentBrowse() {
+        val withExtra = faculty + FacultyRecord(
+            name = "MS. MANPREET KAUR",
+            department = "Applied Science",
+            profileId = "tt-appsc-manpreet-kaur"
+        )
+        val results = search("", snapshot(queryFaculty = withExtra), departmentFilter = "Applied Science")
+        val titles = results.filter { it.group == SearchGroup.FACULTY }.map { it.title }
+        assertEquals(listOf("DR. HARPREET KAUR GREWAL", "MS. MANPREET KAUR"), titles)
+    }
+
+    @Test
+    fun timetableOnlyTeacherCountsInTheDepartmentPicker() {
+        val withExtra = faculty + FacultyRecord(
+            name = "MS. MANPREET KAUR",
+            department = "Applied Science",
+            profileId = "tt-appsc-manpreet-kaur"
+        )
+        // "manpreet" only matches the synthetic record — its department is the
+        // picker's single option.
+        assertEquals(
+            listOf("Applied Science"),
+            facultyDepartments("manpreet", snapshot(queryFaculty = withExtra))
+        )
+    }
 }

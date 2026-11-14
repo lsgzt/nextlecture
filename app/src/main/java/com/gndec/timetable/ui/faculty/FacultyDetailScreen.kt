@@ -64,6 +64,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.gndec.timetable.domain.AppContainer
+import com.gndec.timetable.domain.ExtraTeacherIdPrefix
 import com.gndec.timetable.domain.FacultyRecord
 import com.gndec.timetable.domain.FacultySchedule
 import com.gndec.timetable.domain.FacultyStatus
@@ -85,6 +86,8 @@ import com.gndec.timetable.ui.motion.motionTween
 import com.gndec.timetable.ui.motion.pressFeedback
 import com.gndec.timetable.ui.theme.GndecMuted
 import com.gndec.timetable.util.Formatters
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 import java.time.LocalDate
 import java.time.LocalTime
 
@@ -98,6 +101,9 @@ private enum class ScheduleTab(val title: String) { TODAY("Today"), WEEK("Full w
  * bundled directory and are ALWAYS shown, including for teachers whose
  * department publishes no timetable — those get the honest "This teacher's
  * timetable is not available in our database" note instead of a wrong schedule.
+ * Teachers that appear ONLY inside a department timetable ("tt-…" profile ids)
+ * have no directory record to draw from: the page shows their schedule plus
+ * "This Teacher's information is not available in our database".
  * The timetable itself is discovered live from the department website (never
  * hardcoded), so weekly revisions appear without an app update. The schedule
  * area is a Today / Full week segmented control that slides directionally —
@@ -111,7 +117,20 @@ fun FacultyDetailScreen(
     onOpenSettings: () -> Unit
 ) {
     val context = LocalContext.current
-    val faculty = remember(profileId) { container.facultyDirectory.byProfileId(profileId) }
+    // Directory teachers resolve instantly; a timetable-only teacher needs the
+    // parsed department document (disk-warm by the time search offered the
+    // result), so its record arrives a moment later.
+    var faculty by remember(profileId) {
+        mutableStateOf(container.facultyDirectory.byProfileId(profileId))
+    }
+    LaunchedEffect(profileId) {
+        if (faculty == null && profileId.startsWith(ExtraTeacherIdPrefix)) {
+            faculty = withContext(Dispatchers.Default) {
+                container.facultyTimetables.extraTeacherById(profileId)?.record
+            }
+        }
+    }
+    val isExtraTeacher = profileId.startsWith(ExtraTeacherIdPrefix)
 
     var result by remember(profileId) { mutableStateOf<FacultyTimetableResult?>(null) }
     var loading by remember(profileId) { mutableStateOf(true) }
@@ -120,7 +139,7 @@ fun FacultyDetailScreen(
     val tab = ScheduleTab.valueOf(tabName)
     val reduced = LocalReducedMotion.current
 
-    LaunchedEffect(profileId, refreshTick) {
+    LaunchedEffect(faculty, refreshTick) {
         val teacher = faculty ?: return@LaunchedEffect
         loading = true
         result = runCatching { container.facultyTimetables.load(teacher, forceRefresh = refreshTick > 0) }
@@ -138,18 +157,34 @@ fun FacultyDetailScreen(
                     ) {
                         item { Header(title = "Faculty details", onBack = onBack, onSettings = onOpenSettings) }
                         item {
-                            Card(
-                                modifier = Modifier.fillMaxWidth().padding(horizontal = 20.dp),
-                                shape = RoundedCornerShape(18.dp),
-                                colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.secondaryContainer)
-                            ) {
-                                Column(Modifier.padding(22.dp)) {
-                                    Text("Teacher not found", style = MaterialTheme.typography.titleLarge)
-                                    Spacer(Modifier.height(6.dp))
-                                    Text(
-                                        "This teacher is no longer in the college directory.",
-                                        color = GndecMuted
-                                    )
+                            if (isExtraTeacher) {
+                                // Still resolving the timetable-only teacher from the
+                                // parsed department document — a brief loading state.
+                                Card(
+                                    modifier = Modifier.fillMaxWidth().padding(horizontal = 20.dp),
+                                    shape = RoundedCornerShape(18.dp),
+                                    colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface)
+                                ) {
+                                    Row(Modifier.padding(18.dp), verticalAlignment = Alignment.CenterVertically) {
+                                        CircularProgressIndicator(strokeWidth = 2.dp, modifier = Modifier.size(22.dp))
+                                        Spacer(Modifier.width(14.dp))
+                                        Text("Looking up this teacher in the department timetable…")
+                                    }
+                                }
+                            } else {
+                                Card(
+                                    modifier = Modifier.fillMaxWidth().padding(horizontal = 20.dp),
+                                    shape = RoundedCornerShape(18.dp),
+                                    colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.secondaryContainer)
+                                ) {
+                                    Column(Modifier.padding(22.dp)) {
+                                        Text("Teacher not found", style = MaterialTheme.typography.titleLarge)
+                                        Spacer(Modifier.height(6.dp))
+                                        Text(
+                                            "This teacher is no longer in the college directory.",
+                                            color = GndecMuted
+                                        )
+                                    }
                                 }
                             }
                         }
@@ -157,6 +192,7 @@ fun FacultyDetailScreen(
                 }
                 return@PremiumScreenBackground
             }
+            val record = faculty ?: return@PremiumScreenBackground
 
             val schedule = (result as? FacultyTimetableResult.Ready)?.schedule
             val today = remember { LocalDate.now() }
@@ -192,16 +228,16 @@ fun FacultyDetailScreen(
                         Spacer(Modifier.width(16.dp))
                         Column(Modifier.weight(1f)) {
                             Text(
-                                prettyName(faculty.name),
+                                prettyName(record.name),
                                 style = MaterialTheme.typography.headlineSmall,
                                 overflow = TextOverflow.Ellipsis,
                                 maxLines = 2
                             )
-                            if (faculty.designation.isNotBlank()) {
-                                Text(faculty.designation, style = MaterialTheme.typography.titleMedium)
+                            if (record.designation.isNotBlank()) {
+                                Text(record.designation, style = MaterialTheme.typography.titleMedium)
                             }
                             Text(
-                                faculty.department,
+                                record.department,
                                 color = MaterialTheme.colorScheme.primary,
                                 style = MaterialTheme.typography.titleMedium,
                                 fontWeight = FontWeight.SemiBold
@@ -210,24 +246,30 @@ fun FacultyDetailScreen(
                     }
                 }
 
-                // Contact details — always available, straight from the directory
-                if (faculty.contactable || faculty.profileUrl.isNotBlank()) {
-                    item { ContactCard(faculty) }
+                // Contact details — always available, straight from the directory.
+                // Timetable-only teachers have no directory record: say so plainly
+                // instead of an empty card.
+                if (isExtraTeacher) {
+                    item { TeacherInfoUnavailableCard() }
+                } else if (record.contactable || record.profileUrl.isNotBlank()) {
+                    item { ContactCard(record) }
                 }
 
                 // RAI note — shown ONLY for ME department teachers, whose
                 // department timetable also carries the RAI faculty
-                if (faculty.department == "Mechanical Engineering") {
+                if (record.department == "Mechanical Engineering") {
                     item { RaiNoteCard() }
                 }
 
                 // Timetable
                 item {
                     when {
-                        loading -> TimetableLoadingCard(faculty)
+                        loading -> TimetableLoadingCard(record, fromCollegeSite = isExtraTeacher)
                         result is FacultyTimetableResult.NotPublished -> TimetableUnavailableCard(
-                            "This teacher's timetable is not available in our database",
-                            faculty.department
+                            if (isExtraTeacher) "This teacher's timetable is no longer in the published file"
+                            else "This teacher's timetable is not available in our database",
+                            record.department,
+                            contactDetailsAbove = !isExtraTeacher
                         )
                         result is FacultyTimetableResult.Unavailable -> TimetableErrorCard(
                             (result as FacultyTimetableResult.Unavailable).reason
@@ -235,7 +277,8 @@ fun FacultyDetailScreen(
                         schedule != null -> ScheduleHeaderCard(schedule, status)
                         else -> TimetableUnavailableCard(
                             "This teacher's timetable is not available in our database",
-                            faculty.department
+                            record.department,
+                            contactDetailsAbove = !isExtraTeacher
                         )
                     }
                 }
@@ -484,8 +527,47 @@ private fun RaiNoteCard() {
     }
 }
 
+/**
+ * The identity note for a teacher that appears only in the department
+ * timetables: the college website's faculty directory (the source of the
+ * app's bundled directory) lists no details for them, so the page answers
+ * with the schedule plus this honest line.
+ */
 @Composable
-private fun TimetableLoadingCard(faculty: FacultyRecord) {
+private fun TeacherInfoUnavailableCard() {
+    Card(
+        modifier = Modifier.fillMaxWidth().padding(horizontal = 20.dp),
+        shape = RoundedCornerShape(16.dp),
+        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.secondaryContainer)
+    ) {
+        Row(Modifier.padding(16.dp), verticalAlignment = Alignment.Top) {
+            Icon(
+                Icons.Default.Info,
+                contentDescription = null,
+                tint = MaterialTheme.colorScheme.onSecondaryContainer,
+                modifier = Modifier.size(20.dp)
+            )
+            Spacer(Modifier.width(12.dp))
+            Column {
+                Text(
+                    "This Teacher's information is not available in our database",
+                    style = MaterialTheme.typography.titleMedium,
+                    fontWeight = FontWeight.SemiBold,
+                    color = MaterialTheme.colorScheme.onSecondaryContainer
+                )
+                Spacer(Modifier.height(4.dp))
+                Text(
+                    "We checked the college website's faculty directory, but no details are published for this teacher. Their weekly timetable below is the only information available.",
+                    style = MaterialTheme.typography.bodySmall,
+                    color = MaterialTheme.colorScheme.onSecondaryContainer
+                )
+            }
+        }
+    }
+}
+
+@Composable
+private fun TimetableLoadingCard(faculty: FacultyRecord, fromCollegeSite: Boolean = false) {
     Card(
         modifier = Modifier.fillMaxWidth().padding(horizontal = 20.dp),
         shape = RoundedCornerShape(16.dp),
@@ -494,13 +576,16 @@ private fun TimetableLoadingCard(faculty: FacultyRecord) {
         Row(Modifier.padding(18.dp), verticalAlignment = Alignment.CenterVertically) {
             CircularProgressIndicator(strokeWidth = 2.dp, modifier = Modifier.size(22.dp))
             Spacer(Modifier.width(14.dp))
-            Text("Fetching ${prettyName(faculty.name)}'s timetable from the ${faculty.department} website…")
+            Text(
+                if (fromCollegeSite) "Fetching ${prettyName(faculty.name)}'s timetable from the college website…"
+                else "Fetching ${prettyName(faculty.name)}'s timetable from the ${faculty.department} website…"
+            )
         }
     }
 }
 
 @Composable
-private fun TimetableUnavailableCard(message: String, department: String) {
+private fun TimetableUnavailableCard(message: String, department: String, contactDetailsAbove: Boolean = true) {
     Card(
         modifier = Modifier.fillMaxWidth().padding(horizontal = 20.dp),
         shape = RoundedCornerShape(18.dp),
@@ -514,7 +599,11 @@ private fun TimetableUnavailableCard(message: String, department: String) {
             }
             Spacer(Modifier.height(8.dp))
             Text(
-                "The contact details above are still current. Some departments do not publish a weekly teacher timetable, and teachers visiting from other departments may not be listed in the $department file.",
+                if (contactDetailsAbove) {
+                    "The contact details above are still current. Some departments do not publish a weekly teacher timetable, and teachers visiting from other departments may not be listed in the $department file."
+                } else {
+                    "No directory entry and no published table were found for this teacher in the $department file. Try the refresh button on the source card once the college republishes its timetables."
+                },
                 color = GndecMuted,
                 style = MaterialTheme.typography.bodySmall
             )
