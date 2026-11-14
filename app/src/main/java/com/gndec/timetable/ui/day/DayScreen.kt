@@ -550,7 +550,15 @@ private fun TimelineSection(
 ) {
     var sectionCoords by remember { mutableStateOf<LayoutCoordinates?>(null) }
     val nodeCoords = remember { mutableStateMapOf<Int, LayoutCoordinates>() }
-    val activeIndex = timeline.indexOfLast { it is TimelineItem.Lecture && it.state != LectureState.UPCOMING }
+    // When every lecture is done, drive the glow to the very last timeline node
+    // (including a trailing free period) so the rail looks fully completed.
+    val allDone = timeline.isNotEmpty() &&
+        timeline.none { it is TimelineItem.Lecture && it.state == LectureState.UPCOMING }
+    val activeIndex = if (allDone) {
+        timeline.lastIndex
+    } else {
+        timeline.indexOfLast { it is TimelineItem.Lecture && it.state != LectureState.UPCOMING }
+    }
     val glowTarget = run {
         val section = sectionCoords
         val node = nodeCoords[activeIndex]
@@ -596,21 +604,43 @@ private fun TimelineSection(
                 }
                 val tip = glowEnd.coerceIn(first, last)
                 if (tip > first + 2f) {
-                    val core = Brush.verticalGradient(
-                        0f to accent.copy(alpha = 0.98f),
-                        0.55f to accent.copy(alpha = 0.78f),
-                        0.9f to accent.copy(alpha = 0.45f),
-                        1f to Color.Transparent,
-                        startY = first,
-                        endY = tip
-                    )
-                    val halo = Brush.verticalGradient(
-                        0f to accent.copy(alpha = 0.18f),
-                        0.7f to accent.copy(alpha = 0.07f),
-                        1f to Color.Transparent,
-                        startY = first,
-                        endY = tip
-                    )
+                    // When the day is fully complete, keep the tip solid so the
+                    // rail looks finished instead of fading out at the last node.
+                    val core = if (allDone) {
+                        Brush.verticalGradient(
+                            0f to accent.copy(alpha = 0.98f),
+                            0.6f to accent.copy(alpha = 0.90f),
+                            1f to accent.copy(alpha = 0.85f),
+                            startY = first,
+                            endY = tip
+                        )
+                    } else {
+                        Brush.verticalGradient(
+                            0f to accent.copy(alpha = 0.98f),
+                            0.55f to accent.copy(alpha = 0.78f),
+                            0.9f to accent.copy(alpha = 0.45f),
+                            1f to Color.Transparent,
+                            startY = first,
+                            endY = tip
+                        )
+                    }
+                    val halo = if (allDone) {
+                        Brush.verticalGradient(
+                            0f to accent.copy(alpha = 0.18f),
+                            0.7f to accent.copy(alpha = 0.12f),
+                            1f to accent.copy(alpha = 0.08f),
+                            startY = first,
+                            endY = tip
+                        )
+                    } else {
+                        Brush.verticalGradient(
+                            0f to accent.copy(alpha = 0.18f),
+                            0.7f to accent.copy(alpha = 0.07f),
+                            1f to Color.Transparent,
+                            startY = first,
+                            endY = tip
+                        )
+                    }
                     for (index in 0 until timeline.lastIndex) {
                         val startY = nodeY(index) ?: continue
                         val endY = nodeY(index + 1) ?: continue
