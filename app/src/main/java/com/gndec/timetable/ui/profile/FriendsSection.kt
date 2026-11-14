@@ -2,6 +2,8 @@ package com.gndec.timetable.ui.profile
 
 import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
@@ -19,6 +21,8 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material.icons.filled.ExpandLess
+import androidx.compose.material.icons.filled.ExpandMore
 import androidx.compose.material.icons.filled.Groups
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
@@ -33,6 +37,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.produceState
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -62,6 +67,9 @@ fun FriendsSection(
 ) {
     val scope = rememberCoroutineScope()
     var expanded by remember { mutableStateOf(false) }
+    // Friend names stay collapsed by default so the profile stays compact;
+    // tapping the header reveals the list with animateContentSize.
+    var listExpanded by rememberSaveable { mutableStateOf(false) }
     var name by remember { mutableStateOf("") }
     var group by remember { mutableStateOf("") }
     var message by remember { mutableStateOf<String?>(null) }
@@ -141,7 +149,16 @@ fun FriendsSection(
         elevation = CardDefaults.cardElevation(0.dp)
     ) {
         Column(Modifier.padding(16.dp)) {
-            Row(verticalAlignment = Alignment.CenterVertically) {
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .clickable(
+                        interactionSource = remember { MutableInteractionSource() },
+                        indication = null,
+                        onClick = { listExpanded = !listExpanded }
+                    ),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
                 Icon(
                     Icons.Default.Groups,
                     contentDescription = null,
@@ -157,15 +174,26 @@ fun FriendsSection(
                     )
                     Text(
                         if (friends.isEmpty()) "Add classmates to compare free periods"
-                        else "${friends.size} added · shown on your Today tab",
+                        else if (listExpanded || expanded) "${friends.size} added · shown on your Today tab"
+                        else "${friends.size} added · tap to view",
                         color = MaterialTheme.colorScheme.onSurfaceVariant,
                         style = MaterialTheme.typography.bodySmall
                     )
+                }
+                if (friends.isNotEmpty()) {
+                    Icon(
+                        if (listExpanded || expanded) Icons.Default.ExpandLess else Icons.Default.ExpandMore,
+                        contentDescription = if (listExpanded || expanded) "Collapse friends" else "Expand friends",
+                        tint = MaterialTheme.colorScheme.onSurfaceVariant,
+                        modifier = Modifier.size(22.dp)
+                    )
+                    Spacer(Modifier.width(4.dp))
                 }
                 TextButton(
                     onClick = {
                         if (expanded) onDoneClick() else {
                             expanded = true
+                            listExpanded = true
                             message = null
                         }
                     }
@@ -174,7 +202,7 @@ fun FriendsSection(
                 }
             }
 
-            if (friends.isNotEmpty()) {
+            if (friends.isNotEmpty() && (listExpanded || expanded)) {
                 Spacer(Modifier.height(10.dp))
                 friends.forEach { friend ->
                     Row(

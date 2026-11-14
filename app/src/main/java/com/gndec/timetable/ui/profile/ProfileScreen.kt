@@ -259,8 +259,16 @@ fun ProfileScreen(container: AppContainer, onBack: () -> Unit, onOpenAttendance:
             item { ProfileHero(initials, displayName, settings.studentSubsection.ifBlank { settings.branch.ifBlank { "Add your branch" } }, settings.rollNumber.ifBlank { "CRN not added" }) }
             item { SourceStatus(settings.profileSource, loading, savedMessage) }
 
-            item { FriendsSection(container = container, friends = friends, modifier = Modifier.padding(horizontal = 20.dp)) }
-
+            // Hide while re-searching the official PDF so the form stays focused.
+            if (!lookupOpen) {
+                item {
+                    FriendsSection(
+                        container = container,
+                        friends = friends,
+                        modifier = Modifier.padding(horizontal = 20.dp)
+                    )
+                }
+            }
 
             if (hasSavedProfile && !lookupOpen) {
                 item(key = "attendance-action") {
