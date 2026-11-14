@@ -684,7 +684,7 @@ private fun departmentBrowse(department: String, snapshot: SearchSnapshot): List
         .map { faculty ->
             val subtitle = listOfNotNull(
                 faculty.designation.takeIf { it.isNotBlank() },
-                faculty.email.takeIf { it.isNotBlank() }
+                faculty.emails.firstOrNull()
             ).joinToString(" · ").ifBlank { "Faculty" }
             SearchResult(
                 id = "faculty-${faculty.profileId}",

@@ -92,6 +92,8 @@
     "also_published_as": [
       "PF. AASTIK"
     ],
+    "phone_mobile": "8146366113",
+    "phone_source": "User-provided faculty contact list (2026-10-19)",
     "image_url": "https://gndec.ac.in/images/file_0000000025bc71faa8bd5b85ff2bf92c.png"
   },
   {
@@ -181,6 +183,8 @@
     "department": "Applied Science",
     "dept_id": 1,
     "profile_url": "https://gndec.ac.in/faculty/?id=388",
+    "phone_mobile": "9888020728",
+    "phone_source": "User-provided faculty contact list (2026-10-19)",
     "image_url": "https://gndec.ac.in/images/pstarsikka.jpg"
   },
   {
@@ -266,6 +270,8 @@
     "department": "Applied Science",
     "dept_id": 1,
     "profile_url": "https://gndec.ac.in/faculty/?id=509",
+    "phone_mobile": "7814242450",
+    "phone_source": "User-provided faculty contact list (2026-10-19)",
     "image_url": "https://gndec.ac.in/images/WhatsApp%20Image%202026-09-22%20at%209.22.37%20AM.jpeg"
   },
   {
@@ -276,6 +282,8 @@
     "department": "Applied Science",
     "dept_id": 1,
     "profile_url": "https://gndec.ac.in/faculty/?id=319",
+    "phone_mobile": "9988015346",
+    "phone_source": "User-provided faculty contact list (2026-10-19)",
     "image_url": "https://gndec.ac.in/images/mandeep%20photo.jpg"
   },
   {
@@ -312,8 +320,8 @@
     "department": "Applied Science",
     "dept_id": 1,
     "profile_url": "https://gndec.ac.in/faculty/?id=377",
-    "phone_mobile": "9872207482",
-    "phone_source": "GNDEC Telephone Directory",
+    "phone_mobile": "8360624692",
+    "phone_source": "User-provided faculty contact list (2026-10-19)",
     "phone_office": "ext 4531",
     "image_url": "https://gndec.ac.in/images/IMG_20230220_111724.jpg"
   },
@@ -325,6 +333,8 @@
     "department": "Applied Science",
     "dept_id": 1,
     "profile_url": "https://gndec.ac.in/faculty/?id=508",
+    "phone_mobile": "6239718672",
+    "phone_source": "User-provided faculty contact list (2026-10-19)",
     "image_url": "https://gndec.ac.in/images/IMG_3372.jpeg"
   },
   {
@@ -335,6 +345,8 @@
     "department": "Applied Science",
     "dept_id": 1,
     "profile_url": "https://gndec.ac.in/faculty/?id=473",
+    "phone_mobile": "7347359006",
+    "phone_source": "User-provided faculty contact list (2026-10-19)",
     "image_url": "https://gndec.ac.in/images/WhatsApp%20Image%202026-01-03%20at%209.38.18%20PM.jpeg"
   },
   {
@@ -448,6 +460,8 @@
     "department": "Applied Science",
     "dept_id": 1,
     "profile_url": "https://gndec.ac.in/faculty/?id=472",
+    "phone_mobile": "9878587778",
+    "phone_source": "User-provided faculty contact list (2026-10-19)",
     "image_url": "https://gndec.ac.in/images/WhatsApp%20Image%202026-10-06%20at%203.03.40%20PM.jpeg"
   },
   {
@@ -908,7 +922,8 @@
     "dept_id": 14,
     "profile_url": "https://gndec.ac.in/faculty/?id=436",
     "phone_office": "ext 4537",
-    "phone_source": "GNDEC Telephone Directory",
+    "phone_source": "User-provided faculty contact list (2026-10-19)",
+    "phone_mobile": "8146000426",
     "image_url": "https://gndec.ac.in/images/IMG_4212.jpg"
   },
   {
@@ -971,7 +986,8 @@
       "ER. VARINDER SINGH"
     ],
     "phone_office": "ext 4537",
-    "phone_source": "GNDEC Telephone Directory",
+    "phone_source": "User-provided faculty contact list (2026-10-19)",
+    "phone_mobile": "9872598214",
     "image_url": "https://gndec.ac.in/images/IMG_4252.jpg"
   },
   {
@@ -1337,7 +1353,8 @@
     "dept_id": 15,
     "profile_url": "https://gndec.ac.in/faculty/?id=226",
     "phone_office": "ext 4551",
-    "phone_source": "GNDEC Telephone Directory",
+    "phone_source": "User-provided faculty contact list (2026-10-19)",
+    "phone_mobile": "9464318881",
     "image_url": "https://gndec.ac.in/images/91855451-D4C8-4C06-8661-31B8A8632A0C.jpeg"
   },
   {
@@ -1633,9 +1650,9 @@
     "dept_id": 16,
     "profile_url": "https://gndec.ac.in/faculty/?id=62",
     "phone_office": "0161-5064507",
-    "phone_mobile": "85280-02375",
+    "phone_mobile": "9872219178",
     "admin_roles": "Training & Placement Officer",
-    "phone_source": "Information Brochure 2026",
+    "phone_source": "User-provided faculty contact list (2026-10-19)",
     "image_url": "https://gndec.ac.in/images/sodhi.jpg"
   },
   {
@@ -2301,8 +2318,8 @@
     "department": "Information Technology",
     "dept_id": 21,
     "profile_url": "https://gndec.ac.in/faculty/?id=454",
-    "phone_mobile": "8288833123",
-    "phone_source": "GNDEC permanent section list 2026",
+    "phone_mobile": "8968801937",
+    "phone_source": "User-provided faculty contact list (2026-10-19)",
     "image_url": "https://gndec.ac.in/images/Snapchat-438796799.jpg"
   },
   {
@@ -3507,12 +3524,12 @@
     "department": "Computer Science & Engg.",
     "dept_id": 15,
     "profile_url": "",
-    "image_url": "",
     "phone_office": "",
     "phone_mobile": "7087785177",
     "admin_roles": "",
     "phone_source": "GNDEC permanent section list 2026; Information Brochure 2026",
-    "also_published_as": []
+    "also_published_as": [],
+    "image_url": ""
   },
   {
     "name": "ER. KAWALJEET KAUR",
@@ -3522,12 +3539,12 @@
     "department": "Computer Science & Engg.",
     "dept_id": 15,
     "profile_url": "",
-    "image_url": "",
     "phone_office": "",
     "phone_mobile": "9530657257",
     "admin_roles": "",
     "phone_source": "GNDEC permanent section list 2026; Information Brochure 2026",
-    "also_published_as": []
+    "also_published_as": [],
+    "image_url": ""
   },
   {
     "name": "ER. AASHISH MIGLANI",
@@ -3537,12 +3554,12 @@
     "department": "Computer Science & Engg.",
     "dept_id": 15,
     "profile_url": "",
-    "image_url": "",
     "phone_office": "",
     "phone_mobile": "",
     "admin_roles": "",
     "phone_source": "",
-    "also_published_as": []
+    "also_published_as": [],
+    "image_url": ""
   },
   {
     "name": "ER. SUPREET KAUR",
@@ -3552,12 +3569,12 @@
     "department": "Computer Science & Engg.",
     "dept_id": 15,
     "profile_url": "",
-    "image_url": "",
     "phone_office": "",
     "phone_mobile": "9815472715",
     "admin_roles": "",
     "phone_source": "GNDEC Telephone Directory",
-    "also_published_as": []
+    "also_published_as": [],
+    "image_url": ""
   },
   {
     "name": "ER. PARAMVEER KAUR",
@@ -3567,12 +3584,12 @@
     "department": "Computer Science & Engg.",
     "dept_id": 15,
     "profile_url": "",
-    "image_url": "",
     "phone_office": "",
     "phone_mobile": "8146797966",
     "admin_roles": "",
     "phone_source": "GNDEC Telephone Directory",
-    "also_published_as": []
+    "also_published_as": [],
+    "image_url": ""
   },
   {
     "name": "ER. RANBIR SINGH",
@@ -3582,14 +3599,14 @@
     "department": "Computer Science & Engg.",
     "dept_id": 15,
     "profile_url": "",
-    "image_url": "",
     "phone_office": "",
     "phone_mobile": "",
     "admin_roles": "",
     "phone_source": "",
     "also_published_as": [
       "TA1 ER RANBIR SINGH"
-    ]
+    ],
+    "image_url": ""
   },
   {
     "name": "ER. KHUSHKARAN",
@@ -3599,14 +3616,14 @@
     "department": "Computer Science & Engg.",
     "dept_id": 15,
     "profile_url": "",
-    "image_url": "",
     "phone_office": "",
     "phone_mobile": "",
     "admin_roles": "",
     "phone_source": "",
     "also_published_as": [
       "TA2 ER KHUSHKARAN"
-    ]
+    ],
+    "image_url": ""
   },
   {
     "name": "ER. HARDEEPAK SINGH",
@@ -3616,12 +3633,12 @@
     "department": "Information Technology",
     "dept_id": 21,
     "profile_url": "",
-    "image_url": "",
     "phone_office": "",
-    "phone_mobile": "8968801937",
+    "phone_mobile": "8288833123",
     "admin_roles": "",
-    "phone_source": "GNDEC permanent section list 2026",
-    "also_published_as": []
+    "phone_source": "User-provided faculty contact list (2026-10-19)",
+    "also_published_as": [],
+    "image_url": ""
   },
   {
     "name": "ER. JASKIRAN KAUR",
@@ -3631,12 +3648,12 @@
     "department": "Information Technology",
     "dept_id": 21,
     "profile_url": "",
-    "image_url": "",
-    "phone_office": "",
+    "phone_office": "ext 4549",
     "phone_mobile": "8553600011",
     "admin_roles": "",
     "phone_source": "GNDEC Telephone Directory",
-    "also_published_as": []
+    "also_published_as": [],
+    "image_url": ""
   },
   {
     "name": "ER. PARMINDER KAUR",
@@ -3646,12 +3663,12 @@
     "department": "Information Technology",
     "dept_id": 21,
     "profile_url": "",
-    "image_url": "",
     "phone_office": "",
     "phone_mobile": "",
     "admin_roles": "",
     "phone_source": "",
-    "also_published_as": []
+    "also_published_as": [],
+    "image_url": ""
   },
   {
     "name": "PF. MANI BANSAL",
@@ -3661,12 +3678,12 @@
     "department": "Electrical Engineering",
     "dept_id": 16,
     "profile_url": "",
-    "image_url": "",
     "phone_office": "",
     "phone_mobile": "8288089907",
     "admin_roles": "",
     "phone_source": "GNDEC permanent section list 2026",
-    "also_published_as": []
+    "also_published_as": [],
+    "image_url": ""
   },
   {
     "name": "MR. NAVDEEP SINGH",
@@ -3676,12 +3693,12 @@
     "department": "Electrical Engineering",
     "dept_id": 16,
     "profile_url": "",
-    "image_url": "",
     "phone_office": "",
     "phone_mobile": "",
     "admin_roles": "",
     "phone_source": "",
-    "also_published_as": []
+    "also_published_as": [],
+    "image_url": ""
   },
   {
     "name": "MR. AJAYVEER SINGH",
@@ -3691,12 +3708,12 @@
     "department": "Electrical Engineering",
     "dept_id": 16,
     "profile_url": "",
-    "image_url": "",
     "phone_office": "",
     "phone_mobile": "",
     "admin_roles": "",
     "phone_source": "",
-    "also_published_as": []
+    "also_published_as": [],
+    "image_url": ""
   },
   {
     "name": "MR. SHUBHAM",
@@ -3706,12 +3723,12 @@
     "department": "Electrical Engineering",
     "dept_id": 16,
     "profile_url": "",
-    "image_url": "",
     "phone_office": "",
     "phone_mobile": "",
     "admin_roles": "",
     "phone_source": "",
-    "also_published_as": []
+    "also_published_as": [],
+    "image_url": ""
   },
   {
     "name": "MR. BEANT SINGH",
@@ -3721,12 +3738,12 @@
     "department": "Electrical Engineering",
     "dept_id": 16,
     "profile_url": "",
-    "image_url": "",
     "phone_office": "",
     "phone_mobile": "8437603024",
     "admin_roles": "",
     "phone_source": "GNDEC Telephone Directory",
-    "also_published_as": []
+    "also_published_as": [],
+    "image_url": ""
   },
   {
     "name": "MR. DAVINDER SINGH",
@@ -3736,12 +3753,12 @@
     "department": "Electrical Engineering",
     "dept_id": 16,
     "profile_url": "",
-    "image_url": "",
     "phone_office": "",
     "phone_mobile": "9888652521",
     "admin_roles": "",
     "phone_source": "GNDEC Telephone Directory",
-    "also_published_as": []
+    "also_published_as": [],
+    "image_url": ""
   },
   {
     "name": "MR. GURMET SINGH",
@@ -3751,12 +3768,12 @@
     "department": "Electrical Engineering",
     "dept_id": 16,
     "profile_url": "",
-    "image_url": "",
     "phone_office": "",
     "phone_mobile": "9781900790",
     "admin_roles": "",
     "phone_source": "GNDEC Telephone Directory",
-    "also_published_as": []
+    "also_published_as": [],
+    "image_url": ""
   },
   {
     "name": "ER. EKUSPREET SINGH",
@@ -3766,12 +3783,12 @@
     "department": "Civil Engineering",
     "dept_id": 14,
     "profile_url": "",
-    "image_url": "",
     "phone_office": "",
     "phone_mobile": "",
     "admin_roles": "",
     "phone_source": "",
-    "also_published_as": []
+    "also_published_as": [],
+    "image_url": ""
   },
   {
     "name": "ER. HARSIMRAN SINGH",
@@ -3781,12 +3798,12 @@
     "department": "Civil Engineering",
     "dept_id": 14,
     "profile_url": "",
-    "image_url": "",
     "phone_office": "",
     "phone_mobile": "",
     "admin_roles": "",
     "phone_source": "",
-    "also_published_as": []
+    "also_published_as": [],
+    "image_url": ""
   },
   {
     "name": "ER. JASHANDEEP KAUR",
@@ -3796,12 +3813,12 @@
     "department": "Civil Engineering",
     "dept_id": 14,
     "profile_url": "",
-    "image_url": "",
     "phone_office": "",
-    "phone_mobile": "",
+    "phone_mobile": "8699199951",
     "admin_roles": "",
-    "phone_source": "",
-    "also_published_as": []
+    "phone_source": "User-provided faculty contact list (2026-10-19)",
+    "also_published_as": [],
+    "image_url": ""
   },
   {
     "name": "MR. RISHI KAPOOR",
@@ -3811,12 +3828,12 @@
     "department": "Applied Science",
     "dept_id": 1,
     "profile_url": "",
-    "image_url": "",
-    "phone_office": "",
+    "phone_office": "ext 4531",
     "phone_mobile": "8427645577",
     "admin_roles": "",
     "phone_source": "GNDEC Telephone Directory",
-    "also_published_as": []
+    "also_published_as": [],
+    "image_url": ""
   },
   {
     "name": "MR. SANCHIT MEHRA",
@@ -3826,12 +3843,12 @@
     "department": "Applied Science",
     "dept_id": 1,
     "profile_url": "",
-    "image_url": "",
-    "phone_office": "",
+    "phone_office": "ext 4531",
     "phone_mobile": "9041213075",
     "admin_roles": "",
     "phone_source": "GNDEC Telephone Directory",
-    "also_published_as": []
+    "also_published_as": [],
+    "image_url": ""
   },
   {
     "name": "MS. SANYA BEHL",
@@ -3841,12 +3858,12 @@
     "department": "Applied Science",
     "dept_id": 1,
     "profile_url": "",
-    "image_url": "",
-    "phone_office": "",
+    "phone_office": "ext 4531",
     "phone_mobile": "9814649777",
     "admin_roles": "",
     "phone_source": "GNDEC Telephone Directory",
-    "also_published_as": []
+    "also_published_as": [],
+    "image_url": ""
   },
   {
     "name": "DR. MOHD TAUHEED ILYAS",
@@ -3856,12 +3873,12 @@
     "department": "Applied Science",
     "dept_id": 1,
     "profile_url": "",
-    "image_url": "",
     "phone_office": "",
     "phone_mobile": "",
     "admin_roles": "",
     "phone_source": "",
-    "also_published_as": []
+    "also_published_as": [],
+    "image_url": ""
   },
   {
     "name": "PF. AJAYPAL SINGH MALHI",
@@ -3871,12 +3888,12 @@
     "department": "Computer Applications",
     "dept_id": 29,
     "profile_url": "",
-    "image_url": "",
     "phone_office": "",
     "phone_mobile": "",
     "admin_roles": "",
     "phone_source": "",
-    "also_published_as": []
+    "also_published_as": [],
+    "image_url": ""
   },
   {
     "name": "DR. AMRITPREET KAUR",
@@ -3886,12 +3903,12 @@
     "department": "Computer Applications",
     "dept_id": 29,
     "profile_url": "",
-    "image_url": "",
     "phone_office": "",
     "phone_mobile": "",
     "admin_roles": "",
     "phone_source": "",
-    "also_published_as": []
+    "also_published_as": [],
+    "image_url": ""
   },
   {
     "name": "PF. RANJIT SINGH",
@@ -3901,14 +3918,14 @@
     "department": "Workshops",
     "dept_id": 3,
     "profile_url": "",
-    "image_url": "",
     "phone_office": "ext 4589",
-    "phone_mobile": "",
+    "phone_mobile": "9914060094",
     "admin_roles": "",
     "phone_source": "GNDEC Telephone Directory",
     "also_published_as": [
       "ER. RANJIT SINGH"
-    ]
+    ],
+    "image_url": ""
   },
   {
     "name": "AR. SANJAY GOEL",
@@ -3918,12 +3935,12 @@
     "department": "School of Architecture",
     "dept_id": 99,
     "profile_url": "",
-    "image_url": "",
     "phone_office": "",
     "phone_mobile": "",
     "admin_roles": "",
     "phone_source": "",
-    "also_published_as": []
+    "also_published_as": [],
+    "image_url": ""
   },
   {
     "name": "AR. RAVINDER SINGH",
@@ -3933,12 +3950,12 @@
     "department": "School of Architecture",
     "dept_id": 99,
     "profile_url": "",
-    "image_url": "",
     "phone_office": "",
     "phone_mobile": "",
     "admin_roles": "",
     "phone_source": "",
-    "also_published_as": []
+    "also_published_as": [],
+    "image_url": ""
   },
   {
     "name": "AR. HARPREET KAUR",
@@ -3948,12 +3965,12 @@
     "department": "School of Architecture",
     "dept_id": 99,
     "profile_url": "",
-    "image_url": "",
     "phone_office": "",
     "phone_mobile": "",
     "admin_roles": "",
     "phone_source": "",
-    "also_published_as": []
+    "also_published_as": [],
+    "image_url": ""
   },
   {
     "name": "AR. SANDEEP GREWAL",
@@ -3963,12 +3980,12 @@
     "department": "School of Architecture",
     "dept_id": 99,
     "profile_url": "",
-    "image_url": "",
     "phone_office": "",
     "phone_mobile": "",
     "admin_roles": "",
     "phone_source": "",
-    "also_published_as": []
+    "also_published_as": [],
+    "image_url": ""
   },
   {
     "name": "AR. JASLEEN KAUR",
@@ -3978,12 +3995,12 @@
     "department": "School of Architecture",
     "dept_id": 99,
     "profile_url": "",
-    "image_url": "",
     "phone_office": "",
     "phone_mobile": "",
     "admin_roles": "",
     "phone_source": "",
-    "also_published_as": []
+    "also_published_as": [],
+    "image_url": ""
   },
   {
     "name": "AR. SIMRAN KAUR",
@@ -3993,12 +4010,12 @@
     "department": "School of Architecture",
     "dept_id": 99,
     "profile_url": "",
-    "image_url": "",
     "phone_office": "",
     "phone_mobile": "",
     "admin_roles": "",
     "phone_source": "",
-    "also_published_as": []
+    "also_published_as": [],
+    "image_url": ""
   },
   {
     "name": "AR. BIMALDEEP SINGH",
@@ -4008,12 +4025,12 @@
     "department": "School of Architecture",
     "dept_id": 99,
     "profile_url": "",
-    "image_url": "",
     "phone_office": "",
     "phone_mobile": "",
     "admin_roles": "",
     "phone_source": "",
-    "also_published_as": []
+    "also_published_as": [],
+    "image_url": ""
   },
   {
     "name": "AR. GAZAL SONI",
@@ -4023,12 +4040,12 @@
     "department": "School of Architecture",
     "dept_id": 99,
     "profile_url": "",
-    "image_url": "",
     "phone_office": "ext 4802",
     "phone_mobile": "",
     "admin_roles": "",
     "phone_source": "GNDEC Telephone Directory",
-    "also_published_as": []
+    "also_published_as": [],
+    "image_url": ""
   },
   {
     "name": "AR. JASPREET KAUR",
@@ -4038,12 +4055,12 @@
     "department": "School of Architecture",
     "dept_id": 99,
     "profile_url": "",
-    "image_url": "",
     "phone_office": "ext 4802",
     "phone_mobile": "",
     "admin_roles": "",
     "phone_source": "GNDEC Telephone Directory",
-    "also_published_as": []
+    "also_published_as": [],
+    "image_url": ""
   },
   {
     "name": "AR. KAJAL BHAWRA",
@@ -4053,12 +4070,12 @@
     "department": "School of Architecture",
     "dept_id": 99,
     "profile_url": "",
-    "image_url": "",
-    "phone_office": "",
+    "phone_office": "ext 4802",
     "phone_mobile": "8816975158",
     "admin_roles": "",
     "phone_source": "GNDEC Telephone Directory",
-    "also_published_as": []
+    "also_published_as": [],
+    "image_url": ""
   },
   {
     "name": "AR. MANKARAN SINGH",
@@ -4068,12 +4085,12 @@
     "department": "School of Architecture",
     "dept_id": 99,
     "profile_url": "",
-    "image_url": "",
-    "phone_office": "",
+    "phone_office": "ext 4802",
     "phone_mobile": "8146550188",
     "admin_roles": "",
     "phone_source": "GNDEC Telephone Directory",
-    "also_published_as": []
+    "also_published_as": [],
+    "image_url": ""
   },
   {
     "name": "AR. NEHA GARG",
@@ -4083,11 +4100,11 @@
     "department": "School of Architecture",
     "dept_id": 99,
     "profile_url": "",
-    "image_url": "",
-    "phone_office": "",
+    "phone_office": "ext 4802",
     "phone_mobile": "9501027160",
     "admin_roles": "",
     "phone_source": "GNDEC Telephone Directory",
-    "also_published_as": []
+    "also_published_as": [],
+    "image_url": ""
   }
 ]

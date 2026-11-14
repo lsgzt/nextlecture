@@ -131,7 +131,11 @@ fun FacultyMembersScreen(
             (selectedDept == null || record.department == selectedDept) &&
                 (needle.isBlank() ||
                     record.name.lowercase().contains(needle) ||
-                    record.email.lowercase().contains(needle))
+                    // a teacher can carry several addresses and two numbers -
+                    // the needle may be any one of them
+                    record.emails.any { it.lowercase().contains(needle) } ||
+                    record.mobileNumbers.any { it.contains(needle) } ||
+                    record.officeNumbers.any { it.contains(needle) })
         }
     }
 
@@ -360,7 +364,7 @@ private fun FacultyRow(
                 Text(
                     listOfNotNull(
                         record.designation.takeIf { it.isNotBlank() },
-                        record.email.takeIf { it.isNotBlank() }
+                        record.emails.firstOrNull()
                     ).joinToString(" · ").ifBlank {
                         if (record.profileId.startsWith(ExtraTeacherIdPrefix)) "From the department timetable"
                         else "Faculty"

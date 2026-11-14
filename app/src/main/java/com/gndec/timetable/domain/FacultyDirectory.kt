@@ -40,7 +40,47 @@ data class FacultyRecord(
     @SerialName("also_published_as") val alsoPublishedAs: List<String> = emptyList()
 ) {
     val contactable: Boolean get() = email.isNotBlank() || phoneOffice.isNotBlank() || phoneMobile.isNotBlank()
+
+    /**
+     * The college publishes more than one address for some teachers, written
+     * into the same field and separated by a comma or a semicolon
+     * ("kds@gndec.ac.in, kds97dee@gmail.com"). The same holds for a teacher
+     * with two numbers, so every field is read as a list.
+     */
+    val emails: List<String> get() = splitContacts(email)
+    val mobileNumbers: List<String> get() = splitContacts(phoneMobile)
+    val officeNumbers: List<String> get() = splitContacts(phoneOffice)
+
+    /** The office numbers that are a real line rather than an intercom. */
+    val dialableOfficeNumbers: List<String> get() = officeNumbers.filter { isDialablePhone(it) }
+
+    /** True when this record is a college intercom ("ext 4531") - a desk on
+     * the internal exchange, not a number the dialler can call. */
+    val isIntercomOnly: Boolean
+        get() = officeNumbers.isNotEmpty() && officeNumbers.all { it.isIntercom }
 }
+
+/** Splits a contact field into the individual values the college published. */
+internal fun splitContacts(raw: String): List<String> =
+    raw.split(',', ';').map { it.trim() }.filter { it.isNotEmpty() }
+
+/**
+ * True when [value] is a phone number the dialler can actually call.
+ *
+ * The college's intercom ("ext 4531") only works through its own switchboard,
+ * so it must never be turned into a `tel:` intent - the app would dial a
+ * number that does not exist. A real number has at least seven digits and
+ * carries nothing but digits and the usual separators.
+ */
+internal fun isDialablePhone(value: String): Boolean {
+    if (value.isIntercom) return false
+    if (!value.all { it.isDigit() || it in "+- ()" }) return false
+    return value.count { it.isDigit() } in 7..15
+}
+
+/** True for the college's internal extension numbers ("ext 4531"). */
+internal val String.isIntercom: Boolean
+    get() = trim().startsWith("ext", ignoreCase = true)
 
 /**
  * Loads the bundled faculty directory once per process and answers lookups.

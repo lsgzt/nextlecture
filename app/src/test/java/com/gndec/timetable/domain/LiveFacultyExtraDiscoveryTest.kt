@@ -6,6 +6,7 @@ import com.gndec.timetable.parse.FacultyTimetableParser
 import com.gndec.timetable.parse.ParsedFacultyDoc
 import kotlinx.serialization.json.Json
 import org.junit.Assert.assertEquals
+import org.junit.Assert.assertFalse
 import org.junit.Assert.assertNotNull
 import org.junit.Assert.assertNull
 import org.junit.Assert.assertTrue
@@ -210,5 +211,37 @@ class LiveFacultyExtraDiscoveryTest {
             FacultyNameMatcher.deptOfCode("TA")
         )
         assertNull(FacultyNameMatcher.deptOfCode("TA1"))
+    }
+
+    @Test
+    fun aTeacherWithTwoPublishedAddressesKeepsBoth() {
+        // The college writes more than one address for some teachers into the
+        // same field, separated by a comma or a semicolon. Both must survive.
+        val kanwardeep = directory.firstOrNull { it.profileId == "61" }
+        assertNotNull("KANWARDEEP SINGH must be in the bundled directory", kanwardeep)
+        assertEquals(
+            listOf("kds@gndec.ac.in", "kds97dee@gmail.com"),
+            kanwardeep!!.emails
+        )
+        // the first address is the college one and still drives the contact card
+        assertTrue(kanwardeep.emails.first().endsWith("@gndec.ac.in"))
+    }
+
+    @Test
+    fun anIntercomIsNotOfferedAsADialableNumber() {
+        // The college publishes a desk number for many teachers ("ext 4531").
+        // It only works through the college's switchboard, so the app must not
+        // offer to dial it.
+        val withIntercom = directory.firstOrNull { it.phoneOffice.startsWith("ext ") }
+        assertNotNull("the directory must carry intercoms", withIntercom)
+        assertTrue(withIntercom!!.isIntercomOnly)
+        assertTrue(withIntercom.dialableOfficeNumbers.isEmpty())
+        assertFalse(isDialablePhone(withIntercom.phoneOffice))
+        // a teacher with a published line is dialable
+        val withLine = directory.firstOrNull {
+            it.phoneOffice.isNotBlank() && !it.phoneOffice.startsWith("ext ")
+        }
+        assertNotNull("the directory must carry real office lines", withLine)
+        assertTrue(isDialablePhone(withLine!!.phoneOffice))
     }
 }

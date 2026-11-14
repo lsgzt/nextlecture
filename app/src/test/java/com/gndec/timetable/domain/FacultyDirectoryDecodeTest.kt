@@ -85,6 +85,50 @@ class FacultyDirectoryDecodeTest {
     }
 
     @Test
+    fun aTeacherCanCarrySeveralAddressesAndNumbers() {
+        // The college writes more than one address for some teachers into the
+        // same field, separated by a comma or a semicolon.
+        val payload = """
+            [{
+                "name": "KANWARDEEP SINGH",
+                "email": "kds@gndec.ac.in, kds97dee@gmail.com",
+                "phone_office": "ext 4531",
+                "phone_mobile": "82838-44114, 98142-29753"
+            }]
+        """.trimIndent()
+        val record = json.decodeFromString<List<FacultyRecord>>(payload)[0]
+        assertEquals(listOf("kds@gndec.ac.in", "kds97dee@gmail.com"), record.emails)
+        assertEquals(listOf("82838-44114", "98142-29753"), record.mobileNumbers)
+        assertEquals(listOf("ext 4531"), record.officeNumbers)
+        // an intercom is not a number the dialler can call
+        assertTrue(record.isIntercomOnly)
+        assertEquals(emptyList<String>(), record.dialableOfficeNumbers)
+    }
+
+    @Test
+    fun aSemicolonSeparatesTwoAddressesToo() {
+        val record = json.decodeFromString<List<FacultyRecord>>(
+            """[{"name":"X","email":"a@gndec.ac.in; b@gndec.ac.in"}]"""
+        )[0]
+        assertEquals(listOf("a@gndec.ac.in", "b@gndec.ac.in"), record.emails)
+    }
+
+    @Test
+    fun onlyRealNumbersCanBeDialled() {
+        // A published office line and a mobile are dialable.
+        assertTrue(isDialablePhone("0161-5064529"))
+        assertTrue(isDialablePhone("98156-57551"))
+        assertTrue(isDialablePhone("+91 161 506 4529"))
+        // The college's intercom only works through its own switchboard.
+        assertFalse(isDialablePhone("ext 4531"))
+        assertFalse(isDialablePhone("EXT 4531"))
+        // Too short to be a number, or carrying something else entirely.
+        assertFalse(isDialablePhone("4531"))
+        assertFalse(isDialablePhone(""))
+        assertFalse(isDialablePhone("82838-44114, 98142-29753"))
+    }
+
+    @Test
     fun shortDepartmentUsesCompactChipLabels() {
         assertEquals("CSE", FacultyDirectoryManager.shortDepartment("Computer Science & Engg."))
         assertEquals("ECE", FacultyDirectoryManager.shortDepartment("Electronics & Communication Engineering"))

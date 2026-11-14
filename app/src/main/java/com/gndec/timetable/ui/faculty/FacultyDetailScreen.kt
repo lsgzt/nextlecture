@@ -74,6 +74,7 @@ import com.gndec.timetable.domain.FacultySchedule
 import com.gndec.timetable.domain.FacultyStatus
 import com.gndec.timetable.domain.FacultyTimetableManager
 import com.gndec.timetable.domain.FacultyTimetableResult
+import com.gndec.timetable.domain.isIntercom
 import com.gndec.timetable.parse.FacultySlot
 import com.gndec.timetable.ui.Header
 import com.gndec.timetable.ui.IconBadge
@@ -500,19 +501,54 @@ private fun ContactCard(faculty: FacultyRecord) {
         elevation = CardDefaults.cardElevation(defaultElevation = 0.dp)
     ) {
         Column(Modifier.padding(horizontal = 18.dp, vertical = 10.dp)) {
-            if (faculty.email.isNotBlank()) {
-                ContactRow(Icons.Default.Email, faculty.email, "Email", copyValue = faculty.email) {
-                    runCatching { context.startActivity(Intent(Intent.ACTION_SENDTO, Uri.parse("mailto:${faculty.email}"))) }
+            // The college publishes several addresses for some teachers, and
+            // a few teachers carry two numbers - one row per published value.
+            faculty.emails.forEachIndexed { index, address ->
+                ContactRow(
+                    Icons.Default.Email, address,
+                    if (index == 0) "Email" else "Other email",
+                    copyValue = address
+                ) {
+                    runCatching {
+                        context.startActivity(Intent(Intent.ACTION_SENDTO, Uri.parse("mailto:$address")))
+                    }
                 }
             }
-            if (faculty.phoneOffice.isNotBlank()) {
-                ContactRow(Icons.Default.Phone, faculty.phoneOffice, "Office phone", copyValue = faculty.phoneOffice) {
-                    runCatching { context.startActivity(Intent(Intent.ACTION_DIAL, Uri.parse("tel:${faculty.phoneOffice.filter { it.isDigit() || it == '+' }}"))) }
+            faculty.officeNumbers.forEachIndexed { index, number ->
+                if (number.isIntercom) {
+                    // An intercom is a desk on the college's own exchange: it
+                    // only works through the switchboard, so there is nothing
+                    // to dial - the row is for reading and copying.
+                    val extension = number.filter { it.isDigit() }
+                    ContactRow(
+                        Icons.Default.Phone, "Extension $extension",
+                        "Via the college switchboard", copyValue = "Extension $extension"
+                    )
+                } else {
+                    ContactRow(
+                        Icons.Default.Phone, number,
+                        if (index == 0) "Office phone" else "Other office phone",
+                        copyValue = number
+                    ) {
+                        runCatching {
+                            context.startActivity(
+                                Intent(Intent.ACTION_DIAL, Uri.parse("tel:${number.filter { it.isDigit() || it == '+' }}"))
+                            )
+                        }
+                    }
                 }
             }
-            if (faculty.phoneMobile.isNotBlank()) {
-                ContactRow(Icons.Default.Phone, faculty.phoneMobile, "Mobile", copyValue = faculty.phoneMobile) {
-                    runCatching { context.startActivity(Intent(Intent.ACTION_DIAL, Uri.parse("tel:${faculty.phoneMobile.filter { it.isDigit() || it == '+' }}"))) }
+            faculty.mobileNumbers.forEachIndexed { index, number ->
+                ContactRow(
+                    Icons.Default.Phone, number,
+                    if (index == 0) "Mobile" else "Other mobile",
+                    copyValue = number
+                ) {
+                    runCatching {
+                        context.startActivity(
+                            Intent(Intent.ACTION_DIAL, Uri.parse("tel:${number.filter { it.isDigit() || it == '+' }}"))
+                        )
+                    }
                 }
             }
             if (faculty.profileUrl.isNotBlank()) {
@@ -536,7 +572,7 @@ private fun ContactRow(
     text: String,
     label: String,
     copyValue: String? = null,
-    onClick: () -> Unit
+    onClick: (() -> Unit)? = null
 ) {
     val view = LocalView.current
     val clipboard = LocalClipboardManager.current
@@ -548,7 +584,9 @@ private fun ContactRow(
         }
     }
     Column(
-        Modifier.fillMaxWidth().clickable(onClick = onClick)
+        // A row without an action (an intercom cannot be dialled) is not
+        // clickable - the copy button beside it still is.
+        Modifier.fillMaxWidth().clickable(enabled = onClick != null) { onClick?.invoke() }
     ) {
         Row(
             Modifier.fillMaxWidth().padding(vertical = 8.dp),

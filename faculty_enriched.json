@@ -85,7 +85,9 @@
     "profile_url": "https://gndec.ac.in/faculty/?id=449",
     "also_published_as": [
       "PF. AASTIK"
-    ]
+    ],
+    "phone_mobile": "8146366113",
+    "phone_source": "User-provided faculty contact list (2026-10-19)"
   },
   {
     "name": "DR. GAGANDEEP KAUR LOTEY",
@@ -166,7 +168,9 @@
     "profile_id": "388",
     "department": "Applied Science",
     "dept_id": 1,
-    "profile_url": "https://gndec.ac.in/faculty/?id=388"
+    "profile_url": "https://gndec.ac.in/faculty/?id=388",
+    "phone_mobile": "9888020728",
+    "phone_source": "User-provided faculty contact list (2026-10-19)"
   },
   {
     "name": "DR. RAJBIR KAUR",
@@ -244,7 +248,9 @@
     "profile_id": "509",
     "department": "Applied Science",
     "dept_id": 1,
-    "profile_url": "https://gndec.ac.in/faculty/?id=509"
+    "profile_url": "https://gndec.ac.in/faculty/?id=509",
+    "phone_mobile": "7814242450",
+    "phone_source": "User-provided faculty contact list (2026-10-19)"
   },
   {
     "name": "MANDEEP KAUR",
@@ -253,7 +259,9 @@
     "profile_id": "319",
     "department": "Applied Science",
     "dept_id": 1,
-    "profile_url": "https://gndec.ac.in/faculty/?id=319"
+    "profile_url": "https://gndec.ac.in/faculty/?id=319",
+    "phone_mobile": "9988015346",
+    "phone_source": "User-provided faculty contact list (2026-10-19)"
   },
   {
     "name": "MANJOT KAUR",
@@ -287,8 +295,8 @@
     "department": "Applied Science",
     "dept_id": 1,
     "profile_url": "https://gndec.ac.in/faculty/?id=377",
-    "phone_mobile": "9872207482",
-    "phone_source": "GNDEC Telephone Directory",
+    "phone_mobile": "8360624692",
+    "phone_source": "User-provided faculty contact list (2026-10-19)",
     "phone_office": "ext 4531"
   },
   {
@@ -298,7 +306,9 @@
     "profile_id": "508",
     "department": "Applied Science",
     "dept_id": 1,
-    "profile_url": "https://gndec.ac.in/faculty/?id=508"
+    "profile_url": "https://gndec.ac.in/faculty/?id=508",
+    "phone_mobile": "6239718672",
+    "phone_source": "User-provided faculty contact list (2026-10-19)"
   },
   {
     "name": "PARNEET KAUR",
@@ -307,7 +317,9 @@
     "profile_id": "473",
     "department": "Applied Science",
     "dept_id": 1,
-    "profile_url": "https://gndec.ac.in/faculty/?id=473"
+    "profile_url": "https://gndec.ac.in/faculty/?id=473",
+    "phone_mobile": "7347359006",
+    "phone_source": "User-provided faculty contact list (2026-10-19)"
   },
   {
     "name": "PRAGYA GOYAL",
@@ -410,7 +422,9 @@
     "profile_id": "472",
     "department": "Applied Science",
     "dept_id": 1,
-    "profile_url": "https://gndec.ac.in/faculty/?id=472"
+    "profile_url": "https://gndec.ac.in/faculty/?id=472",
+    "phone_mobile": "9878587778",
+    "phone_source": "User-provided faculty contact list (2026-10-19)"
   },
   {
     "name": "DR, JASBIR SINGH SAINI",
@@ -831,7 +845,8 @@
     "dept_id": 14,
     "profile_url": "https://gndec.ac.in/faculty/?id=436",
     "phone_office": "ext 4537",
-    "phone_source": "GNDEC Telephone Directory"
+    "phone_source": "User-provided faculty contact list (2026-10-19)",
+    "phone_mobile": "8146000426"
   },
   {
     "name": "SANDEEP KAUR",
@@ -889,7 +904,8 @@
       "ER. VARINDER SINGH"
     ],
     "phone_office": "ext 4537",
-    "phone_source": "GNDEC Telephone Directory"
+    "phone_source": "User-provided faculty contact list (2026-10-19)",
+    "phone_mobile": "9872598214"
   },
   {
     "name": "YUVRAJ SINGH",
@@ -1226,7 +1242,8 @@
     "dept_id": 15,
     "profile_url": "https://gndec.ac.in/faculty/?id=226",
     "phone_office": "ext 4551",
-    "phone_source": "GNDEC Telephone Directory"
+    "phone_source": "User-provided faculty contact list (2026-10-19)",
+    "phone_mobile": "9464318881"
   },
   {
     "name": "ER. LAKHVIR KAUR GREWAL",
@@ -1499,9 +1516,9 @@
     "dept_id": 16,
     "profile_url": "https://gndec.ac.in/faculty/?id=62",
     "phone_office": "0161-5064507",
-    "phone_mobile": "85280-02375",
+    "phone_mobile": "9872219178",
     "admin_roles": "Training & Placement Officer",
-    "phone_source": "Information Brochure 2026"
+    "phone_source": "User-provided faculty contact list (2026-10-19)"
   },
   {
     "name": "KARANBIR SINGH",
@@ -2116,8 +2133,8 @@
     "department": "Information Technology",
     "dept_id": 21,
     "profile_url": "https://gndec.ac.in/faculty/?id=454",
-    "phone_mobile": "8288833123",
-    "phone_source": "GNDEC permanent section list 2026"
+    "phone_mobile": "8968801937",
+    "phone_source": "User-provided faculty contact list (2026-10-19)"
   },
   {
     "name": "PARMINDER KAUR WADHWA",
@@ -3330,9 +3347,9 @@
     "dept_id": 21,
     "profile_url": "",
     "phone_office": "",
-    "phone_mobile": "8968801937",
+    "phone_mobile": "8288833123",
     "admin_roles": "",
-    "phone_source": "GNDEC permanent section list 2026",
+    "phone_source": "User-provided faculty contact list (2026-10-19)",
     "also_published_as": []
   },
   {
@@ -3343,7 +3360,7 @@
     "department": "Information Technology",
     "dept_id": 21,
     "profile_url": "",
-    "phone_office": "",
+    "phone_office": "ext 4549",
     "phone_mobile": "8553600011",
     "admin_roles": "",
     "phone_source": "GNDEC Telephone Directory",
@@ -3498,9 +3515,9 @@
     "dept_id": 14,
     "profile_url": "",
     "phone_office": "",
-    "phone_mobile": "",
+    "phone_mobile": "8699199951",
     "admin_roles": "",
-    "phone_source": "",
+    "phone_source": "User-provided faculty contact list (2026-10-19)",
     "also_published_as": []
   },
   {
@@ -3511,7 +3528,7 @@
     "department": "Applied Science",
     "dept_id": 1,
     "profile_url": "",
-    "phone_office": "",
+    "phone_office": "ext 4531",
     "phone_mobile": "8427645577",
     "admin_roles": "",
     "phone_source": "GNDEC Telephone Directory",
@@ -3525,7 +3542,7 @@
     "department": "Applied Science",
     "dept_id": 1,
     "profile_url": "",
-    "phone_office": "",
+    "phone_office": "ext 4531",
     "phone_mobile": "9041213075",
     "admin_roles": "",
     "phone_source": "GNDEC Telephone Directory",
@@ -3539,7 +3556,7 @@
     "department": "Applied Science",
     "dept_id": 1,
     "profile_url": "",
-    "phone_office": "",
+    "phone_office": "ext 4531",
     "phone_mobile": "9814649777",
     "admin_roles": "",
     "phone_source": "GNDEC Telephone Directory",
@@ -3596,7 +3613,7 @@
     "dept_id": 3,
     "profile_url": "",
     "phone_office": "ext 4589",
-    "phone_mobile": "",
+    "phone_mobile": "9914060094",
     "admin_roles": "",
     "phone_source": "GNDEC Telephone Directory",
     "also_published_as": [
@@ -3737,7 +3754,7 @@
     "department": "School of Architecture",
     "dept_id": 99,
     "profile_url": "",
-    "phone_office": "",
+    "phone_office": "ext 4802",
     "phone_mobile": "8816975158",
     "admin_roles": "",
     "phone_source": "GNDEC Telephone Directory",
@@ -3751,7 +3768,7 @@
     "department": "School of Architecture",
     "dept_id": 99,
     "profile_url": "",
-    "phone_office": "",
+    "phone_office": "ext 4802",
     "phone_mobile": "8146550188",
     "admin_roles": "",
     "phone_source": "GNDEC Telephone Directory",
@@ -3765,7 +3782,7 @@
     "department": "School of Architecture",
     "dept_id": 99,
     "profile_url": "",
-    "phone_office": "",
+    "phone_office": "ext 4802",
     "phone_mobile": "9501027160",
     "admin_roles": "",
     "phone_source": "GNDEC Telephone Directory",
