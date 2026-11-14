@@ -106,6 +106,7 @@ fun HomeScreen(
     // Per-subject verdict for whichever lecture the hero is currently showing.
     // Remembered because the countdown ticks every minute and would otherwise
     // re-scan every attendance record on each tick.
+    @Composable
     fun heroAttendance(lecture: LectureEntity) =
         remember(attendanceState, lecture.id) { attendanceState.subjectAttendance(lecture.subject) }
     val erpNotices by container.erpNoticeManager.notices.collectAsStateWithLifecycle()

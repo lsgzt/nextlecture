@@ -3,6 +3,7 @@ package com.gndec.timetable.ui.notice
 import android.content.Intent
 import android.net.Uri
 import androidx.compose.animation.AnimatedContent
+import androidx.compose.animation.core.snap
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
@@ -176,7 +177,7 @@ fun NoticeScreen(
                         targetState = tab,
                         transitionSpec = {
                             if (reduced) {
-                                fadeIn(motionTween(Motion.Normal)) togetherWith fadeOut(motionTween(Motion.Fast))
+                                fadeIn(snap()) togetherWith fadeOut(snap())
                             } else {
                                 fadeIn(tween(Motion.Emphasized, easing = Motion.EasingStandard)) togetherWith
                                     fadeOut(tween(Motion.Normal, easing = Motion.EasingStandard))

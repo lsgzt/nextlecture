@@ -247,6 +247,7 @@ fun ProfileScreen(container: AppContainer, onBack: () -> Unit, onOpenAttendance:
     val matches = matchingStudents(directory, query)
     val displayName = settings.studentName.ifBlank { "Your profile" }
     val initials = displayName.split(" ").filter { it.isNotBlank() }.take(2).joinToString("") { it.first().uppercase() }.ifBlank { "S" }
+    val friends = remember(settings.friendsJson) { container.settings.decodeFriends(settings.friendsJson) }
 
     PremiumScreenBackground {
         LazyColumn(
@@ -258,7 +259,6 @@ fun ProfileScreen(container: AppContainer, onBack: () -> Unit, onOpenAttendance:
             item { ProfileHero(initials, displayName, settings.studentSubsection.ifBlank { settings.branch.ifBlank { "Add your branch" } }, settings.rollNumber.ifBlank { "CRN not added" }) }
             item { SourceStatus(settings.profileSource, loading, savedMessage) }
 
-            val friends = remember(settings.friendsJson) { container.settings.decodeFriends(settings.friendsJson) }
             item { FriendsSection(container = container, friends = friends, modifier = Modifier.padding(horizontal = 20.dp)) }
 
 

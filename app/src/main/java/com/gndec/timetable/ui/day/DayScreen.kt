@@ -167,13 +167,13 @@ fun DayScreen(
     // Friends are stored locally; their timetables come from the groups this
     // device has already parsed, so this costs no network at all.
     val friends = remember(settings.friendsJson) { container.settings.decodeFriends(settings.friendsJson) }
-    val todayFriendDays = rememberFriendDays(container, friends, time.dayOfWeek.value)
-    val tomorrowFriendDays = rememberFriendDays(container, friends, tomorrowDow)
-    val reduced = LocalReducedMotion.current
     val time = Instant.ofEpochMilli(nowMillis).atZone(Zone)
     val nowMinutes = time.hour * 60 + time.minute
     val todayDow = time.dayOfWeek.value
     val tomorrowDow = if (todayDow == 7) 1 else todayDow + 1
+    val todayFriendDays = rememberFriendDays(container, friends, todayDow)
+    val tomorrowFriendDays = rememberFriendDays(container, friends, tomorrowDow)
+    val reduced = LocalReducedMotion.current
     val background = MaterialTheme.colorScheme.background
     val muted = MaterialTheme.colorScheme.onSurfaceVariant
     val primaryText = MaterialTheme.colorScheme.onSurface
