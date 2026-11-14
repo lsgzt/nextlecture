@@ -32,6 +32,7 @@ import com.gndec.timetable.ui.attendance.AttendanceScreen
 import com.gndec.timetable.ui.day.DayScreen
 import com.gndec.timetable.ui.details.LectureDetailScreen
 import com.gndec.timetable.ui.faculty.FacultyDetailScreen
+import com.gndec.timetable.ui.faculty.FacultyMembersScreen
 import com.gndec.timetable.ui.home.HomeScreen
 import com.gndec.timetable.ui.PremiumBottomBar
 import com.gndec.timetable.ui.motion.LocalReducedMotion
@@ -173,6 +174,7 @@ class MainActivity : ComponentActivity() {
                                             onOpenProfile = { navigate("profile") },
                                             onOpenSearch = { navigate("search") },
                                             onOpenVacantRooms = { navigate("vacant_rooms") },
+                                            onOpenFacultyMembers = { navigate("faculty_members") },
                                             onOpenLecture = { selectedLecture = it; selectedLectureDate = LocalDate.now(); navigate("detail") }
                                         )
                                     }
@@ -280,6 +282,14 @@ class MainActivity : ComponentActivity() {
                                     }
                                     composable("vacant_rooms") {
                                         VacantRoomsScreen(container = container, onBack = { nav.popBackStack() })
+                                    }
+                                    composable("faculty_members") {
+                                        FacultyMembersScreen(
+                                            container = container,
+                                            onBack = { nav.popBackStack() },
+                                            onOpenFaculty = { profileId -> navigate("faculty/$profileId") },
+                                            onOpenSettings = { navigate("settings") }
+                                        )
                                     }
                                 }
                                 val backStackEntry by nav.currentBackStackEntryAsState()

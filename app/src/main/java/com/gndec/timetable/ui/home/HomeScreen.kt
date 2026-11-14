@@ -72,6 +72,7 @@ import com.gndec.timetable.ui.isBannerEligibleOn
 import com.gndec.timetable.ui.theme.GndecOrange
 import com.gndec.timetable.util.Formatters
 import androidx.compose.material.icons.filled.MeetingRoom
+import androidx.compose.material.icons.filled.PersonSearch
 import androidx.compose.material.icons.filled.ChevronRight
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.ui.text.font.FontWeight
@@ -92,6 +93,7 @@ fun HomeScreen(
     onOpenProfile: () -> Unit,
     onOpenSearch: () -> Unit,
     onOpenVacantRooms: () -> Unit,
+    onOpenFacultyMembers: () -> Unit,
     onOpenLecture: (LectureEntity) -> Unit
 ) {
     val vm = remember { HomeViewModel(container) }
@@ -339,8 +341,14 @@ fun HomeScreen(
                         modifier = androidx.compose.ui.Modifier.itemEntrance(7).padding(horizontal = 20.dp).animateItem()
                     )
                 }
+                item(key = "faculty-members") {
+                    FacultyMembersEntryCard(
+                        onOpen = onOpenFacultyMembers,
+                        modifier = androidx.compose.ui.Modifier.itemEntrance(8).padding(horizontal = 20.dp).animateItem()
+                    )
+                }
                 item(key = "offline") {
-                    PremiumOfflineCard(androidx.compose.ui.Modifier.itemEntrance(8).padding(horizontal = 20.dp).animateItem())
+                    PremiumOfflineCard(androidx.compose.ui.Modifier.itemEntrance(9).padding(horizontal = 20.dp).animateItem())
                 }
             }
         }
@@ -381,6 +389,33 @@ private fun VacantRoomsEntryCard(onOpen: () -> Unit, modifier: Modifier = Modifi
                 Text("See which rooms are free right now or at any slot", color = MaterialTheme.colorScheme.onSurfaceVariant, style = MaterialTheme.typography.bodySmall, maxLines = 1, overflow = androidx.compose.ui.text.style.TextOverflow.Ellipsis)
             }
             Icon(Icons.Default.ChevronRight, contentDescription = "Open vacant rooms", tint = MaterialTheme.colorScheme.onSurfaceVariant)
+        }
+    }
+}
+
+/** Quick-action card that opens the faculty directory browser. */
+@Composable
+private fun FacultyMembersEntryCard(onOpen: () -> Unit, modifier: Modifier = Modifier) {
+    val pressInteraction = remember { MutableInteractionSource() }
+    androidx.compose.material3.Card(
+        onClick = onOpen,
+        modifier = modifier.fillMaxWidth().pressFeedback(pressInteraction),
+        interactionSource = pressInteraction,
+        shape = androidx.compose.foundation.shape.RoundedCornerShape(20.dp),
+        colors = androidx.compose.material3.CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
+        border = androidx.compose.foundation.BorderStroke(1.dp, MaterialTheme.colorScheme.outlineVariant),
+        elevation = androidx.compose.material3.CardDefaults.cardElevation(0.dp)
+    ) {
+        Row(Modifier.padding(16.dp), verticalAlignment = Alignment.CenterVertically) {
+            Box(Modifier.size(38.dp).background(MaterialTheme.colorScheme.primary.copy(alpha = 0.13f), CircleShape), contentAlignment = Alignment.Center) {
+                Icon(Icons.Default.PersonSearch, contentDescription = null, tint = MaterialTheme.colorScheme.primary, modifier = Modifier.size(20.dp))
+            }
+            Spacer(Modifier.width(10.dp))
+            Column(Modifier.weight(1f)) {
+                Text("Faculty members", style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.Bold)
+                Text("Teacher profiles, contacts and live timetables", color = MaterialTheme.colorScheme.onSurfaceVariant, style = MaterialTheme.typography.bodySmall, maxLines = 1, overflow = androidx.compose.ui.text.style.TextOverflow.Ellipsis)
+            }
+            Icon(Icons.Default.ChevronRight, contentDescription = "Open faculty members", tint = MaterialTheme.colorScheme.onSurfaceVariant)
         }
     }
 }

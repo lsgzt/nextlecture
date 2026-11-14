@@ -96,4 +96,81 @@ class FacultySearchTest {
         val results = search("harpreet", snapshot(queryFaculty = emptyList()))
         assertTrue(results.none { it.group == SearchGroup.FACULTY })
     }
+
+    // --- department picker ---------------------------------------------------
+
+    @Test
+    fun departmentFilterNarrowsFacultyResults() {
+        // "mandeep kaur" matches both the Civil and the Electrical teacher;
+        // the picker's Electrical chip must keep only the EE one.
+        val results = search("mandeep kaur", snapshot(), departmentFilter = "Electrical Engineering")
+        val facultyResults = results.filter { it.group == SearchGroup.FACULTY }
+        assertEquals(1, facultyResults.size)
+        val profileId = (facultyResults[0].action as SearchAction.OpenFaculty).profileId
+        assertEquals("426", profileId)
+    }
+
+    @Test
+    fun departmentFilterCanBeReleasedWithNull() {
+        val all = search("mandeep kaur", snapshot(), departmentFilter = null)
+        assertEquals(2, all.filter { it.group == SearchGroup.FACULTY }.size)
+    }
+
+    @Test
+    fun facultyDepartmentsListsDepartmentsWithHits() {
+        // Canonical order: Electrical (4) before Civil (7).
+        assertEquals(
+            listOf("Electrical Engineering", "Civil Engineering"),
+            facultyDepartments("mandeep kaur", snapshot())
+        )
+    }
+
+    @Test
+    fun facultyDepartmentsListsWholeDirectoryForEmptyQuery() {
+        assertEquals(
+            listOf(
+                "Applied Science",
+                "Information Technology",
+                "Electrical Engineering",
+                "Civil Engineering"
+            ),
+            facultyDepartments("", snapshot())
+        )
+    }
+
+    @Test
+    fun emptyQueryWithPickedDepartmentBrowsesThatDepartment() {
+        // Picking a department with nothing typed lists its teachers
+        // instead of the generic quick actions.
+        val results = search("", snapshot(), departmentFilter = "Applied Science")
+        val facultyResults = results.filter { it.group == SearchGroup.FACULTY }
+        assertEquals(1, facultyResults.size)
+        assertEquals("DR. HARPREET KAUR GREWAL", facultyResults[0].title)
+        assertEquals(SearchAction.OpenFaculty("71"), facultyResults[0].action)
+    }
+
+    @Test
+    fun emptyQueryWithoutPickedDepartmentStillShowsSuggestions() {
+        val results = search("", snapshot(), departmentFilter = null)
+        assertTrue(results.any { it.group == SearchGroup.ACTION })
+        assertTrue(results.none { it.group == SearchGroup.FACULTY })
+    }
+
+    @Test
+    fun browseModeListsTeachersAlphabetically() {
+        val itSnapshot = SearchSnapshot(
+            settings = AppSettings(),
+            lectures = emptyList(),
+            notices = emptyList(),
+            holidays = emptyList(),
+            attendance = emptyList(),
+            rooms = null,
+            faculty = faculty.filter { it.department == "Information Technology" },
+            today = LocalDate.of(2026, 10, 7),
+            nowMinutes = 600
+        )
+        val results = search("", itSnapshot, departmentFilter = "Information Technology")
+        val titles = results.filter { it.group == SearchGroup.FACULTY }.map { it.title }
+        assertEquals(titles, titles.sorted())
+    }
 }

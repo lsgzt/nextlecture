@@ -3,6 +3,7 @@ package com.gndec.timetable.ui.search
 import com.gndec.timetable.data.db.LectureEntity
 import com.gndec.timetable.data.prefs.AppSettings
 import com.gndec.timetable.domain.ErpNotice
+import com.gndec.timetable.domain.FacultyDirectoryManager
 import com.gndec.timetable.domain.FacultyRecord
 import com.gndec.timetable.domain.Holiday
 import com.gndec.timetable.domain.VacantRoomsManager
@@ -334,15 +335,25 @@ private val SyllabusAction = QuickAction(
  * The whole feature in one pure call. Every branch is additive — a query that is
  * also a date still falls through to the text search — so nothing is lost when a
  * query matches more than one intent.
+ *
+ * [departmentFilter] narrows the FACULTY group to one department (the picker in
+ * the search suggestions). With an empty query a picked department turns the
+ * suggestions into a straight directory listing of that department's teachers,
+ * so the picker works for browsing as well as for filtering.
  */
-fun search(query: String, snapshot: SearchSnapshot): List<SearchResult> {
+fun search(query: String, snapshot: SearchSnapshot, departmentFilter: String? = null): List<SearchResult> {
     val trimmed = query.trim()
-    if (trimmed.isEmpty()) return suggestions(snapshot)
+    if (trimmed.isEmpty()) {
+        if (departmentFilter != null && snapshot.faculty.isNotEmpty()) {
+            return departmentBrowse(departmentFilter, snapshot)
+        }
+        return suggestions(snapshot)
+    }
 
     val out = mutableListOf<SearchResult>()
     out += dateResults(trimmed, snapshot)
     out += identityResults(trimmed, snapshot)
-    out += facultyResults(trimmed, snapshot)
+    out += facultyResults(trimmed, snapshot, departmentFilter)
     out += roomResults(trimmed, snapshot)
     out += actionResults(trimmed)
     out += syllabusResults(trimmed)
@@ -515,29 +526,91 @@ private fun ErpNotice.actionOrNavigate(): SearchAction =
  * Names go through BOTH the shared score ladder and a per-word Damerau fuzzy
  * pass, because the directory and the timetable files disagree on spellings
  * ("KULVINDER" vs "Kulwinder") — a user typing either finds the teacher.
+ *
+ * [departmentFilter] keeps only the picked department's teachers — that is
+ * the department picker in the search suggestions.
  */
-private fun facultyResults(query: String, snapshot: SearchSnapshot): List<SearchResult> {
+private fun facultyResults(query: String, snapshot: SearchSnapshot, departmentFilter: String? = null): List<SearchResult> {
     if (snapshot.faculty.isEmpty()) return emptyList()
-    val hits = snapshot.faculty.mapNotNull { faculty ->
+    val hits = facultyMatched(query, snapshot)
+        .filter { departmentFilter == null || it.first.department == departmentFilter }
+        .map { (faculty, best) ->
+            val subtitle = listOfNotNull(
+                faculty.designation.takeIf { it.isNotBlank() },
+                faculty.department.takeIf { it.isNotBlank() }
+            ).joinToString(" · ").ifBlank { "Faculty" }
+            SearchResult(
+                id = "faculty-${faculty.profileId}",
+                group = SearchGroup.FACULTY,
+                title = faculty.name,
+                subtitle = subtitle,
+                score = if (best.second) best.first else best.first - 10,
+                action = SearchAction.OpenFaculty(faculty.profileId)
+            )
+        }
+    return hits.sortedWith(compareByDescending<SearchResult> { it.score }.thenBy { it.title }).take(8)
+}
+
+/**
+ * The department picker's options for this query: every department the user can
+ * still narrow down to. With a query it lists only departments that actually
+ * have a matching teacher; with an empty query it lists the whole directory so
+ * the picker doubles as a department browser straight from the suggestions.
+ */
+fun facultyDepartments(query: String, snapshot: SearchSnapshot): List<String> {
+    if (snapshot.faculty.isEmpty()) return emptyList()
+    val trimmed = query.trim()
+    val pool = if (trimmed.isEmpty()) {
+        snapshot.faculty
+    } else {
+        facultyMatched(trimmed, snapshot).map { it.first }
+    }
+    val departments = pool.map { it.department }.filter { it.isNotBlank() }.distinct()
+    return FacultyDirectoryManager.orderedDepartments(departments)
+}
+
+/**
+ * Empty-query department browsing: picking a department with nothing typed
+ * lists that department's whole directory — every teacher, alphabetical —
+ * instead of the generic quick actions. The selected chip itself says which
+ * department is listed, so the subtitle carries designation and email.
+ */
+private fun departmentBrowse(department: String, snapshot: SearchSnapshot): List<SearchResult> =
+    snapshot.faculty
+        .filter { it.department == department }
+        .sortedBy { it.name }
+        .map { faculty ->
+            val subtitle = listOfNotNull(
+                faculty.designation.takeIf { it.isNotBlank() },
+                faculty.email.takeIf { it.isNotBlank() }
+            ).joinToString(" · ").ifBlank { "Faculty" }
+            SearchResult(
+                id = "faculty-${faculty.profileId}",
+                group = SearchGroup.FACULTY,
+                title = faculty.name,
+                subtitle = subtitle,
+                score = SCORE_PREFIX,
+                action = SearchAction.OpenFaculty(faculty.profileId)
+            )
+        }
+
+/**
+ * Directory records that match [query] with their best score and whether that
+ * best score came from the name itself (name hits outrank department/designation
+ * hits, which rank below everything with the same ladder score).
+ */
+private fun facultyMatched(query: String, snapshot: SearchSnapshot): List<Pair<FacultyRecord, Pair<Int, Boolean>>> {
+    return snapshot.faculty.mapNotNull { faculty ->
         val name = maxOf(scoreWords(query, faculty.name), fuzzyNameScore(query, faculty.name))
         val dept = score(query, faculty.department)
         val designation = score(query, faculty.designation)
-        val best = maxOf(name, dept, designation)
-        if (best <= 0) return@mapNotNull null
-        val subtitle = listOfNotNull(
-            faculty.designation.takeIf { it.isNotBlank() },
-            faculty.department.takeIf { it.isNotBlank() }
-        ).joinToString(" · ").ifBlank { "Faculty" }
-        SearchResult(
-            id = "faculty-${faculty.profileId}",
-            group = SearchGroup.FACULTY,
-            title = faculty.name,
-            subtitle = subtitle,
-            score = if (best == name) best else best - 10,
-            action = SearchAction.OpenFaculty(faculty.profileId)
-        )
+        if (name >= dept && name >= designation) {
+            if (name <= 0) return@mapNotNull null
+            faculty to (name to true)
+        } else {
+            faculty to (maxOf(dept, designation) to false)
+        }
     }
-    return hits.sortedWith(compareByDescending<SearchResult> { it.score }.thenBy { it.title }).take(8)
 }
 
 /**

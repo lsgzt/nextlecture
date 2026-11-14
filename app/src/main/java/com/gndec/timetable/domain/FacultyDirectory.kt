@@ -3,6 +3,7 @@ package com.gndec.timetable.domain
 import android.content.Context
 import com.gndec.timetable.R
 import com.gndec.timetable.net.RoomSourceRoot
+import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.Json
 
@@ -18,13 +19,13 @@ data class FacultyRecord(
     val name: String = "",
     val designation: String = "",
     val email: String = "",
-    val profileId: String = "",
+    @SerialName("profile_id") val profileId: String = "",
     val department: String = "",
-    val deptId: Int = 0,
-    val profileUrl: String = "",
-    val phoneOffice: String = "",
-    val phoneMobile: String = "",
-    val adminRoles: String = ""
+    @SerialName("dept_id") val deptId: Int = 0,
+    @SerialName("profile_url") val profileUrl: String = "",
+    @SerialName("phone_office") val phoneOffice: String = "",
+    @SerialName("phone_mobile") val phoneMobile: String = "",
+    @SerialName("admin_roles") val adminRoles: String = ""
 ) {
     val contactable: Boolean get() = email.isNotBlank() || phoneOffice.isNotBlank() || phoneMobile.isNotBlank()
 }
@@ -80,5 +81,53 @@ class FacultyDirectoryManager(context: Context) {
 
         /** True for the departments whose teachers live in the ME timetable. */
         val ME_SERVED_DEPARTMENTS = setOf("Mechanical Engineering", "Production Engineering")
+
+        /**
+         * Compact chip label for a department — the full names ("Electronics &
+         * Communication Engineering") are far too wide for the filter chips, so
+         * the picker and the faculty directory browser show the familiar branch
+         * short forms instead.
+         */
+        fun shortDepartment(department: String): String = when (department.trim()) {
+            "Applied Science" -> "Applied Science"
+            "Information Technology" -> "IT"
+            "Computer Science & Engg." -> "CSE"
+            "Electrical Engineering" -> "EE"
+            "Mechanical Engineering" -> "ME"
+            "Production Engineering" -> "M&PE"
+            "Civil Engineering" -> "CE"
+            "Electronics & Communication Engineering" -> "ECE"
+            "Business Administration" -> "MBA"
+            "Computer Applications" -> "MCA"
+            "Computer Center" -> "Computer Center"
+            "School of Architecture" -> "Architecture"
+            else -> department.trim()
+        }
+
+        /**
+         * Sorts department names into the canonical display order used by the
+         * search department picker and the faculty directory browser: the seven
+         * departments that publish a teacher timetable (plus M&PE, served by
+         * ME) in branch order first, then every remaining department
+         * alphabetically.
+         */
+        fun orderedDepartments(departments: List<String>): List<String> {
+            val canonical = listOf(
+                "Applied Science",
+                "Computer Science & Engg.",
+                "Information Technology",
+                "Electronics & Communication Engineering",
+                "Electrical Engineering",
+                "Mechanical Engineering",
+                "Production Engineering",
+                "Civil Engineering"
+            )
+            return departments.sortedWith(
+                compareBy(
+                    { dept -> canonical.indexOf(dept.trim()).let { if (it >= 0) it else canonical.size } },
+                    { it.trim().lowercase() }
+                )
+            )
+        }
     }
 }

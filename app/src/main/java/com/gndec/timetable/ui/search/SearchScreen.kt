@@ -18,6 +18,8 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
@@ -44,6 +46,7 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -112,14 +115,20 @@ fun SearchScreen(
         if (looksLikeRoom) container.vacantRoomsManager.ensureLoaded()
     }
 
-    // Bundled faculty directory — read once from the APK the first time the
-    // user types anything, so teacher results appear instantly (no network).
+    // Bundled faculty directory — read once from the APK as soon as the screen
+    // opens (cheap: the manager lazy-parses it once per process), so teacher
+    // results and the department picker appear instantly with no network.
     var faculty by remember { mutableStateOf(emptyList<com.gndec.timetable.domain.FacultyRecord>()) }
-    LaunchedEffect(trimmed.isNotEmpty()) {
-        if (trimmed.isNotEmpty() && faculty.isEmpty()) {
+    LaunchedEffect(Unit) {
+        if (faculty.isEmpty()) {
             faculty = withContext(kotlinx.coroutines.Dispatchers.Default) { container.facultyDirectory.directory }
         }
     }
+
+    // Department picker inside the suggestions — null means "All departments".
+    // With a query it filters the FACULTY results; with an empty query picking a
+    // department browses that department's teachers right here in search.
+    var deptFilter by remember { mutableStateOf<String?>(null) }
 
     val today = remember { LocalDate.now() }
     val nowMinutes = remember {
@@ -140,7 +149,10 @@ fun SearchScreen(
             nowMinutes = nowMinutes
         )
     }
-    val results = remember(query, snapshot) { search(query, snapshot) }
+    val facultyDepts = remember(query, snapshot) { facultyDepartments(query, snapshot) }
+    // A department the current query no longer matches falls back to "All".
+    val effectiveDept = deptFilter?.takeIf { it in facultyDepts }
+    val results = remember(query, snapshot, effectiveDept) { search(query, snapshot, effectiveDept) }
 
     fun run(action: SearchAction) {
         focusManager.clearFocus()
@@ -205,13 +217,51 @@ fun SearchScreen(
                         value = query,
                         onValueChange = { query = it },
                         modifier = Modifier.fillMaxWidth().padding(horizontal = 20.dp),
-                        placeholder = { Text("Try crn, F106, 25 Sep, vacant rooms") },
+                        placeholder = { Text("Try a teacher, crn, F106, 25 Sep, vacant rooms") },
                         leadingIcon = { Icon(Icons.Default.Search, contentDescription = null) },
                         singleLine = true,
                         shape = RoundedCornerShape(16.dp),
                         keyboardOptions = KeyboardOptions(imeAction = ImeAction.Search),
                         keyboardActions = KeyboardActions(onSearch = { focusManager.clearFocus() })
                     )
+                }
+
+                // Department picker — part of the search suggestions. Offers every
+                // department the query can still narrow to (all of them while the
+                // query is empty), so same-name teachers across departments can be
+                // separated with one tap and any department can be browsed.
+                if (facultyDepts.isNotEmpty()) {
+                    item(key = "dept-picker") {
+                        Column {
+                            Text(
+                                "DEPARTMENT",
+                                modifier = Modifier.padding(start = 22.dp, bottom = 4.dp),
+                                color = MaterialTheme.colorScheme.primary,
+                                style = MaterialTheme.typography.labelMedium,
+                                fontWeight = FontWeight.Bold,
+                                letterSpacing = 1.2.sp
+                            )
+                            LazyRow(
+                                contentPadding = PaddingValues(horizontal = 20.dp),
+                                horizontalArrangement = Arrangement.spacedBy(8.dp)
+                            ) {
+                                item(key = "dept-all") {
+                                    DeptChip(
+                                        label = "All",
+                                        selected = effectiveDept == null,
+                                        onClick = { deptFilter = null }
+                                    )
+                                }
+                                items(facultyDepts, key = { it }) { dept ->
+                                    DeptChip(
+                                        label = com.gndec.timetable.domain.FacultyDirectoryManager.shortDepartment(dept),
+                                        selected = effectiveDept == dept,
+                                        onClick = { deptFilter = if (effectiveDept == dept) null else dept }
+                                    )
+                                }
+                            }
+                        }
+                    }
                 }
 
                 if (results.isEmpty() && trimmed.isNotEmpty()) {
@@ -320,11 +370,34 @@ private fun NoResults(query: String) {
             )
             Spacer(Modifier.height(4.dp))
             Text(
-                "Search works across your details, timetable, notices, holidays, attendance and rooms. Try a roll number, a room like F106, or a date like 25 Sep.",
+                "Search works across your details, faculty, timetables, notices, holidays, attendance and rooms. Try a teacher's name, a roll number, a room like F106, or a date like 25 Sep.",
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
                 style = MaterialTheme.typography.bodySmall
             )
         }
+    }
+}
+
+/** One department filter chip of the suggestions picker. */
+@Composable
+private fun DeptChip(label: String, selected: Boolean, onClick: () -> Unit) {
+    Surface(
+        shape = RoundedCornerShape(14.dp),
+        color = if (selected) MaterialTheme.colorScheme.primary.copy(alpha = 0.14f) else MaterialTheme.colorScheme.surface,
+        border = BorderStroke(
+            1.dp,
+            if (selected) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.outlineVariant
+        ),
+        modifier = Modifier.clickable(onClick = onClick)
+    ) {
+        Text(
+            label,
+            modifier = Modifier.padding(horizontal = 13.dp, vertical = 8.dp),
+            color = if (selected) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurface,
+            style = MaterialTheme.typography.bodyMedium,
+            fontWeight = if (selected) FontWeight.Bold else FontWeight.SemiBold,
+            maxLines = 1
+        )
     }
 }
 
