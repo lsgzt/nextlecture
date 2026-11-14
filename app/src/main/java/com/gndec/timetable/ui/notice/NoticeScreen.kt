@@ -82,7 +82,7 @@ import java.time.format.TextStyle
 import java.time.temporal.ChronoUnit
 import java.util.Locale
 
-private enum class NoticeTab(val label: String) { NOTICES("Notices"), HOLIDAYS("Holidays") }
+enum class NoticeTab(val label: String) { NOTICES("Notices"), HOLIDAYS("Holidays") }
 
 private val HolidayLongDate = DateTimeFormatter.ofPattern("d MMMM yyyy (EEEE)")
 private val HolidayMonthFormat = DateTimeFormatter.ofPattern("MMMM yyyy")
@@ -141,7 +141,9 @@ fun NoticeScreen(
     onOpenToday: () -> Unit,
     onOpenAlerts: () -> Unit,
     onOpenSettings: () -> Unit,
-    onOpenNoticeDetail: (ErpNotice) -> Unit
+    onOpenNoticeDetail: (ErpNotice) -> Unit,
+    /** Which segment to open with — home holiday banners use HOLIDAYS. */
+    initialTab: NoticeTab = NoticeTab.NOTICES
 ) {
     val notices by container.erpNoticeManager.notices.collectAsStateWithLifecycle()
     val refreshing by container.erpNoticeManager.refreshing.collectAsStateWithLifecycle()
@@ -149,8 +151,9 @@ fun NoticeScreen(
     val holidays by container.holidayManager.holidays.collectAsStateWithLifecycle()
     val holidaysRefreshing by container.holidayManager.refreshing.collectAsStateWithLifecycle()
     val context = LocalContext.current
-    var tabName by rememberSaveable { mutableStateOf(NoticeTab.NOTICES.name) }
-    val tab = NoticeTab.valueOf(tabName)
+    // Keyed on initialTab so home → Holidays does not restore a prior Notices selection.
+    var tabName by rememberSaveable(initialTab.name) { mutableStateOf(initialTab.name) }
+    val tab = runCatching { NoticeTab.valueOf(tabName) }.getOrDefault(initialTab)
     val reduced = LocalReducedMotion.current
 
     fun open(url: String) {

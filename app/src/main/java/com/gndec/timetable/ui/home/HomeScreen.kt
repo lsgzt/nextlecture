@@ -89,6 +89,7 @@ fun HomeScreen(
     onOpenToday: () -> Unit,
     onOpenAlerts: () -> Unit,
     onOpenNotice: () -> Unit,
+    onOpenHolidays: () -> Unit,
     onOpenNoticeDetail: (com.gndec.timetable.domain.ErpNotice) -> Unit,
     onOpenSettings: () -> Unit,
     onOpenProfile: () -> Unit,
@@ -190,7 +191,7 @@ fun HomeScreen(
                             items = homeBanners,
                             onOpen = { item ->
                                 if (item.isHoliday) {
-                                    onOpenNotice()
+                                    onOpenHolidays()
                                 } else {
                                     val noticeId = item.noticeId
                                     val notice = if (noticeId != null) {

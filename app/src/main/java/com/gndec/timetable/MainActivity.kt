@@ -173,6 +173,7 @@ class MainActivity : ComponentActivity() {
                                             onOpenToday = { navigate("today") },
                                             onOpenAlerts = { navigate("syllabus") },
                                             onOpenNotice = { navigate("notice") },
+                                            onOpenHolidays = { navigate("notice/holidays") },
                                             onOpenNoticeDetail = { notice ->
                                                 selectedNotice = notice
                                                 navigate("notice_detail")
@@ -243,6 +244,20 @@ class MainActivity : ComponentActivity() {
                                                 selectedNotice = notice
                                                 navigate("notice_detail")
                                             }
+                                        )
+                                    }
+                                    composable("notice/holidays") {
+                                        NoticeScreen(
+                                            container = container,
+                                            onOpenHome = { navigate("home") },
+                                            onOpenToday = { navigate("today") },
+                                            onOpenAlerts = { navigate("syllabus") },
+                                            onOpenSettings = { navigate("settings") },
+                                            onOpenNoticeDetail = { notice ->
+                                                selectedNotice = notice
+                                                navigate("notice_detail")
+                                            },
+                                            initialTab = com.gndec.timetable.ui.notice.NoticeTab.HOLIDAYS
                                         )
                                     }
                                     composable("notice_detail") {
@@ -324,8 +339,9 @@ class MainActivity : ComponentActivity() {
                                     }
                                 }
                                 val backStackEntry by nav.currentBackStackEntryAsState()
-                                val tabRoute = when (backStackEntry?.destination?.route) {
-                                    "home", "today", "notice" -> backStackEntry?.destination?.route
+                                val tabRoute = when (val route = backStackEntry?.destination?.route) {
+                                    "home", "today", "notice" -> route
+                                    "notice/holidays" -> "notice"
                                     // Detail keeps its previous behavior of highlighting Home.
                                     "detail" -> "home"
                                     else -> null

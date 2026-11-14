@@ -26,7 +26,7 @@ fun routeRank(route: String?): Int = when {
     route.startsWith("onboarding") || route.startsWith("notification_onboarding") -> RankOnboarding
     route == "home" -> 0
     route == "today" -> 1
-    route == "notice" -> 2
+    route == "notice" || route == "notice/holidays" -> 2
     route == "notice_detail" -> 9
     route == "syllabus" -> 3
     route == "faculty_members" -> 10
