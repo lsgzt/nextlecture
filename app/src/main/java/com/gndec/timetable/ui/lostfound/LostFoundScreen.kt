@@ -61,6 +61,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.text.font.FontWeight
@@ -136,6 +137,7 @@ fun LostFoundScreen(
     var tab by rememberSaveable { mutableStateOf(LostFoundItem.KIND_LOST) }
     var composing by rememberSaveable { mutableStateOf(false) }
     var detail by remember { mutableStateOf<LostFoundItem?>(null) }
+    val view = LocalView.current
 
     Surface(Modifier.fillMaxSize(), color = MaterialTheme.colorScheme.background) {
         if (composing) {
@@ -200,7 +202,7 @@ fun LostFoundScreen(
                         }
                         ExtendedFloatingActionButton(
                             onClick = {
-                                LocalView.current.hapticTick()
+                                view.hapticTick()
                                 composing = true
                             },
                             icon = { Icon(Icons.Default.Add, contentDescription = null) },
@@ -357,7 +359,7 @@ private fun LostFoundCard(
                 ) {
                     if (bitmap != null) {
                         Image(
-                            bitmap = bitmap!!,
+                            bitmap = bitmap!!.asImageBitmap(),
                             contentDescription = item.title,
                             modifier = Modifier.fillMaxSize(),
                             contentScale = ContentScale.Crop

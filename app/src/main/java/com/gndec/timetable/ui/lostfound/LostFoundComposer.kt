@@ -8,7 +8,6 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
@@ -56,6 +55,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.text.font.FontWeight
@@ -141,7 +141,7 @@ fun LostFoundComposer(
             if (pickedUri != null && preview != null) {
                 Box(Modifier.fillMaxWidth().clip(RoundedCornerShape(18.dp))) {
                     Image(
-                        bitmap = preview!!,
+                        bitmap = preview!!.asImageBitmap(),
                         contentDescription = "Picked photo",
                         modifier = Modifier.fillMaxWidth(),
                         contentScale = ContentScale.Crop
