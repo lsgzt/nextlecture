@@ -73,7 +73,10 @@
     "profile_id": "2",
     "department": "Applied Science",
     "dept_id": 1,
-    "profile_url": "https://gndec.ac.in/faculty/?id=2"
+    "profile_url": "https://gndec.ac.in/faculty/?id=2",
+    "phone_mobile": "9463005275",
+    "phone_source": "GNDEC Telephone Directory",
+    "phone_office": "ext 4531"
   },
   {
     "name": "AASTIK SHARMA",
@@ -180,7 +183,10 @@
     "profile_id": "313",
     "department": "Applied Science",
     "dept_id": 1,
-    "profile_url": "https://gndec.ac.in/faculty/?id=313"
+    "profile_url": "https://gndec.ac.in/faculty/?id=313",
+    "phone_mobile": "9814482728",
+    "phone_source": "GNDEC Telephone Directory",
+    "phone_office": "ext 4531"
   },
   {
     "name": "DR. RAJVIR KAUR SRAW",
@@ -332,7 +338,10 @@
     "profile_url": "https://gndec.ac.in/faculty/?id=78",
     "also_published_as": [
       "PF. PRAGYA"
-    ]
+    ],
+    "phone_mobile": "9357655111",
+    "phone_source": "GNDEC Telephone Directory",
+    "phone_office": "ext 4531"
   },
   {
     "name": "SAHIL",
@@ -653,7 +662,8 @@
     "dept_id": 14,
     "profile_url": "https://gndec.ac.in/faculty/?id=69",
     "phone_office": "ext 4737",
-    "phone_source": "GNDEC Telephone Directory"
+    "phone_source": "GNDEC Telephone Directory",
+    "phone_mobile": "9855965901"
   },
   {
     "name": "HARDEEP SINGH RAI",
@@ -664,7 +674,8 @@
     "dept_id": 14,
     "profile_url": "https://gndec.ac.in/faculty/?id=268",
     "phone_office": "ext 4540",
-    "phone_source": "GNDEC Telephone Directory"
+    "phone_source": "GNDEC Telephone Directory",
+    "phone_mobile": "9855225007"
   },
   {
     "name": "HARVINDER SINGH",
@@ -675,7 +686,8 @@
     "dept_id": 14,
     "profile_url": "https://gndec.ac.in/faculty/?id=23",
     "phone_office": "ext 4508",
-    "phone_source": "GNDEC Telephone Directory"
+    "phone_source": "GNDEC Telephone Directory",
+    "phone_mobile": "9914800906"
   },
   {
     "name": "PRASHANT GARG",
@@ -686,7 +698,8 @@
     "dept_id": 14,
     "profile_url": "https://gndec.ac.in/faculty/?id=13",
     "phone_office": "ext 4741",
-    "phone_source": "GNDEC Telephone Directory"
+    "phone_source": "GNDEC Telephone Directory",
+    "phone_mobile": "9914313435"
   },
   {
     "name": "PUNEET PAL SINGH CHEEMA",
@@ -710,7 +723,8 @@
     "dept_id": 14,
     "profile_url": "https://gndec.ac.in/faculty/?id=266",
     "phone_office": "ext 4537",
-    "phone_source": "GNDEC Telephone Directory"
+    "phone_source": "GNDEC Telephone Directory",
+    "phone_mobile": "9417398110"
   },
   {
     "name": "AS SIDHU",
@@ -757,7 +771,8 @@
     "dept_id": 14,
     "profile_url": "https://gndec.ac.in/faculty/?id=122",
     "phone_office": "ext 4732",
-    "phone_source": "GNDEC Telephone Directory"
+    "phone_source": "GNDEC Telephone Directory",
+    "phone_mobile": "9465196630"
   },
   {
     "name": "HEENA MALHOTRA",
@@ -812,7 +827,8 @@
     "dept_id": 14,
     "profile_url": "https://gndec.ac.in/faculty/?id=241",
     "phone_office": "ext 4537",
-    "phone_source": "GNDEC Telephone Directory"
+    "phone_source": "GNDEC Telephone Directory",
+    "phone_mobile": "9779815920"
   },
   {
     "name": "PRABHJOT SINGH",
@@ -835,7 +851,9 @@
     "profile_id": "129",
     "department": "Civil Engineering",
     "dept_id": 14,
-    "profile_url": "https://gndec.ac.in/faculty/?id=129"
+    "profile_url": "https://gndec.ac.in/faculty/?id=129",
+    "phone_mobile": "8427706043",
+    "phone_source": "GNDEC Telephone Directory"
   },
   {
     "name": "PUSHPINDER SINGH",
@@ -880,7 +898,8 @@
     "dept_id": 14,
     "profile_url": "https://gndec.ac.in/faculty/?id=406",
     "phone_office": "ext 4537",
-    "phone_source": "GNDEC Telephone Directory"
+    "phone_source": "GNDEC Telephone Directory",
+    "phone_mobile": "9876510717"
   },
   {
     "name": "SUKHWINDERPAL SINGH",
@@ -941,7 +960,8 @@
     "dept_id": 15,
     "profile_url": "https://gndec.ac.in/faculty/?id=4",
     "phone_office": "ext 4550",
-    "phone_source": "GNDEC Telephone Directory"
+    "phone_source": "GNDEC Telephone Directory",
+    "phone_mobile": "9855576176"
   },
   {
     "name": "AMANPREET SINGH BRAR",
@@ -952,7 +972,8 @@
     "dept_id": 15,
     "profile_url": "https://gndec.ac.in/faculty/?id=50",
     "phone_office": "ext 4551",
-    "phone_source": "GNDEC Telephone Directory"
+    "phone_source": "GNDEC Telephone Directory",
+    "phone_mobile": "9814282749"
   },
   {
     "name": "DR. JASBIR SINGH SAINI",
@@ -1036,7 +1057,8 @@
     "dept_id": 15,
     "profile_url": "https://gndec.ac.in/faculty/?id=131",
     "phone_office": "ext 4551",
-    "phone_source": "GNDEC Telephone Directory"
+    "phone_source": "GNDEC Telephone Directory",
+    "phone_mobile": "9888893018"
   },
   {
     "name": "DR. HARDEEP SINGH KANG",
@@ -1047,7 +1069,8 @@
     "dept_id": 15,
     "profile_url": "https://gndec.ac.in/faculty/?id=160",
     "phone_office": "ext 4551",
-    "phone_source": "GNDEC Telephone Directory"
+    "phone_source": "GNDEC Telephone Directory",
+    "phone_mobile": "9781404142"
   },
   {
     "name": "DR. INDERJIT SINGH DHANOA",
@@ -1061,7 +1084,8 @@
       "DR. INDERJIT SINGH"
     ],
     "phone_office": "ext 4551",
-    "phone_source": "GNDEC Telephone Directory"
+    "phone_source": "GNDEC Telephone Directory",
+    "phone_mobile": "9855655244"
   },
   {
     "name": "DR. KAMALDEEP KAUR",
@@ -1072,7 +1096,8 @@
     "dept_id": 15,
     "profile_url": "https://gndec.ac.in/faculty/?id=143",
     "phone_office": "ext 4551",
-    "phone_source": "GNDEC Telephone Directory"
+    "phone_source": "GNDEC Telephone Directory",
+    "phone_mobile": "9815452427"
   },
   {
     "name": "DR. KAPIL SHARMA",
@@ -1109,7 +1134,8 @@
     "dept_id": 15,
     "profile_url": "https://gndec.ac.in/faculty/?id=172",
     "phone_office": "ext 4551",
-    "phone_source": "GNDEC Telephone Directory"
+    "phone_source": "GNDEC Telephone Directory",
+    "phone_mobile": "9464368209"
   },
   {
     "name": "DR. PRIYANKA ARORA",
@@ -1120,7 +1146,8 @@
     "dept_id": 15,
     "profile_url": "https://gndec.ac.in/faculty/?id=120",
     "phone_office": "ext 4551",
-    "phone_source": "GNDEC Telephone Directory"
+    "phone_source": "GNDEC Telephone Directory",
+    "phone_mobile": "9888899029"
   },
   {
     "name": "DR. SATINDERPAL SINGH",
@@ -1187,7 +1214,8 @@
       "ER. JASDEEP KAUR"
     ],
     "phone_office": "ext 4551",
-    "phone_source": "GNDEC Telephone Directory"
+    "phone_source": "GNDEC Telephone Directory",
+    "phone_mobile": "9417263502"
   },
   {
     "name": "ER. JASMINE KAUR",
@@ -1269,7 +1297,8 @@
     "dept_id": 15,
     "profile_url": "https://gndec.ac.in/faculty/?id=112",
     "phone_office": "ext 4551",
-    "phone_source": "GNDEC Telephone Directory"
+    "phone_source": "GNDEC Telephone Directory",
+    "phone_mobile": "9463058915"
   },
   {
     "name": "ER. MEETALI",
@@ -1300,7 +1329,8 @@
     "dept_id": 15,
     "profile_url": "https://gndec.ac.in/faculty/?id=146",
     "phone_office": "ext 4551",
-    "phone_source": "GNDEC Telephone Directory"
+    "phone_source": "GNDEC Telephone Directory",
+    "phone_mobile": "9501421234"
   },
   {
     "name": "ER.HARKOMAL PREET KAUR",
@@ -2192,7 +2222,8 @@
     "dept_id": 28,
     "profile_url": "https://gndec.ac.in/faculty/?id=168",
     "phone_office": "ext 4592",
-    "phone_source": "GNDEC Telephone Directory"
+    "phone_source": "GNDEC Telephone Directory",
+    "phone_mobile": "9815903230"
   },
   {
     "name": "AMARPREET KAUR",
