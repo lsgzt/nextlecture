@@ -346,21 +346,18 @@ fun DayScreen(
                     )
                 }
                 item {
-                    Column(Modifier.fillMaxWidth().padding(horizontal = 22.dp, vertical = 4.dp)) {
-                        Row(verticalAlignment = Alignment.CenterVertically) {
-                            Icon(Icons.Default.CloudDone, contentDescription = null, tint = accent, modifier = Modifier.size(19.dp))
-                            Spacer(Modifier.width(8.dp))
-                            Text("Using saved timetable · reminders work offline", color = muted, style = MaterialTheme.typography.bodySmall)
-                        }
-                        meta?.generatedAtMillis?.let { generatedAt ->
-                            Spacer(Modifier.height(4.dp))
-                            Text(
-                                "Timetable generated on ${Formatters.dateTime(generatedAt)}",
-                                color = muted,
-                                style = MaterialTheme.typography.bodySmall,
-                                modifier = Modifier.padding(start = 27.dp)
-                            )
-                        }
+                    Row(
+                        Modifier.fillMaxWidth().padding(horizontal = 22.dp, vertical = 4.dp),
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Icon(Icons.Default.CloudDone, contentDescription = null, tint = accent, modifier = Modifier.size(19.dp))
+                        Spacer(Modifier.width(8.dp))
+                        // One compact status line (matches FacultyDetail source footer style).
+                        // Prefer FET generation time when known; otherwise keep the offline cue.
+                        val status = meta?.generatedAtMillis?.let { generatedAt ->
+                            "Using saved timetable · generated ${Formatters.dateTime(generatedAt)}"
+                        } ?: "Using saved timetable · reminders work offline"
+                        Text(status, color = muted, style = MaterialTheme.typography.bodySmall)
                     }
                 }
             }
