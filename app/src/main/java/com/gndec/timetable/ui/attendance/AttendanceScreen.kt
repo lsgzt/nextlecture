@@ -302,7 +302,9 @@ fun AttendanceScreen(
                                     .onFailure { error = it.message ?: "Could not remove attendance" }
                                 savingKey = null
                             }
-                        }
+                        },
+                        mentorName = settings.mentorName,
+                        mentorVenue = settings.mentorVenue
                         )
                     }
                 }
