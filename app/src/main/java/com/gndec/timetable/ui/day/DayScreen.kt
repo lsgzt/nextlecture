@@ -68,7 +68,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.drawBehind
-import androidx.compose.ui.draw.drawWithContent
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Brush
@@ -711,20 +710,19 @@ private fun TimelineSection(
     Box(
         Modifier.fillMaxWidth()
             .onGloballyPositioned { refreshAllFromSection(it) }
-            // Draw after children so node centres from this frame are available.
-            .drawWithContent {
-                drawContent()
-                // Touch epoch so draw invalidates whenever positions refresh.
+            // Rail is drawn behind the nodes/labels so the timing text stays
+            // readable; layoutEpoch forces a redraw when positions refresh.
+            .drawBehind {
                 val epoch = layoutEpoch
-                if (epoch < 0) return@drawWithContent
+                if (epoch < 0) return@drawBehind
                 fun nodeY(index: Int): Float? = nodeYs[index]
                 fun nodeGap(index: Int): Float =
                     (nodeHalfHs[index] ?: (RailNodeSize.toPx() / 2f)) + 4.dp.toPx()
                 val positioned = (0..timeline.lastIndex).mapNotNull { i -> nodeY(i)?.let { i to it } }
-                if (positioned.size < 2) return@drawWithContent
+                if (positioned.size < 2) return@drawBehind
                 val first = positioned.first().second
                 val last = positioned.last().second
-                if (last <= first) return@drawWithContent
+                if (last <= first) return@drawBehind
                 val x = RailCenterX.toPx()
                 val labelBand = 58.dp.toPx()
                 for (index in 0 until timeline.lastIndex) {
