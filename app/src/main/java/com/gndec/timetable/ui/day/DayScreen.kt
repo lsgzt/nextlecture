@@ -957,7 +957,7 @@ private fun FreePeriod(start: Int, end: Int, nodeIndex: Int, sectionCoords: () -
             if (freeFriends.isNotEmpty()) {
                 Spacer(Modifier.height(4.dp))
                 Text(
-                    "${friendNameList(freeFriends)} ${friendVerb(freeFriends)} also free at this time slot",
+                    "Also free · ${friendNameList(freeFriends)}",
                     color = accent,
                     style = MaterialTheme.typography.bodySmall,
                     fontWeight = FontWeight.Medium
