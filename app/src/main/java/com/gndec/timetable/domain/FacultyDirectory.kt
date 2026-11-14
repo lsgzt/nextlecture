@@ -3,6 +3,7 @@ package com.gndec.timetable.domain
 import android.content.Context
 import com.gndec.timetable.R
 import com.gndec.timetable.net.RoomSourceRoot
+import com.gndec.timetable.parse.FacultyNameMatcher
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.Json
@@ -44,6 +45,8 @@ class FacultyDirectoryManager(context: Context) {
 
     private val json = Json { ignoreUnknownKeys = true; isLenient = true }
 
+    private val publishedNameCache = mutableMapOf<String, FacultyRecord?>()
+
     private val directoryLazy: Lazy<List<FacultyRecord>> = lazy {
         runCatching {
             context.resources.openRawResource(R.raw.faculty_directory).bufferedReader().use { reader ->
@@ -67,6 +70,41 @@ class FacultyDirectoryManager(context: Context) {
     fun byProfileIdIfLoaded(profileId: String): FacultyRecord? =
         if (!directoryLazy.isInitialized()) null
         else directory.firstOrNull { it.profileId == profileId }
+
+    /**
+     * Best directory match for a timetable teacher label such as
+     * "DR AMANDEEP KAUR" or "ER. MANI BANSAL (EE)".
+     *
+     * Returns null on ties or weak scores so the UI does not open the wrong
+     * profile. Call from a background dispatcher — walks the full directory.
+     */
+    fun findBestByPublishedName(published: String): FacultyRecord? {
+        val label = published.trim()
+        if (label.isBlank()) return null
+        synchronized(publishedNameCache) {
+            if (publishedNameCache.containsKey(label)) return publishedNameCache[label]
+        }
+        val cleaned = label.replace(Regex("""\s*\([^)]*\)\s*$"""), "").trim().ifBlank { label }
+        var best: FacultyRecord? = null
+        var bestScore = 0
+        var tie = false
+        for (record in directory) {
+            val score = maxOf(
+                FacultyNameMatcher.nameScore(cleaned, record.name),
+                FacultyNameMatcher.nameScore(label, record.name)
+            )
+            if (score > bestScore) {
+                best = record
+                bestScore = score
+                tie = false
+            } else if (score == bestScore && score > 0) {
+                tie = true
+            }
+        }
+        val resolved = if (best == null || bestScore < 65 || tie) null else best
+        synchronized(publishedNameCache) { publishedNameCache[label] = resolved }
+        return resolved
+    }
 
     /** Directory records of every department served by [root]. */
     fun poolForRoot(root: RoomSourceRoot): List<FacultyRecord> =

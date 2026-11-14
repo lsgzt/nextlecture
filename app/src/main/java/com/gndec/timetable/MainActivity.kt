@@ -244,7 +244,8 @@ class MainActivity : ComponentActivity() {
                                                 onOpenHome = { navigate("home") },
                                                 onOpenToday = { navigate("today") },
                                                 onOpenAlerts = { navigate("syllabus") },
-                                                onOpenSettings = { navigate("settings") }
+                                                onOpenSettings = { navigate("settings") },
+                                                onOpenFaculty = { profileId -> navigate("faculty/$profileId") }
                                             )
                                         }
                                     }
