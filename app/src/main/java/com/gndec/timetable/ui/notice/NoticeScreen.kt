@@ -12,7 +12,9 @@ import androidx.compose.animation.slideOutHorizontally
 import androidx.compose.animation.togetherWith
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
+import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.interaction.MutableInteractionSource
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -32,6 +34,8 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Campaign
 import androidx.compose.material.icons.filled.CalendarMonth
 import androidx.compose.material.icons.filled.ChevronRight
+import androidx.compose.material.icons.filled.Description
+import androidx.compose.material.icons.filled.Domain
 import androidx.compose.material.icons.filled.OpenInNew
 import androidx.compose.material.icons.filled.Refresh
 import androidx.compose.material3.Card
@@ -44,6 +48,7 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -62,9 +67,12 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.gndec.timetable.domain.AppContainer
+import com.gndec.timetable.domain.DeptNoticesState
 import com.gndec.timetable.domain.ErpNotice
 import com.gndec.timetable.domain.ErpNoticeManager
 import com.gndec.timetable.domain.Holiday
+import com.gndec.timetable.parse.DeptNotice
+import com.gndec.timetable.parse.DeptSite
 import com.gndec.timetable.ui.PremiumBottomBarContentClearance
 import com.gndec.timetable.ui.PremiumPageHeader
 import com.gndec.timetable.ui.PremiumScreenBackground
@@ -83,6 +91,31 @@ import java.time.temporal.ChronoUnit
 import java.util.Locale
 
 enum class NoticeTab(val label: String) { NOTICES("Notices"), HOLIDAYS("Holidays") }
+
+/** Which notice source the Notices tab is showing. */
+private enum class NoticeSource(val label: String) {
+    ALL("All"),
+    HOMEPAGE("GNDEC Home Page"),
+    ERP("ERP"),
+    /** The student's own department; the label comes from the resolved site. */
+    DEPARTMENT("")
+}
+
+private fun NoticeSource.labelFor(dept: DeptSite?): String =
+    if (this == NoticeSource.DEPARTMENT) dept?.chipLabel.orEmpty() else label
+
+/** Feed membership test for a source chip (feed source strings are case-varying). */
+private fun matchesNoticeSource(notice: ErpNotice, source: NoticeSource): Boolean = when (source) {
+    NoticeSource.ALL -> true
+    NoticeSource.HOMEPAGE -> notice.source.lowercase().contains("homepage")
+    NoticeSource.ERP -> notice.source.lowercase().contains("erp")
+    NoticeSource.DEPARTMENT -> true
+}
+
+private val DeptNoticeDate = DateTimeFormatter.ofPattern("d MMMM yyyy")
+
+private fun formatDeptNoticeDate(date: String): String? =
+    if (date.isBlank()) null else runCatching { LocalDate.parse(date).format(DeptNoticeDate) }.getOrNull()
 
 private val HolidayLongDate = DateTimeFormatter.ofPattern("d MMMM yyyy (EEEE)")
 private val HolidayMonthFormat = DateTimeFormatter.ofPattern("MMMM yyyy")
@@ -150,7 +183,15 @@ fun NoticeScreen(
     val lastError by container.erpNoticeManager.lastError.collectAsStateWithLifecycle()
     val holidays by container.holidayManager.holidays.collectAsStateWithLifecycle()
     val holidaysRefreshing by container.holidayManager.refreshing.collectAsStateWithLifecycle()
+    val dept by container.deptNoticesManager.dept.collectAsStateWithLifecycle()
+    val deptNotices by container.deptNoticesManager.state.collectAsStateWithLifecycle()
     val context = LocalContext.current
+    // The department whose notices belong on this student's Notice tab is
+    // re-resolved here, so a saved branch or year change is picked up on
+    // every re-entry into the screen.
+    LaunchedEffect(Unit) {
+        runCatching { container.deptNoticesManager.ensureLoaded() }
+    }
     // Keyed on initialTab so home → Holidays does not restore a prior Notices selection.
     var tabName by rememberSaveable(initialTab.name) { mutableStateOf(initialTab.name) }
     val tab = runCatching { NoticeTab.valueOf(tabName) }.getOrDefault(initialTab)
@@ -202,9 +243,13 @@ fun NoticeScreen(
                                 notices = notices,
                                 refreshing = refreshing,
                                 lastError = lastError,
+                                dept = dept,
+                                deptState = deptNotices,
+                                onDeptRefresh = { container.appScope.launch { container.deptNoticesManager.refresh(force = true) } },
                                 onRefresh = { container.appScope.launch { container.erpNoticeManager.refresh(forceRefresh = true) } },
                                 onOpenNotice = onOpenNoticeDetail,
-                                onViewAll = { open(ErpNoticeManager.NOTICE_URL) }
+                                onViewAll = { open(ErpNoticeManager.NOTICE_URL) },
+                                onOpenUrl = { open(it) }
                             )
                             NoticeTab.HOLIDAYS -> HolidaysTab(
                                 holidays = holidays,
@@ -219,71 +264,124 @@ fun NoticeScreen(
     }
 }
 
-/** Notices tab: the official feed exactly as it rendered before the split. */
+/**
+ * Notices tab: the default ERP + homepage feed exactly as before, plus the
+ * student's own department section; the source pills narrow the list to one
+ * feed when the student only wants one.
+ */
 @Composable
 private fun NoticesTab(
     notices: List<ErpNotice>,
     refreshing: Boolean,
     lastError: String?,
+    dept: DeptSite?,
+    deptState: DeptNoticesState,
+    onDeptRefresh: () -> Unit,
     onRefresh: () -> Unit,
     onOpenNotice: (ErpNotice) -> Unit,
-    onViewAll: () -> Unit
+    onViewAll: () -> Unit,
+    onOpenUrl: (String) -> Unit
 ) {
+    // Keyed on the resolved department so a branch switch re-defaults to All.
+    var sourceName by rememberSaveable(dept?.key) { mutableStateOf(NoticeSource.ALL.name) }
+    var source = runCatching { NoticeSource.valueOf(sourceName) }.getOrDefault(NoticeSource.ALL)
+    if (source == NoticeSource.DEPARTMENT && dept == null) source = NoticeSource.ALL
+    val visible = notices.filter { matchesNoticeSource(it, source) }
+
     Column(
         Modifier.fillMaxWidth().padding(horizontal = 20.dp),
         verticalArrangement = Arrangement.spacedBy(12.dp)
     ) {
-        Card(
-            modifier = Modifier.fillMaxWidth(),
-            colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.secondaryContainer),
-            shape = RoundedCornerShape(20.dp),
-            border = BorderStroke(1.dp, MaterialTheme.colorScheme.outlineVariant),
-            elevation = CardDefaults.cardElevation(0.dp)
-        ) {
-            Row(Modifier.padding(16.dp), verticalAlignment = Alignment.CenterVertically) {
-                Icon(Icons.Default.Campaign, contentDescription = null, tint = MaterialTheme.colorScheme.primary, modifier = Modifier.size(25.dp))
-                Spacer(Modifier.width(11.dp))
-                Column(Modifier.weight(1f)) {
-                    Text("GNDEC OFFICIAL NOTICE FEED", color = MaterialTheme.colorScheme.primary, style = MaterialTheme.typography.labelMedium, fontWeight = FontWeight.Bold, letterSpacing = 1.1.sp)
-                    Text("ERP + homepage notices · cached for instant loading", color = MaterialTheme.colorScheme.onSurfaceVariant, style = MaterialTheme.typography.bodySmall)
-                }
-                TextButton(onClick = onRefresh, enabled = !refreshing) {
-                    Icon(Icons.Default.Refresh, contentDescription = "Refresh notices", modifier = Modifier.size(18.dp))
+        if (dept != null) {
+            NoticeSourceSelector(source = source, dept = dept, onSelect = { sourceName = it.name })
+        }
+        if (source != NoticeSource.DEPARTMENT) {
+            Card(
+                modifier = Modifier.fillMaxWidth(),
+                colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.secondaryContainer),
+                shape = RoundedCornerShape(20.dp),
+                border = BorderStroke(1.dp, MaterialTheme.colorScheme.outlineVariant),
+                elevation = CardDefaults.cardElevation(0.dp)
+            ) {
+                Row(Modifier.padding(16.dp), verticalAlignment = Alignment.CenterVertically) {
+                    Icon(Icons.Default.Campaign, contentDescription = null, tint = MaterialTheme.colorScheme.primary, modifier = Modifier.size(25.dp))
+                    Spacer(Modifier.width(11.dp))
+                    Column(Modifier.weight(1f)) {
+                        Text("GNDEC OFFICIAL NOTICE FEED", color = MaterialTheme.colorScheme.primary, style = MaterialTheme.typography.labelMedium, fontWeight = FontWeight.Bold, letterSpacing = 1.1.sp)
+                        Text("ERP + homepage notices · cached for instant loading", color = MaterialTheme.colorScheme.onSurfaceVariant, style = MaterialTheme.typography.bodySmall)
+                    }
+                    TextButton(onClick = onRefresh, enabled = !refreshing) {
+                        Icon(Icons.Default.Refresh, contentDescription = "Refresh notices", modifier = Modifier.size(18.dp))
+                    }
                 }
             }
-        }
-        if (notices.isEmpty()) {
-            Card(Modifier.fillMaxWidth(), colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface), elevation = CardDefaults.cardElevation(0.dp)) {
-                val phase = if (refreshing) "__loading" else (lastError ?: "__empty")
-                val phaseSwapIn = motionTween<Float>(Motion.Normal)
-                val phaseSwapOut = motionTween<Float>(Motion.Fast)
-                AnimatedContent(
-                    targetState = phase,
-                    transitionSpec = { fadeIn(phaseSwapIn) togetherWith fadeOut(phaseSwapOut) },
-                    label = "noticePhase"
-                ) { current ->
+            when {
+                notices.isEmpty() -> OfficialFeedPhaseCard(refreshing = refreshing, lastError = lastError)
+                visible.isEmpty() -> Card(
+                    Modifier.fillMaxWidth(),
+                    colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
+                    elevation = CardDefaults.cardElevation(0.dp)
+                ) {
                     Text(
-                        when {
-                            current == "__loading" -> "Loading official notices…"
-                            current == "__empty" -> "No cached notices available yet."
-                            else -> current
-                        },
+                        "No notices from this source right now — try another one.",
                         modifier = Modifier.padding(18.dp),
                         color = MaterialTheme.colorScheme.onSurfaceVariant
                     )
                 }
+                else -> visible.forEach { notice ->
+                    NoticeCard(notice = notice, onClick = { onOpenNotice(notice) })
+                }
             }
-        } else {
-            notices.forEach { notice ->
-                NoticeCard(notice = notice, onClick = { onOpenNotice(notice) })
+            // Default view keeps the official feed *along with* the department.
+            if (source == NoticeSource.ALL && dept != null) {
+                DeptNoticesSection(
+                    dept = dept,
+                    state = deptState,
+                    onRefresh = onDeptRefresh,
+                    onOpen = onOpenUrl
+                )
             }
+            TealOutlineButton(
+                text = "View all previous notices on GNDEC official website",
+                icon = Icons.Default.OpenInNew,
+                modifier = Modifier.fillMaxWidth(),
+                onClick = onViewAll
+            )
+        } else if (dept != null) {
+            // Department-only view: the full board replaces the official feed.
+            DeptNoticesSection(
+                dept = dept,
+                state = deptState,
+                onRefresh = onDeptRefresh,
+                onOpen = onOpenUrl,
+                standalone = true
+            )
         }
-        TealOutlineButton(
-            text = "View all previous notices on GNDEC official website",
-            icon = Icons.Default.OpenInNew,
-            modifier = Modifier.fillMaxWidth(),
-            onClick = onViewAll
-        )
+    }
+}
+
+/** Loading / empty / failed phase of the official feed, exactly as before the split. */
+@Composable
+private fun OfficialFeedPhaseCard(refreshing: Boolean, lastError: String?) {
+    Card(Modifier.fillMaxWidth(), colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface), elevation = CardDefaults.cardElevation(0.dp)) {
+        val phase = if (refreshing) "__loading" else (lastError ?: "__empty")
+        val phaseSwapIn = motionTween<Float>(Motion.Normal)
+        val phaseSwapOut = motionTween<Float>(Motion.Fast)
+        AnimatedContent(
+            targetState = phase,
+            transitionSpec = { fadeIn(phaseSwapIn) togetherWith fadeOut(phaseSwapOut) },
+            label = "noticePhase"
+        ) { current ->
+            Text(
+                when {
+                    current == "__loading" -> "Loading official notices…"
+                    current == "__empty" -> "No cached notices available yet."
+                    else -> current
+                },
+                modifier = Modifier.padding(18.dp),
+                color = MaterialTheme.colorScheme.onSurfaceVariant
+            )
+        }
     }
 }
 
@@ -720,5 +818,243 @@ private fun NoticeCard(notice: ErpNotice, onClick: () -> Unit) {
             }
             Icon(Icons.Default.ChevronRight, contentDescription = "Open notice", tint = MaterialTheme.colorScheme.onSurfaceVariant)
         }
+    }
+}
+
+/** Source pills: All · GNDEC Home Page · ERP · the student's own department. */
+@Composable
+private fun NoticeSourceSelector(source: NoticeSource, dept: DeptSite, onSelect: (NoticeSource) -> Unit) {
+    val view = LocalView.current
+    val options = listOf(NoticeSource.ALL, NoticeSource.HOMEPAGE, NoticeSource.ERP, NoticeSource.DEPARTMENT)
+    Row(
+        Modifier.fillMaxWidth().horizontalScroll(rememberScrollState()),
+        horizontalArrangement = Arrangement.spacedBy(7.dp)
+    ) {
+        options.forEach { option ->
+            val active = option == source
+            val containerColor by animateColorAsState(
+                targetValue = if (active) MaterialTheme.colorScheme.primaryContainer else MaterialTheme.colorScheme.surface,
+                animationSpec = motionTween(Motion.Normal),
+                label = "noticeSourceContainer"
+            )
+            val borderColor by animateColorAsState(
+                targetValue = if (active) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.outlineVariant,
+                animationSpec = motionTween(Motion.Normal),
+                label = "noticeSourceBorder"
+            )
+            val contentColor by animateColorAsState(
+                targetValue = if (active) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurface,
+                animationSpec = motionTween(Motion.Normal),
+                label = "noticeSourceContent"
+            )
+            val pressInteraction = remember { MutableInteractionSource() }
+            Card(
+                onClick = {
+                    if (option != source) view.hapticTick()
+                    onSelect(option)
+                },
+                modifier = Modifier.pressFeedback(pressInteraction, pressedScale = 0.96f),
+                interactionSource = pressInteraction,
+                shape = RoundedCornerShape(50),
+                colors = CardDefaults.cardColors(containerColor = containerColor),
+                border = BorderStroke(1.dp, borderColor),
+                elevation = CardDefaults.cardElevation(0.dp)
+            ) {
+                Text(
+                    option.labelFor(dept),
+                    modifier = Modifier.padding(horizontal = 13.dp, vertical = 9.dp),
+                    color = contentColor,
+                    style = MaterialTheme.typography.labelLarge,
+                    fontWeight = if (active) FontWeight.Bold else FontWeight.Medium,
+                    maxLines = 1
+                )
+            }
+        }
+    }
+}
+
+/** The department's own notices: header card first, then every board row. */
+@Composable
+private fun DeptNoticesSection(
+    dept: DeptSite,
+    state: DeptNoticesState,
+    onRefresh: () -> Unit,
+    onOpen: (String) -> Unit,
+    standalone: Boolean = false
+) {
+    when (val current = state) {
+        is DeptNoticesState.Ready -> {
+            if (current.deptKey != dept.key) {
+                // State still belongs to a previously resolved department.
+                DeptNoticesLoadingCard(dept)
+                return
+            }
+            DeptNoticeHeaderCard(dept = dept, refreshing = current.refreshing, onRefresh = onRefresh, onOpen = onOpen)
+            current.error?.let { message ->
+                Text(
+                    message,
+                    style = MaterialTheme.typography.bodySmall,
+                    color = MaterialTheme.colorScheme.error,
+                    modifier = Modifier.padding(horizontal = 4.dp)
+                )
+            }
+            if (current.notices.isEmpty()) {
+                Card(
+                    Modifier.fillMaxWidth(),
+                    colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
+                    elevation = CardDefaults.cardElevation(0.dp)
+                ) {
+                    Text(
+                        "Nothing on ${dept.label}'s board right now.",
+                        modifier = Modifier.padding(18.dp),
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                    )
+                }
+            } else {
+                current.notices.forEach { notice ->
+                    DeptNoticeCard(notice = notice, onOpen = onOpen)
+                }
+            }
+            if (standalone) {
+                TealOutlineButton(
+                    text = "Open ${dept.label} website",
+                    icon = Icons.Default.OpenInNew,
+                    modifier = Modifier.fillMaxWidth(),
+                    onClick = { onOpen(dept.url) }
+                )
+            }
+        }
+        is DeptNoticesState.Error -> {
+            if (current.deptKey == dept.key) {
+                Card(
+                    Modifier.fillMaxWidth(),
+                    colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
+                    border = BorderStroke(1.dp, MaterialTheme.colorScheme.outlineVariant),
+                    elevation = CardDefaults.cardElevation(0.dp)
+                ) {
+                    Row(Modifier.padding(16.dp), verticalAlignment = Alignment.CenterVertically) {
+                        Icon(Icons.Default.Domain, contentDescription = null, tint = MaterialTheme.colorScheme.error, modifier = Modifier.size(23.dp))
+                        Spacer(Modifier.width(11.dp))
+                        Column(Modifier.weight(1f)) {
+                            Text("${dept.label} notices unavailable", style = MaterialTheme.typography.titleSmall, fontWeight = FontWeight.SemiBold)
+                            Text(current.message, color = MaterialTheme.colorScheme.onSurfaceVariant, style = MaterialTheme.typography.bodySmall, maxLines = 3, overflow = TextOverflow.Ellipsis)
+                        }
+                        TextButton(onClick = onRefresh) {
+                            Icon(Icons.Default.Refresh, contentDescription = "Retry department notices", modifier = Modifier.size(18.dp))
+                        }
+                    }
+                }
+            } else {
+                DeptNoticesLoadingCard(dept)
+            }
+        }
+        is DeptNoticesState.Loading -> DeptNoticesLoadingCard(dept)
+    }
+}
+
+@Composable
+private fun DeptNoticesLoadingCard(dept: DeptSite) {
+    Card(
+        Modifier.fillMaxWidth(),
+        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
+        elevation = CardDefaults.cardElevation(0.dp)
+    ) {
+        Row(Modifier.padding(16.dp), verticalAlignment = Alignment.CenterVertically) {
+            Icon(Icons.Default.Domain, contentDescription = null, tint = MaterialTheme.colorScheme.primary, modifier = Modifier.size(23.dp))
+            Spacer(Modifier.width(11.dp))
+            Text("Loading ${dept.label} notices…", color = MaterialTheme.colorScheme.onSurfaceVariant, style = MaterialTheme.typography.bodyMedium)
+        }
+    }
+}
+
+/** "IT DEPARTMENT NOTICES" style header with refresh + open-site actions. */
+@Composable
+private fun DeptNoticeHeaderCard(
+    dept: DeptSite,
+    refreshing: Boolean,
+    onRefresh: () -> Unit,
+    onOpen: (String) -> Unit
+) {
+    Card(
+        modifier = Modifier.fillMaxWidth(),
+        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.secondaryContainer),
+        shape = RoundedCornerShape(20.dp),
+        border = BorderStroke(1.dp, MaterialTheme.colorScheme.outlineVariant),
+        elevation = CardDefaults.cardElevation(0.dp)
+    ) {
+        Row(Modifier.padding(16.dp), verticalAlignment = Alignment.CenterVertically) {
+            Icon(Icons.Default.Domain, contentDescription = null, tint = MaterialTheme.colorScheme.primary, modifier = Modifier.size(25.dp))
+            Spacer(Modifier.width(11.dp))
+            Column(Modifier.weight(1f)) {
+                Text("${dept.chipLabel.uppercase()} DEPARTMENT NOTICES", color = MaterialTheme.colorScheme.primary, style = MaterialTheme.typography.labelMedium, fontWeight = FontWeight.Bold, letterSpacing = 1.1.sp)
+                Text("From ${dept.host} · newest first", color = MaterialTheme.colorScheme.onSurfaceVariant, style = MaterialTheme.typography.bodySmall)
+            }
+            TextButton(onClick = onRefresh, enabled = !refreshing) {
+                Icon(Icons.Default.Refresh, contentDescription = "Refresh department notices", modifier = Modifier.size(18.dp))
+            }
+            TextButton(onClick = { onOpen(dept.url) }) {
+                Icon(Icons.Default.OpenInNew, contentDescription = "Open department site", modifier = Modifier.size(18.dp))
+            }
+        }
+    }
+}
+
+@Composable
+private fun DeptNoticeCard(notice: DeptNotice, onOpen: (String) -> Unit) {
+    val pressInteraction = remember { MutableInteractionSource() }
+    Card(
+        onClick = { onOpen(notice.url) },
+        modifier = Modifier.fillMaxWidth().pressFeedback(pressInteraction),
+        interactionSource = pressInteraction,
+        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
+        shape = RoundedCornerShape(18.dp),
+        border = BorderStroke(1.dp, MaterialTheme.colorScheme.outlineVariant),
+        elevation = CardDefaults.cardElevation(0.dp)
+    ) {
+        Row(Modifier.padding(15.dp), verticalAlignment = Alignment.CenterVertically) {
+            Icon(Icons.Default.Description, contentDescription = null, tint = MaterialTheme.colorScheme.primary, modifier = Modifier.size(23.dp))
+            Spacer(Modifier.width(11.dp))
+            Column(Modifier.weight(1f)) {
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    Text(
+                        notice.title,
+                        style = MaterialTheme.typography.titleMedium,
+                        fontWeight = FontWeight.SemiBold,
+                        maxLines = 3,
+                        overflow = TextOverflow.Ellipsis,
+                        modifier = Modifier.weight(1f, fill = false)
+                    )
+                    if (notice.isNew) {
+                        Spacer(Modifier.width(8.dp))
+                        NewNoticePill()
+                    }
+                }
+                Spacer(Modifier.size(4.dp))
+                Text(
+                    formatDeptNoticeDate(notice.date) ?: "Department notice board",
+                    color = MaterialTheme.colorScheme.primary,
+                    style = MaterialTheme.typography.bodySmall,
+                    fontWeight = FontWeight.SemiBold
+                )
+            }
+            Icon(Icons.Default.ChevronRight, contentDescription = "Open department notice", tint = MaterialTheme.colorScheme.onSurfaceVariant)
+        }
+    }
+}
+
+@Composable
+private fun NewNoticePill() {
+    Surface(
+        color = MaterialTheme.colorScheme.tertiaryContainer,
+        contentColor = MaterialTheme.colorScheme.onTertiaryContainer,
+        shape = RoundedCornerShape(50)
+    ) {
+        Text(
+            "NEW",
+            modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp),
+            style = MaterialTheme.typography.labelSmall,
+            fontWeight = FontWeight.Bold,
+            maxLines = 1
+        )
     }
 }

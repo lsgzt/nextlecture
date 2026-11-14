@@ -38,6 +38,7 @@ class AppContainer(val context: Context) {
     val groupTimetableManager by lazy { GroupTimetableManager(context) }
     val vacantRoomsManager by lazy { VacantRoomsManager(context) }
     val downloadsManager by lazy { DownloadsManager(context) }
+    val deptNoticesManager by lazy { DeptNoticesManager(context, settings) }
     val lostFoundManager by lazy { LostFoundManager(context, LostFoundClient()) }
     val lostFoundImages by lazy { LostFoundImageStore(context) }
     val facultyDirectory by lazy { FacultyDirectoryManager(context) }
