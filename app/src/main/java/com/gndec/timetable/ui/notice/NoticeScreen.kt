@@ -40,6 +40,7 @@ import androidx.compose.material.icons.filled.OpenInNew
 import androidx.compose.material.icons.filled.Refresh
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -47,6 +48,8 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
+import androidx.compose.material3.pulltorefresh.PullToRefreshBox
+import androidx.compose.material3.pulltorefresh.rememberPullToRefreshState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -82,6 +85,7 @@ import com.gndec.timetable.ui.motion.Motion
 import com.gndec.timetable.ui.motion.hapticTick
 import com.gndec.timetable.ui.motion.motionTween
 import com.gndec.timetable.ui.motion.pressFeedback
+import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
 import java.time.LocalDate
 import java.time.YearMonth
@@ -167,6 +171,7 @@ private fun buildHolidayRows(holidays: List<Holiday>, today: LocalDate): List<Ho
             compareBy<HolidayRow>({ it.date == null }, { it.date ?: LocalDate.MAX })
         )
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun NoticeScreen(
     container: AppContainer,
@@ -201,61 +206,93 @@ fun NoticeScreen(
         context.startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(url)))
     }
 
+    // Pull-to-refresh replaces the official-feed header card and its refresh
+    // button: one gesture re-fetches whatever the open tab shows — the ERP +
+    // homepage feed and the department board together on Notices, the official
+    // holiday list on Holidays. The indicator tracks only refreshes the user
+    // starts from this screen: the stale-cache background refresh that runs on
+    // entry stays indicator-less, exactly like the Home screen's pull.
+    val pullState = rememberPullToRefreshState()
+    var manualRefreshing by remember { mutableStateOf(false) }
+
+    fun refreshVisibleTab() {
+        manualRefreshing = true
+        container.appScope.launch {
+            try {
+                when (tab) {
+                    NoticeTab.NOTICES -> coroutineScope {
+                        launch { runCatching { container.erpNoticeManager.refresh(forceRefresh = true) } }
+                        launch { runCatching { container.deptNoticesManager.refresh(force = true) } }
+                    }
+                    NoticeTab.HOLIDAYS -> runCatching { container.holidayManager.refresh(forceRefresh = true) }
+                }
+            } finally {
+                manualRefreshing = false
+            }
+        }
+    }
+
     Scaffold(containerColor = MaterialTheme.colorScheme.background) { padding ->
         PremiumScreenBackground {
-            LazyColumn(
-                modifier = Modifier.fillMaxSize().padding(padding),
-                contentPadding = PaddingValues(top = 8.dp, bottom = 26.dp + PremiumBottomBarContentClearance),
-                verticalArrangement = Arrangement.spacedBy(12.dp)
+            PullToRefreshBox(
+                isRefreshing = manualRefreshing,
+                onRefresh = { refreshVisibleTab() },
+                state = pullState,
+                modifier = Modifier.fillMaxSize().padding(padding)
             ) {
-                item {
-                    PremiumPageHeader(
-                        title = "Notice",
-                        subtitle = "Latest GNDEC official updates",
-                        onSettings = onOpenSettings
-                    )
-                }
-                item {
-                    NoticeTabSelector(tab) { tabName = it.name }
-                }
-                item(key = "notice-tab-content") {
-                    AnimatedContent(
-                        targetState = tab,
-                        transitionSpec = {
-                            if (reduced) {
-                                fadeIn(tween(Motion.Normal, easing = Motion.EasingStandard)) togetherWith
-                                    fadeOut(tween(Motion.Fast, easing = Motion.EasingStandard))
-                            } else {
-                                // Segmented-control motion — same as the Today screen's
-                                // today/tomorrow switch: content slides toward the
-                                // direction of the newly selected tab.
-                                val dir = if (targetState.ordinal >= initialState.ordinal) 1 else -1
-                                (slideInHorizontally(tween(Motion.Emphasized, easing = Motion.EasingEnter)) { dir * it / 12 } +
-                                    fadeIn(tween(Motion.Emphasized, easing = Motion.EasingEnter))) togetherWith
-                                    (slideOutHorizontally(tween(Motion.Normal, easing = Motion.EasingExit)) { -dir * it / 14 } +
-                                        fadeOut(tween(Motion.Normal, easing = Motion.EasingExit)))
+                LazyColumn(
+                    modifier = Modifier.fillMaxSize(),
+                    contentPadding = PaddingValues(top = 8.dp, bottom = 26.dp + PremiumBottomBarContentClearance),
+                    verticalArrangement = Arrangement.spacedBy(12.dp)
+                ) {
+                    item {
+                        PremiumPageHeader(
+                            title = "Notice",
+                            subtitle = "Latest GNDEC official updates",
+                            onSettings = onOpenSettings
+                        )
+                    }
+                    item {
+                        NoticeTabSelector(tab) { tabName = it.name }
+                    }
+                    item(key = "notice-tab-content") {
+                        AnimatedContent(
+                            targetState = tab,
+                            transitionSpec = {
+                                if (reduced) {
+                                    fadeIn(tween(Motion.Normal, easing = Motion.EasingStandard)) togetherWith
+                                        fadeOut(tween(Motion.Fast, easing = Motion.EasingStandard))
+                                } else {
+                                    // Segmented-control motion — same as the Today screen's
+                                    // today/tomorrow switch: content slides toward the
+                                    // direction of the newly selected tab.
+                                    val dir = if (targetState.ordinal >= initialState.ordinal) 1 else -1
+                                    (slideInHorizontally(tween(Motion.Emphasized, easing = Motion.EasingEnter)) { dir * it / 12 } +
+                                        fadeIn(tween(Motion.Emphasized, easing = Motion.EasingEnter))) togetherWith
+                                        (slideOutHorizontally(tween(Motion.Normal, easing = Motion.EasingExit)) { -dir * it / 14 } +
+                                            fadeOut(tween(Motion.Normal, easing = Motion.EasingExit)))
+                                }
+                            },
+                            label = "noticeTabContent"
+                        ) { current ->
+                            when (current) {
+                                NoticeTab.NOTICES -> NoticesTab(
+                                    notices = notices,
+                                    refreshing = refreshing,
+                                    lastError = lastError,
+                                    dept = dept,
+                                    deptState = deptNotices,
+                                    onRetry = { refreshVisibleTab() },
+                                    onOpenNotice = onOpenNoticeDetail,
+                                    onViewAll = { open(ErpNoticeManager.NOTICE_URL) },
+                                    onOpenUrl = { open(it) }
+                                )
+                                NoticeTab.HOLIDAYS -> HolidaysTab(
+                                    holidays = holidays,
+                                    refreshing = holidaysRefreshing,
+                                    onOpen = { open(it) }
+                                )
                             }
-                        },
-                        label = "noticeTabContent"
-                    ) { current ->
-                        when (current) {
-                            NoticeTab.NOTICES -> NoticesTab(
-                                notices = notices,
-                                refreshing = refreshing,
-                                lastError = lastError,
-                                dept = dept,
-                                deptState = deptNotices,
-                                onDeptRefresh = { container.appScope.launch { container.deptNoticesManager.refresh(force = true) } },
-                                onRefresh = { container.appScope.launch { container.erpNoticeManager.refresh(forceRefresh = true) } },
-                                onOpenNotice = onOpenNoticeDetail,
-                                onViewAll = { open(ErpNoticeManager.NOTICE_URL) },
-                                onOpenUrl = { open(it) }
-                            )
-                            NoticeTab.HOLIDAYS -> HolidaysTab(
-                                holidays = holidays,
-                                refreshing = holidaysRefreshing,
-                                onOpen = { open(it) }
-                            )
                         }
                     }
                 }
@@ -267,7 +304,8 @@ fun NoticeScreen(
 /**
  * Notices tab: the default ERP + homepage feed exactly as before, plus the
  * student's own department section; the source pills narrow the list to one
- * feed when the student only wants one.
+ * feed when the student only wants one. Refreshes arrive through the
+ * screen's pull gesture; [onRetry] only retries a failed department fetch.
  */
 @Composable
 private fun NoticesTab(
@@ -276,8 +314,7 @@ private fun NoticesTab(
     lastError: String?,
     dept: DeptSite?,
     deptState: DeptNoticesState,
-    onDeptRefresh: () -> Unit,
-    onRefresh: () -> Unit,
+    onRetry: () -> Unit,
     onOpenNotice: (ErpNotice) -> Unit,
     onViewAll: () -> Unit,
     onOpenUrl: (String) -> Unit
@@ -296,25 +333,6 @@ private fun NoticesTab(
             NoticeSourceSelector(source = source, dept = dept, onSelect = { sourceName = it.name })
         }
         if (source != NoticeSource.DEPARTMENT) {
-            Card(
-                modifier = Modifier.fillMaxWidth(),
-                colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.secondaryContainer),
-                shape = RoundedCornerShape(20.dp),
-                border = BorderStroke(1.dp, MaterialTheme.colorScheme.outlineVariant),
-                elevation = CardDefaults.cardElevation(0.dp)
-            ) {
-                Row(Modifier.padding(16.dp), verticalAlignment = Alignment.CenterVertically) {
-                    Icon(Icons.Default.Campaign, contentDescription = null, tint = MaterialTheme.colorScheme.primary, modifier = Modifier.size(25.dp))
-                    Spacer(Modifier.width(11.dp))
-                    Column(Modifier.weight(1f)) {
-                        Text("GNDEC OFFICIAL NOTICE FEED", color = MaterialTheme.colorScheme.primary, style = MaterialTheme.typography.labelMedium, fontWeight = FontWeight.Bold, letterSpacing = 1.1.sp)
-                        Text("ERP + homepage notices · cached for instant loading", color = MaterialTheme.colorScheme.onSurfaceVariant, style = MaterialTheme.typography.bodySmall)
-                    }
-                    TextButton(onClick = onRefresh, enabled = !refreshing) {
-                        Icon(Icons.Default.Refresh, contentDescription = "Refresh notices", modifier = Modifier.size(18.dp))
-                    }
-                }
-            }
             when {
                 notices.isEmpty() -> OfficialFeedPhaseCard(refreshing = refreshing, lastError = lastError)
                 visible.isEmpty() -> Card(
@@ -337,7 +355,7 @@ private fun NoticesTab(
                 DeptNoticesSection(
                     dept = dept,
                     state = deptState,
-                    onRefresh = onDeptRefresh,
+                    onRetry = onRetry,
                     onOpen = onOpenUrl
                 )
             }
@@ -352,7 +370,7 @@ private fun NoticesTab(
             DeptNoticesSection(
                 dept = dept,
                 state = deptState,
-                onRefresh = onDeptRefresh,
+                onRetry = onRetry,
                 onOpen = onOpenUrl,
                 standalone = true
             )
@@ -878,7 +896,7 @@ private fun NoticeSourceSelector(source: NoticeSource, dept: DeptSite, onSelect:
 private fun DeptNoticesSection(
     dept: DeptSite,
     state: DeptNoticesState,
-    onRefresh: () -> Unit,
+    onRetry: () -> Unit,
     onOpen: (String) -> Unit,
     standalone: Boolean = false
 ) {
@@ -889,7 +907,7 @@ private fun DeptNoticesSection(
                 DeptNoticesLoadingCard(dept)
                 return
             }
-            DeptNoticeHeaderCard(dept = dept, refreshing = current.refreshing, onRefresh = onRefresh, onOpen = onOpen)
+            DeptNoticeHeaderCard(dept = dept, onOpen = onOpen)
             current.error?.let { message ->
                 Text(
                     message,
@@ -939,7 +957,7 @@ private fun DeptNoticesSection(
                             Text("${dept.label} notices unavailable", style = MaterialTheme.typography.titleSmall, fontWeight = FontWeight.SemiBold)
                             Text(current.message, color = MaterialTheme.colorScheme.onSurfaceVariant, style = MaterialTheme.typography.bodySmall, maxLines = 3, overflow = TextOverflow.Ellipsis)
                         }
-                        TextButton(onClick = onRefresh) {
+                        TextButton(onClick = onRetry) {
                             Icon(Icons.Default.Refresh, contentDescription = "Retry department notices", modifier = Modifier.size(18.dp))
                         }
                     }
@@ -967,12 +985,10 @@ private fun DeptNoticesLoadingCard(dept: DeptSite) {
     }
 }
 
-/** "IT DEPARTMENT NOTICES" style header with refresh + open-site actions. */
+/** "IT DEPARTMENT NOTICES" style header; the screen's pull gesture refreshes it. */
 @Composable
 private fun DeptNoticeHeaderCard(
     dept: DeptSite,
-    refreshing: Boolean,
-    onRefresh: () -> Unit,
     onOpen: (String) -> Unit
 ) {
     Card(
@@ -988,9 +1004,6 @@ private fun DeptNoticeHeaderCard(
             Column(Modifier.weight(1f)) {
                 Text("${dept.chipLabel.uppercase()} DEPARTMENT NOTICES", color = MaterialTheme.colorScheme.primary, style = MaterialTheme.typography.labelMedium, fontWeight = FontWeight.Bold, letterSpacing = 1.1.sp)
                 Text("From ${dept.host} · newest first", color = MaterialTheme.colorScheme.onSurfaceVariant, style = MaterialTheme.typography.bodySmall)
-            }
-            TextButton(onClick = onRefresh, enabled = !refreshing) {
-                Icon(Icons.Default.Refresh, contentDescription = "Refresh department notices", modifier = Modifier.size(18.dp))
             }
             TextButton(onClick = { onOpen(dept.url) }) {
                 Icon(Icons.Default.OpenInNew, contentDescription = "Open department site", modifier = Modifier.size(18.dp))
