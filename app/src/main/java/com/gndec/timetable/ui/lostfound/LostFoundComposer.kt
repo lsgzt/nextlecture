@@ -27,6 +27,7 @@ import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
@@ -58,12 +59,14 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalView
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.gndec.timetable.domain.ImageCompressor
+import com.gndec.timetable.net.LostFoundClient
 import com.gndec.timetable.net.LostFoundItem
 import com.gndec.timetable.ui.motion.Motion
 import com.gndec.timetable.ui.motion.hapticTick
@@ -72,8 +75,9 @@ import com.gndec.timetable.ui.motion.pressFeedback
 
 /**
  * Full-screen "report a lost / found item" composer: photo (optional),
- * required title, optional description. The photo is compressed before it
- * ever leaves the phone — a 3–8 MB camera shot becomes a ~200 KB upload.
+ * required title, optional description, required contact info and a
+ * delete PIN. The photo is compressed before it ever leaves the phone — a
+ * 3–8 MB camera shot becomes a ~200 KB upload.
  */
 @Composable
 fun LostFoundComposer(
@@ -85,6 +89,8 @@ fun LostFoundComposer(
     var kind by remember { mutableStateOf(initialKind) }
     var title by remember { mutableStateOf("") }
     var description by remember { mutableStateOf("") }
+    var contact by remember { mutableStateOf("") }
+    var pin by remember { mutableStateOf("") }
     var pickedUri by remember { mutableStateOf<Uri?>(null) }
     val posting by vm.posting.collectAsStateWithLifecycle()
     val postError by vm.postError.collectAsStateWithLifecycle()
@@ -218,6 +224,31 @@ fun LostFoundComposer(
             )
             Spacer(Modifier.height(10.dp))
 
+            // How the other student reaches the poster.
+            OutlinedTextField(
+                value = contact,
+                onValueChange = { contact = it.take(120) },
+                modifier = Modifier.fillMaxWidth(),
+                placeholder = { Text("Your contact info — phone, email or @handle") },
+                supportingText = { Text("Shown on the post so the ${if (kind == LostFoundItem.KIND_LOST) "finder" else "owner"} can reach you") },
+                singleLine = true,
+                shape = RoundedCornerShape(14.dp)
+            )
+            Spacer(Modifier.height(10.dp))
+
+            // The PIN that later unlocks deletion of this post.
+            OutlinedTextField(
+                value = pin,
+                onValueChange = { pin = it.filter { c -> c.isDigit() }.take(8) },
+                modifier = Modifier.fillMaxWidth(),
+                placeholder = { Text("Choose a delete PIN (4–8 digits)") },
+                supportingText = { Text("Save it — it's the only way to delete this post once the item is collected or returned") },
+                singleLine = true,
+                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.NumberPassword),
+                shape = RoundedCornerShape(14.dp)
+            )
+            Spacer(Modifier.height(10.dp))
+
             (localError ?: postError)?.let { message ->
                 Text(
                     message,
@@ -231,9 +262,20 @@ fun LostFoundComposer(
             Button(
                 onClick = {
                     val trimmedTitle = title.trim()
-                    if (trimmedTitle.isEmpty()) {
-                        localError = "Give the item a short title"
-                        return@Button
+                    val trimmedContact = contact.trim()
+                    when {
+                        trimmedTitle.isEmpty() -> {
+                            localError = "Give the item a short title"
+                            return@Button
+                        }
+                        trimmedContact.isEmpty() -> {
+                            localError = "Add your contact info so the other student can reach you"
+                            return@Button
+                        }
+                        !LostFoundClient.isValidDeletePin(pin) -> {
+                            localError = "The delete PIN must be 4–8 digits"
+                            return@Button
+                        }
                     }
                     localError = null
                     inFlight = true
@@ -241,6 +283,8 @@ fun LostFoundComposer(
                         kind = kind,
                         title = trimmedTitle,
                         description = description.trim(),
+                        contact = trimmedContact,
+                        pin = pin,
                         imageUri = pickedUri
                     ) {
                         inFlight = false
@@ -249,7 +293,7 @@ fun LostFoundComposer(
                         // On failure the composer stays open with the error shown.
                     }
                 },
-                enabled = !posting && title.isNotBlank(),
+                enabled = !posting && title.isNotBlank() && contact.isNotBlank() && LostFoundClient.isValidDeletePin(pin),
                 modifier = Modifier.fillMaxWidth().height(52.dp),
                 shape = RoundedCornerShape(16.dp),
                 colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.primary)
@@ -271,7 +315,7 @@ fun LostFoundComposer(
             }
             Spacer(Modifier.height(10.dp))
             Text(
-                "Your post is public and anonymous — no name or account is attached. Please keep it about the item only.",
+                "Your post is public and anonymous — no name or account is attached, but the contact info you entered is shown so other students can reach you.",
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
                 style = MaterialTheme.typography.bodySmall,
                 textAlign = TextAlign.Center,

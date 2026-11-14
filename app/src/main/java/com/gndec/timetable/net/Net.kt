@@ -18,8 +18,6 @@ import okhttp3.Request
 import okhttp3.RequestBody.Companion.toRequestBody
 import java.util.concurrent.TimeUnit
 
-class HttpException(val code: Int, message: String) : Exception("HTTP $code: $message")
-
 /**
  * The provider stopped the answer because it resembled the source text too closely. The
  * student should get a paraphrased answer instead, so the request is replayed with a

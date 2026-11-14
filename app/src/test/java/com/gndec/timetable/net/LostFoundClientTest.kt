@@ -8,10 +8,12 @@ import org.junit.Test
 
 /**
  * The pure, offline parts of the Lost & Found stack: path/URL derivation for
- * the thumbnail variant, row decoding from PostgREST JSON, and the relative
- * age rendering shown under each post. (LostFoundManager itself needs
- * android.content.Context, so its relativeTime() algorithm is exercised via
- * the byte-identical LostFoundRelativeTime mirror here.)
+ * the thumbnail variant, row decoding from PostgREST JSON (including the
+ * contact info of the delete-and-contact update), the delete-PIN rules, the
+ * contact sanitizer, and the relative age rendering shown under each post.
+ * (LostFoundManager itself needs android.content.Context, so its
+ * relativeTime() algorithm is exercised via the LostFoundRelativeTime
+ * object it delegates to.)
  */
 class LostFoundClientTest {
 
@@ -48,6 +50,7 @@ class LostFoundClientTest {
                 "description": "Lost near the workshop block, has a scratch on the clasp.",
                 "image_path": "lost/0e7d.jpg",
                 "created_at": "2026-11-13T10:15:30+00:00",
+                "contact_info": "98765 43210",
                 "owner_phone": "9876543210"
               },
               {
@@ -65,8 +68,58 @@ class LostFoundClientTest {
         assertEquals("lost", rows[0].kind)
         assertEquals("Black Titan watch", rows[0].title)
         assertEquals("lost/0e7d.jpg", rows[0].image_path)
+        assertEquals("98765 43210", rows[0].contact_info)
         assertEquals(null, rows[1].image_path)
         assertEquals("", rows[1].description)
+        // Pre-update rows (and the demo seeds) simply decode with blank contact.
+        assertEquals("", rows[1].contact_info)
+    }
+
+    @Test
+    fun createRpcRowDecodes() {
+        // The create_lost_found_post RPC returns the created row as a single
+        // JSON object — the same shape the insert() call decodes.
+        val json = Json { ignoreUnknownKeys = true }
+        val body = """
+            {
+              "id": "9b1f2c00-1111-4f6f-9a52-1b1e8ef41c5c",
+              "kind": "found",
+              "title": "Found: blue Nike water bottle",
+              "description": "Left near the CSE lab on Thursday.",
+              "image_path": "found/9b1f.jpg",
+              "created_at": "2026-11-14T09:30:00+00:00",
+              "contact_info": "@sameer_on_insta"
+            }
+        """.trimIndent()
+        val row = json.decodeFromString<LostFoundItem>(body)
+        assertEquals("found", row.kind)
+        assertEquals("@sameer_on_insta", row.contact_info)
+    }
+
+    @Test
+    fun deletePinRules() {
+        // 4-8 digits pass …
+        assertTrue(LostFoundClient.isValidDeletePin("1357"))
+        assertTrue(LostFoundClient.isValidDeletePin("135790"))
+        assertTrue(LostFoundClient.isValidDeletePin("12345678"))
+        // … anything else does not.
+        assertTrue(!LostFoundClient.isValidDeletePin(""))
+        assertTrue(!LostFoundClient.isValidDeletePin("123"))
+        assertTrue(!LostFoundClient.isValidDeletePin("123456789"))
+        assertTrue(!LostFoundClient.isValidDeletePin("12a4"))
+        assertTrue(!LostFoundClient.isValidDeletePin("12 4"))
+        assertTrue(!LostFoundClient.isValidDeletePin("12.4"))
+    }
+
+    @Test
+    fun contactSanitizer() {
+        // Pasted numbers with stray runs of whitespace collapse to one line.
+        assertEquals("98765 43210", LostFoundClient.sanitizeContact("  98765   43210 "))
+        assertEquals("sameer@gndec.ac.in", LostFoundClient.sanitizeContact("sameer@gndec.ac.in"))
+        // Hard cap at the server's 120-char column limit.
+        assertEquals(120, LostFoundClient.sanitizeContact("a".repeat(400)).length)
+        // Tabs and newlines count as whitespace runs too.
+        assertEquals("@handle 98765 43210", LostFoundClient.sanitizeContact("@handle\n\t 98765  43210"))
     }
 
     @Test

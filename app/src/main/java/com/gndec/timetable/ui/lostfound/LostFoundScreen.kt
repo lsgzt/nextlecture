@@ -33,10 +33,12 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.AddAPhoto
+import androidx.compose.material.icons.filled.Call
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Inventory2
 import androidx.compose.material.icons.filled.Refresh
 import androidx.compose.material.icons.filled.SearchOff
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
@@ -49,6 +51,9 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
+import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -76,6 +81,7 @@ import com.gndec.timetable.domain.AppContainer
 import com.gndec.timetable.domain.LostFoundImageStore
 import com.gndec.timetable.domain.LostFoundManager
 import com.gndec.timetable.domain.LostFoundState
+import com.gndec.timetable.net.LostFoundClient
 import com.gndec.timetable.net.LostFoundItem
 import com.gndec.timetable.ui.motion.Motion
 import com.gndec.timetable.ui.motion.hapticTick
@@ -104,6 +110,8 @@ class LostFoundViewModel(private val container: AppContainer) : ViewModel() {
         kind: String,
         title: String,
         description: String,
+        contact: String,
+        pin: String,
         imageUri: Uri?,
         onDone: () -> Unit
     ) {
@@ -113,10 +121,20 @@ class LostFoundViewModel(private val container: AppContainer) : ViewModel() {
                     kind = kind,
                     title = title,
                     description = description,
+                    contact = contact,
+                    pin = pin,
                     imageUri = imageUri?.toString()
                 )
             }
             onDone()
+        }
+    }
+
+    /** Deletes with the poster's PIN; [onDone] receives whether it worked. */
+    fun delete(item: LostFoundItem, pin: String, onDone: (Boolean) -> Unit) {
+        viewModelScope.launch {
+            val ok = runCatching { container.lostFoundManager.delete(item, pin) }.getOrDefault(false)
+            onDone(ok)
         }
     }
 }
@@ -137,6 +155,7 @@ fun LostFoundScreen(
     var tab by rememberSaveable { mutableStateOf(LostFoundItem.KIND_LOST) }
     var composing by rememberSaveable { mutableStateOf(false) }
     var detail by remember { mutableStateOf<LostFoundItem?>(null) }
+    var deleteTarget by remember { mutableStateOf<LostFoundItem?>(null) }
     val view = LocalView.current
 
     Surface(Modifier.fillMaxSize(), color = MaterialTheme.colorScheme.background) {
@@ -186,13 +205,17 @@ fun LostFoundScreen(
                                         item = item,
                                         store = container.lostFoundImages,
                                         onClick = { detail = item },
+                                        onDelete = {
+                                            view.hapticTick()
+                                            deleteTarget = item
+                                        },
                                         modifier = Modifier.padding(horizontal = 20.dp).itemEntrance(2)
                                     )
                                 }
                             }
                             item(key = "footer") {
                                 Text(
-                                    "Posts are public — anyone on campus can see them. Lost something? Post it here and keep an eye on the Found tab too.",
+                                    "Posts are public — anyone on campus can see them, including the contact details. Keep the delete PIN you set when posting: it's the only way to take the post down once the item is collected or returned.",
                                     style = MaterialTheme.typography.bodySmall,
                                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                                     textAlign = TextAlign.Center,
@@ -224,7 +247,23 @@ fun LostFoundScreen(
         LostFoundDetailDialog(
             item = item,
             store = container.lostFoundImages,
-            onDismiss = { detail = null }
+            onDismiss = { detail = null },
+            onDelete = {
+                detail = null
+                deleteTarget = item
+            }
+        )
+    }
+
+    deleteTarget?.let { target ->
+        LostFoundDeleteDialog(
+            item = target,
+            vm = vm,
+            onDismiss = { deleteTarget = null },
+            onDeleted = {
+                deleteTarget = null
+                if (detail?.id == target.id) detail = null
+            }
         )
     }
 }
@@ -329,6 +368,7 @@ private fun LostFoundCard(
     item: LostFoundItem,
     store: LostFoundImageStore,
     onClick: () -> Unit,
+    onDelete: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     val view = LocalView.current
@@ -402,6 +442,18 @@ private fun LostFoundCard(
                             letterSpacing = 1.sp
                         )
                     }
+                    Spacer(Modifier.width(4.dp))
+                    IconButton(
+                        onClick = onDelete,
+                        modifier = Modifier.size(34.dp)
+                    ) {
+                        Icon(
+                            Icons.Default.Delete,
+                            contentDescription = "Delete post",
+                            tint = MaterialTheme.colorScheme.onSurfaceVariant,
+                            modifier = Modifier.size(17.dp)
+                        )
+                    }
                 }
                 if (item.description.isNotBlank()) {
                     Spacer(Modifier.height(4.dp))
@@ -412,6 +464,26 @@ private fun LostFoundCard(
                         maxLines = 2,
                         overflow = TextOverflow.Ellipsis
                     )
+                }
+                if (item.contact_info.isNotBlank()) {
+                    Spacer(Modifier.height(6.dp))
+                    Row(verticalAlignment = Alignment.CenterVertically) {
+                        Icon(
+                            Icons.Default.Call,
+                            contentDescription = null,
+                            tint = MaterialTheme.colorScheme.primary,
+                            modifier = Modifier.size(14.dp)
+                        )
+                        Spacer(Modifier.width(6.dp))
+                        Text(
+                            item.contact_info,
+                            color = MaterialTheme.colorScheme.onSurface,
+                            style = MaterialTheme.typography.bodySmall,
+                            fontWeight = FontWeight.SemiBold,
+                            maxLines = 1,
+                            overflow = TextOverflow.Ellipsis
+                        )
+                    }
                 }
                 Spacer(Modifier.height(6.dp))
                 Text(
@@ -511,4 +583,86 @@ private fun LostFoundLoadError(message: String, onRetry: () -> Unit) {
             }
         }
     }
+}
+
+/**
+ * Asks for the delete PIN the poster chose when creating this post — the
+ * only key that unlocks deletion ("item collected", "founder returned it").
+ * A wrong PIN only gets a retry hint; a matching one removes the post and
+ * closes whatever view was showing it.
+ */
+@Composable
+private fun LostFoundDeleteDialog(
+    item: LostFoundItem,
+    vm: LostFoundViewModel,
+    onDismiss: () -> Unit,
+    onDeleted: () -> Unit
+) {
+    var pin by remember { mutableStateOf("") }
+    var busy by remember { mutableStateOf(false) }
+    var error by remember { mutableStateOf<String?>(null) }
+
+    AlertDialog(
+        onDismissRequest = { if (!busy) onDismiss() },
+        confirmButton = {
+            TextButton(
+                enabled = !busy && LostFoundClient.isValidDeletePin(pin),
+                onClick = {
+                    busy = true
+                    error = null
+                    vm.delete(item, pin) { ok ->
+                        busy = false
+                        if (ok) {
+                            onDeleted()
+                        } else {
+                            error = "That PIN doesn’t match this post. Check the PIN you set when posting it."
+                        }
+                    }
+                }
+            ) {
+                Text("Delete", color = MaterialTheme.colorScheme.error, fontWeight = FontWeight.Bold)
+            }
+        },
+        dismissButton = {
+            TextButton(enabled = !busy, onClick = onDismiss) {
+                Text("Cancel")
+            }
+        },
+        title = { Text("Delete this post?", fontWeight = FontWeight.Bold) },
+        text = {
+            Column {
+                Text(
+                    if (item.kind == LostFoundItem.KIND_LOST)
+                        "Got the item back? Enter the delete PIN you set when posting “${item.title}”. This removes the post and its photo for good."
+                    else
+                        "Returned it to its owner? Enter the delete PIN you set when posting “${item.title}”. This removes the post and its photo for good.",
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                )
+                Spacer(Modifier.height(12.dp))
+                OutlinedTextField(
+                    value = pin,
+                    onValueChange = { pin = it.filter { c -> c.isDigit() }.take(8) },
+                    enabled = !busy,
+                    modifier = Modifier.fillMaxWidth(),
+                    placeholder = { Text("Delete PIN") },
+                    singleLine = true,
+                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.NumberPassword),
+                    shape = RoundedCornerShape(14.dp)
+                )
+                if (error != null) {
+                    Spacer(Modifier.height(8.dp))
+                    Text(
+                        error ?: "",
+                        color = MaterialTheme.colorScheme.error,
+                        style = MaterialTheme.typography.bodySmall
+                    )
+                }
+                if (busy) {
+                    Spacer(Modifier.height(10.dp))
+                    CircularProgressIndicator(Modifier.size(18.dp), strokeWidth = 2.dp, color = MaterialTheme.colorScheme.primary)
+                }
+            }
+        }
+    )
 }
