@@ -151,7 +151,8 @@ object FacultyNameMatcher {
     /**
      * How well a published teacher name matches a directory name.
      * 100 exact · 100 space-insensitive · 85 initial-per-token · 78 leading
-     * token-subset · 75 given-name prefix · 70/65 fuzzy spelling variants.
+     * token-subset (in either direction) · 75 given-name prefix · 70/65 fuzzy
+     * spelling variants.
      */
     fun nameScore(published: String, directory: String): Int {
         if (normName(published) == normName(directory)) return 100
@@ -170,6 +171,10 @@ object FacultyNameMatcher {
         }
         // "AMARJOT KAUR" is a leading subset of "AMARJOT KAUR RANDHAWA"
         if (cap.size < dir.size && dir.take(cap.size) == cap) return 78
+        // ... and the other way round: the directory writes "SAMREET KAUR",
+        // the file "Pf. Samreet Kaur Gosal" — the same teacher under a name
+        // the file carries in full.
+        if (dir.size < cap.size && cap.take(dir.size) == dir) return 78
         // "PRAGYA" is the given name of "PRAGYA GOYAL"; "Aman" of "AMANDEEP SINGH"
         if (cap.size == 1 && dir.size >= 2 && cap[0].length >= 4 && dir[0].startsWith(cap[0])) return 75
         return 0
@@ -221,7 +226,8 @@ object FacultyNameMatcher {
      * Pass 1 — full-name matches, honouring department annotations and
      * honorific tie-breaks, requiring a strictly best table per record.
      * Pass 2 — bare-code subsequence matching with GLOBAL uniqueness, iterated
-     * to a fixpoint.
+     * to a fixpoint. A code may only claim a table that pass 1 left unclaimed,
+     * and only a teacher whose first initial the code starts with.
      */
     fun <T> assignTables(
         directoryNames: List<String>,
@@ -232,6 +238,8 @@ object FacultyNameMatcher {
         tableAt: (Int) -> T
     ): Map<String, T> {
         val assignment = mutableMapOf<String, T>()
+        /** Table indexes already handed to a teacher by the name pass. */
+        val claimedTables = mutableSetOf<Int>()
 
         // Pass 1: full names.
         for (r in directoryNames.indices) {
@@ -239,6 +247,7 @@ object FacultyNameMatcher {
             val dirDept = directoryDepartments[r]
             val dirTitle = titleOf(dirName)
             var best: T? = null
+            var bestIndex = -1
             var bestScore = 0
             var tie = false
             for (t in teacherNames.indices) {
@@ -250,12 +259,15 @@ object FacultyNameMatcher {
                     if (score > 0 && dirTitle.isNotEmpty() && titleOf(published) == dirTitle) score += 3
                 }
                 if (score > bestScore) {
-                    best = tableAt(t); bestScore = score; tie = false
+                    best = tableAt(t); bestIndex = t; bestScore = score; tie = false
                 } else if (score == bestScore && score > 0) {
                     tie = true
                 }
             }
-            if (best != null && bestScore >= 65 && !tie) assignment[normName(dirName)] = best
+            if (best != null && bestScore >= 65 && !tie) {
+                assignment[normName(dirName)] = best
+                claimedTables += bestIndex
+            }
         }
 
         // Pass 2: codes, fixpoint.
@@ -266,11 +278,24 @@ object FacultyNameMatcher {
                 val code = teacherCodes[t] ?: continue
                 if (code.length < 2) continue
                 if (code.lowercase() in DEPT_CODES) continue
+                // A table the name pass already claimed belongs to THAT teacher:
+                // a second teacher must never steal it on a loose code match.
+                if (t in claimedTables) continue
                 val hits = directoryNames.filterIndexed { r, name ->
-                    normName(name) !in assignment && isSubsequence(code.lowercase(), nameTokens(name).joinToString(""))
+                    normName(name) !in assignment &&
+                        isSubsequence(code.lowercase(), nameTokens(name).joinToString("")) &&
+                        // A teacher's code always starts with their own first
+                        // initial. Without this a short code ("AG", "PTS")
+                        // matches every name that merely CONTAINS those letters
+                        // in order, and the table is handed to the wrong
+                        // teacher — "AG" fits SARABMEET SINGH MASSON as well as
+                        // AKSHAY GIRDHAR.
+                        code.first().lowercaseChar() ==
+                            nameTokens(name).firstOrNull()?.firstOrNull()?.lowercaseChar()
                 }
                 if (hits.size == 1) {
                     assignment[normName(hits[0])] = tableAt(t)
+                    claimedTables += t
                     changed = true
                 }
             }

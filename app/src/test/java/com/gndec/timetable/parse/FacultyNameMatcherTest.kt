@@ -70,6 +70,14 @@ class FacultyNameMatcherTest {
     }
 
     @Test
+    fun directoryNameLeadingPrefixOfThePublishedCaptionMatches() {
+        // The other way round: the directory writes "SAMREET KAUR", the file
+        // "Pf. Samreet Kaur Gosal" — the same teacher, named in full.
+        assertEquals(78, FacultyNameMatcher.nameScore("Pf. Samreet Kaur Gosal", "SAMREET KAUR"))
+        assertEquals(78, FacultyNameMatcher.nameScore("Pf. Baljeet Singh Ahluwalia", "BALJEET SINGH"))
+    }
+
+    @Test
     fun givenNamePrefixMatches() {
         // 'PRAGYA' is a leading token-subset of 'PRAGYA GOYAL' (78); the looser
         // single given-name rule (75) fires for e.g. 'Aman' vs 'AMANDEEP SINGH'.
@@ -200,5 +208,58 @@ class FacultyNameMatcherTest {
             teachers = listOf(Triple(null, "ME", "ME(faculty)"))
         )
         assertNull(assigned["amandeep singh"])
+    }
+
+    @Test
+    fun aCodeNeverStealsATableTheNamePassAlreadyClaimed() {
+        // "Dr. Amit Kamra-AK" belongs to AMIT KAMRA. KAMALJIT KAUR DHILLON
+        // also contains A and K in order, so the bare-code pass used to hand
+        // Kamra's table to her — a teacher who never appears in that file.
+        val assigned = assign(
+            directory = listOf(
+                "DR. AMIT KAMRA" to "Information Technology",
+                "DR. KAMALJIT KAUR DHILLON" to "Information Technology"
+            ),
+            teachers = listOf(
+                Triple("Dr. Amit Kamra", "AK", "Dr. Amit Kamra-AK")
+            )
+        )
+        assertEquals("Dr. Amit Kamra-AK", assigned["amit kamra"])
+        assertNull(assigned["kamaljit kaur dhillon"])
+    }
+
+    @Test
+    fun aBareCodeOnlyClaimsATeacherWithTheSameFirstInitial() {
+        // Civil publishes bare codes. "HVS" is HARVINDER SINGH's — but
+        // SARAH VENKATESH contains H, V and S in order too. A code may only
+        // claim a teacher whose own first initial it starts with.
+        val assigned = assign(
+            directory = listOf(
+                "HARVINDER SINGH" to "Civil Engineering",
+                "SARAH VENKATESH" to "Civil Engineering"
+            ),
+            teachers = listOf(
+                Triple(null, "HVS", "HVS")
+            )
+        )
+        assertEquals("HVS", assigned["harvinder singh"])
+        assertNull(assigned["sarah venkatesh"])
+    }
+
+    @Test
+    fun aCodeIsNotHandedToADifferentTeacherWithTheSameLetters() {
+        // "Pf. Preetinder Singh (PTS)" is PREETINDER SINGH's table; SANPREET
+        // SINGH contains P, T and S in order as well.
+        val assigned = assign(
+            directory = listOf(
+                "DR. PREETINDER SINGH" to "Electrical Engineering",
+                "SANPREET SINGH" to "Electrical Engineering"
+            ),
+            teachers = listOf(
+                Triple("Pf. Preetinder Singh", "PTS", "Pf. Preetinder Singh (PTS)")
+            )
+        )
+        assertEquals("Pf. Preetinder Singh (PTS)", assigned["preetinder singh"])
+        assertNull(assigned["sanpreet singh"])
     }
 }

@@ -340,6 +340,24 @@
   "profile_url": "https://gndec.ac.in/faculty/?id=498"
  },
  {
+  "name": "KIRAN KUMARI",
+  "designation": "Assistant Professor",
+  "email": "as_kiran10464@gndec.ac.in",
+  "profile_id": "511",
+  "department": "Applied Science",
+  "dept_id": 1,
+  "profile_url": "https://gndec.ac.in/faculty/?id=511"
+ },
+ {
+  "name": "MANPREET KAUR",
+  "designation": "Assistant Professor",
+  "email": "as_manpreet@gndec.ac.in",
+  "profile_id": "472",
+  "department": "Applied Science",
+  "dept_id": 1,
+  "profile_url": "https://gndec.ac.in/faculty/?id=472"
+ },
+ {
   "name": "DR, JASBIR SINGH SAINI",
   "designation": "Associate Professor (CP) cum System Analyst",
   "email": "cc@gndec.ac.in",
@@ -391,6 +409,15 @@
   "department": "Computer Center",
   "dept_id": 2,
   "profile_url": "https://gndec.ac.in/faculty/?id=103"
+ },
+ {
+  "name": "HARBHAG SINGH",
+  "designation": "Assistant Professor (Computer Programmer / Computer Practices)",
+  "email": "harbhag@gndec.ac.in",
+  "profile_id": "221",
+  "department": "Computer Center",
+  "dept_id": 2,
+  "profile_url": "https://gndec.ac.in/faculty/?id=221"
  },
  {
   "name": "JASMANINDER SINGH GREWAL",
@@ -1128,6 +1155,15 @@
   "profile_url": "https://gndec.ac.in/faculty/?id=505"
  },
  {
+  "name": "HARMINDER KAUR",
+  "designation": "Assistant Professor",
+  "email": "it_harminder10383@gndec.ac.in",
+  "profile_id": "512",
+  "department": "Computer Science & Engg.",
+  "dept_id": 15,
+  "profile_url": "https://gndec.ac.in/faculty/?id=512"
+ },
+ {
   "name": "KANWARDEEP SINGH",
   "designation": "Professor and Head",
   "email": "kds@gndec.ac.in, kds97dee@gmail.com",
@@ -1315,6 +1351,19 @@
   "profile_url": "https://gndec.ac.in/faculty/?id=356"
  },
  {
+  "name": "SANPREET SINGH",
+  "designation": "Assistant Professor",
+  "email": "er.sanpreetsingh@gmail.com",
+  "profile_id": "433",
+  "department": "Electrical Engineering",
+  "dept_id": 16,
+  "profile_url": "https://gndec.ac.in/faculty/?id=433",
+  "phone_office": "",
+  "phone_mobile": "7986013685",
+  "admin_roles": "",
+  "phone_source": "GNDEC Telephone Directory"
+ },
+ {
   "name": "NARWANT SINGH GREWAL",
   "designation": "Professor",
   "email": "narwant@gndec.ac.in",
@@ -1487,6 +1536,32 @@
   "department": "Electronics & Communication Engineering",
   "dept_id": 17,
   "profile_url": "https://gndec.ac.in/faculty/?id=37"
+ },
+ {
+  "name": "DR PREETI PANNU",
+  "designation": "Assistant Professor",
+  "email": "preetipannu@gndec.ac.in",
+  "profile_id": "267",
+  "department": "Electronics & Communication Engineering",
+  "dept_id": 17,
+  "profile_url": "https://gndec.ac.in/faculty/?id=267",
+  "phone_office": "0161-5064501",
+  "phone_mobile": "98189-47360",
+  "admin_roles": "Assistant Public Relation Officer",
+  "phone_source": "Information Brochure 2026"
+ },
+ {
+  "name": "NAVJOT SINGH",
+  "designation": "Assistant Professor",
+  "email": "dr.navjotsingh@gndec.ac.in",
+  "profile_id": "468",
+  "department": "Electronics & Communication Engineering",
+  "dept_id": 17,
+  "profile_url": "https://gndec.ac.in/faculty/?id=468",
+  "phone_office": "",
+  "phone_mobile": "9501724761",
+  "admin_roles": "",
+  "phone_source": "Section List 2026"
  },
  {
   "name": "DR. KULVINDER SINGH MANN",
@@ -1719,6 +1794,15 @@
   "department": "Information Technology",
   "dept_id": 21,
   "profile_url": "https://gndec.ac.in/faculty/?id=79"
+ },
+ {
+  "name": "SARABMEET SINGH MASSON",
+  "designation": "Assistant Professor",
+  "email": "it_sarabmeet10427@gndec.ac.in",
+  "profile_id": "457",
+  "department": "Information Technology",
+  "dept_id": 21,
+  "profile_url": "https://gndec.ac.in/faculty/?id=457"
  },
  {
   "name": "DR. AMANJOT KAUR GILL",
@@ -2601,5 +2685,18 @@
   "department": "School of Architecture",
   "dept_id": 99,
   "profile_url": "https://gndec.ac.in/faculty/?id=486"
+ },
+ {
+  "name": "SUKHMANJIT SINGH",
+  "designation": "Associate Professor",
+  "email": "aulakh.sukhman@gmail.com",
+  "profile_id": "484",
+  "department": "School of Architecture",
+  "dept_id": 99,
+  "profile_url": "https://gndec.ac.in/faculty/?id=484",
+  "phone_office": "",
+  "phone_mobile": "9779595124",
+  "admin_roles": "",
+  "phone_source": "GNDEC Telephone Directory"
  }
 ]

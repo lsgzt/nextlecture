@@ -25,7 +25,7 @@ data class FacultyRecord(
     @SerialName("dept_id") val deptId: Int = 0,
     @SerialName("profile_url") val profileUrl: String = "",
     /** Absolute photo URL from the college website, blank when it has none
-     * (two of the 271 directory pages carry no usable picture). */
+     * (five of the 280 directory pages carry no usable picture). */
     @SerialName("image_url") val imageUrl: String = "",
     @SerialName("phone_office") val phoneOffice: String = "",
     @SerialName("phone_mobile") val phoneMobile: String = "",
