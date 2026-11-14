@@ -251,7 +251,7 @@ fun SearchScreen(
                         value = query,
                         onValueChange = { query = it },
                         modifier = Modifier.fillMaxWidth().padding(horizontal = 20.dp),
-                        placeholder = { Text("Try a teacher, crn, F106, 25 Sep, vacant rooms") },
+                        placeholder = { Text("Search teachers, rooms, dates…") },
                         leadingIcon = { Icon(Icons.Default.Search, contentDescription = null) },
                         singleLine = true,
                         shape = RoundedCornerShape(16.dp),
