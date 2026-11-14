@@ -934,6 +934,8 @@ private fun TimelineRail(lecture: LectureEntity, state: LectureState, nodeIndex:
 @Composable
 private fun FriendsBeforeDayNote(slots: List<FriendEarlySlot>, accent: Color, muted: Color) {
     if (slots.isEmpty()) return
+    // Plain text only — same weight as the "Also free · …" line under free periods,
+    // no chip/block so it stays light above the rail.
     val bold = SpanStyle(fontWeight = FontWeight.Bold, color = accent)
     val body = SpanStyle(fontWeight = FontWeight.Medium, color = muted)
     val text = buildAnnotatedString {
@@ -941,24 +943,13 @@ private fun FriendsBeforeDayNote(slots: List<FriendEarlySlot>, accent: Color, mu
             appendFriendsBeforeDay(slots, bold, body)
         }
     }
-    Row(
-        Modifier
+    Text(
+        text = text,
+        style = MaterialTheme.typography.bodySmall,
+        modifier = Modifier
             .fillMaxWidth()
             .padding(horizontal = TimelineHorizontalPadding)
-            .clip(RoundedCornerShape(12.dp))
-            .background(MaterialTheme.colorScheme.surface.copy(alpha = 0.55f))
-            .padding(horizontal = 14.dp, vertical = 11.dp),
-        verticalAlignment = Alignment.CenterVertically
-    ) {
-        Icon(
-            Icons.Default.Groups,
-            contentDescription = null,
-            tint = accent.copy(alpha = 0.85f),
-            modifier = Modifier.size(18.dp)
-        )
-        Spacer(Modifier.width(10.dp))
-        Text(text, style = MaterialTheme.typography.bodySmall)
-    }
+    )
 }
 
 /**
