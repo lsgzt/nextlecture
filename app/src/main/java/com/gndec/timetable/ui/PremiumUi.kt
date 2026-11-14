@@ -1038,28 +1038,30 @@ fun PremiumOfflineCard(modifier: Modifier = Modifier) {
 /**
  * Daily quote strip, shown between the hero lecture card and the notice card.
  *
- * Deliberately not a card: it is a quiet line of text that breaks up two dense blocks, so
- * it stays borderless and carries no surface of its own. Side inset scales with length —
- * short quotes stay nearly full-width; longer ones get more horizontal room so the last
- * line is not two stranded words. The author is always end-aligned under the quote block.
+ * Deliberately not a card: quiet centered italic text between denser blocks.
+ * Side inset grows with length so longer quotes wrap with fuller last lines
+ * instead of two stranded words. Attribution sits under the quote, right-aligned
+ * with a modest trailing inset — classic web “— Author” style, not flush to the
+ * screen edge.
  *
  * The author is skipped when ZenQuotes returns it blank rather than rendering a lone dash.
  */
 @Composable
 fun PremiumDailyQuote(quote: DailyQuote, modifier: Modifier = Modifier) {
-    // Wider for short text; tighter for long text so mid-line wraps look balanced.
-    val widthFraction = when {
-        quote.text.length <= 55 -> 0.96f
-        quote.text.length <= 95 -> 0.88f
-        else -> 0.80f
+    val sideInset = when {
+        quote.text.length <= 50 -> 20.dp
+        quote.text.length <= 90 -> 32.dp
+        else -> 40.dp
     }
     Column(
-        modifier = modifier.fillMaxWidth(),
+        modifier = modifier
+            .fillMaxWidth()
+            .padding(horizontal = sideInset),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Text(
             quote.text,
-            modifier = Modifier.fillMaxWidth(widthFraction),
+            modifier = Modifier.fillMaxWidth(),
             color = MaterialTheme.colorScheme.onSurfaceVariant,
             style = MaterialTheme.typography.bodyLarge,
             fontStyle = FontStyle.Italic,
@@ -1067,10 +1069,12 @@ fun PremiumDailyQuote(quote: DailyQuote, modifier: Modifier = Modifier) {
             textAlign = TextAlign.Center
         )
         quote.author.takeIf { it.isNotBlank() }?.let { author ->
-            Spacer(Modifier.height(3.dp))
+            Spacer(Modifier.height(4.dp))
             Text(
                 "— $author",
-                modifier = Modifier.fillMaxWidth(widthFraction),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(end = 6.dp),
                 color = MaterialTheme.colorScheme.primary,
                 style = MaterialTheme.typography.bodySmall,
                 fontWeight = FontWeight.Medium,
