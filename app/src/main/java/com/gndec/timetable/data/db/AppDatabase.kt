@@ -17,7 +17,7 @@ import androidx.sqlite.db.SupportSQLiteDatabase
         SyllabusChatMessageEntity::class,
         TimetableSnapshotEntity::class
     ],
-    version = 5,
+    version = 6,
     exportSchema = true
 )
 abstract class AppDatabase : RoomDatabase() {
@@ -106,6 +106,14 @@ abstract class AppDatabase : RoomDatabase() {
             }
         }
 
+        private val MIGRATION_5_6 = object : Migration(5, 6) {
+            override fun migrate(database: SupportSQLiteDatabase) {
+                // Additive only: FET document generation timestamp from the official footer.
+                // Existing rows read back as NULL until the next successful refresh parses it.
+                database.execSQL("ALTER TABLE timetable_meta ADD COLUMN generatedAtMillis INTEGER")
+            }
+        }
+
         @Volatile private var instance: AppDatabase? = null
 
         fun get(context: Context): AppDatabase =
@@ -119,7 +127,7 @@ abstract class AppDatabase : RoomDatabase() {
                     // startup rather than silently wiping a student's cached timetable,
                     // 366 days of attendance snapshots and their saved reminder set.
                     // Every version bump now has to ship an explicit Migration below.
-                    .addMigrations(MIGRATION_1_2, MIGRATION_2_3, MIGRATION_3_4, MIGRATION_4_5)
+                    .addMigrations(MIGRATION_1_2, MIGRATION_2_3, MIGRATION_3_4, MIGRATION_4_5, MIGRATION_5_6)
                     .build().also { instance = it }
             }
     }

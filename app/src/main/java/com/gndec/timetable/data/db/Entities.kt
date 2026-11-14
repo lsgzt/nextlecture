@@ -59,7 +59,13 @@ data class TimetableMetaEntity(
     val lastChecked: Long?,
     val etag: String?,
     val lastModified: String?,
-    val timetableHash: String?
+    val timetableHash: String?,
+    /**
+     * Epoch millis of the FET footer line on the official document
+     * ("Timetable generated with FET … on M/D/YY h:mm AM/PM"), when parseable.
+     * Null for caches saved before this field existed or for documents without the footer.
+     */
+    val generatedAtMillis: Long? = null
 )
 
 @Entity(tableName = "ai_cache")

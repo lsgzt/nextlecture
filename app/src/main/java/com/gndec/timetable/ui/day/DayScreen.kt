@@ -108,6 +108,7 @@ import com.gndec.timetable.ui.motion.motionSpring
 import com.gndec.timetable.ui.motion.motionTween
 import com.gndec.timetable.ui.motion.pressFeedback
 import com.gndec.timetable.ui.theme.lectureTypeColors
+import com.gndec.timetable.util.Formatters
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.map
@@ -152,6 +153,7 @@ fun DayScreen(
     val lectures by remember(group) {
         if (group == null) flowOf(emptyList()) else container.db.lectureDao().observeForGroup(group)
     }.collectAsStateWithLifecycle(initialValue = emptyList())
+    val meta by container.db.metaDao().observe().collectAsStateWithLifecycle(initialValue = null)
     var nowMillis by remember { mutableLongStateOf(System.currentTimeMillis()) }
     var viewModeName by rememberSaveable { mutableStateOf(DayViewMode.TODAY.name) }
     val viewMode = DayViewMode.valueOf(viewModeName)
@@ -344,13 +346,21 @@ fun DayScreen(
                     )
                 }
                 item {
-                    Row(
-                        Modifier.fillMaxWidth().padding(horizontal = 22.dp, vertical = 4.dp),
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-                        Icon(Icons.Default.CloudDone, contentDescription = null, tint = accent, modifier = Modifier.size(19.dp))
-                        Spacer(Modifier.width(8.dp))
-                        Text("Using saved timetable · reminders work offline", color = muted, style = MaterialTheme.typography.bodySmall)
+                    Column(Modifier.fillMaxWidth().padding(horizontal = 22.dp, vertical = 4.dp)) {
+                        Row(verticalAlignment = Alignment.CenterVertically) {
+                            Icon(Icons.Default.CloudDone, contentDescription = null, tint = accent, modifier = Modifier.size(19.dp))
+                            Spacer(Modifier.width(8.dp))
+                            Text("Using saved timetable · reminders work offline", color = muted, style = MaterialTheme.typography.bodySmall)
+                        }
+                        meta?.generatedAtMillis?.let { generatedAt ->
+                            Spacer(Modifier.height(4.dp))
+                            Text(
+                                "Timetable generated on ${Formatters.dateTime(generatedAt)}",
+                                color = muted,
+                                style = MaterialTheme.typography.bodySmall,
+                                modifier = Modifier.padding(start = 27.dp)
+                            )
+                        }
                     }
                 }
             }

@@ -129,7 +129,8 @@ class TimetableApp : Application() {
                     lastChecked = 0L,
                     etag = null,
                     lastModified = null,
-                    timetableHash = null
+                    timetableHash = null,
+                    generatedAtMillis = meta.generatedAtMillis
                 )
             )
         }

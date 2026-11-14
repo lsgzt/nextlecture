@@ -13,6 +13,7 @@ import com.gndec.timetable.net.TimetableFetcher
 import com.gndec.timetable.net.TimetableSourceResolver
 import com.gndec.timetable.parse.GroupMatcher
 import com.gndec.timetable.parse.ParseException
+import com.gndec.timetable.parse.RoomTimetableParser
 import com.gndec.timetable.parse.TimetableParser
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.first
@@ -102,7 +103,8 @@ class RefreshManager(
             // is never advanced by a failure, so freshness stays honest either way.
             lastChecked = if (backoffForRetry) now - (autoRefreshMinAgeMillis - failureRetryMinAgeMillis) else now,
             etag = etag, lastModified = lastModified,
-            timetableHash = meta?.timetableHash
+            timetableHash = meta?.timetableHash,
+            generatedAtMillis = meta?.generatedAtMillis
         )
 
         when (val outcome = fetcher.fetch(resolved.url, etag, lastModified)) {
@@ -195,7 +197,8 @@ class RefreshManager(
                 id = 1, sourceUrl = sourceUrl,
                 lastSuccessfulFetch = now, lastChecked = now,
                 etag = etag, lastModified = lastModified,
-                timetableHash = TimetableParser.sha256(html)
+                timetableHash = TimetableParser.sha256(html),
+                generatedAtMillis = RoomTimetableParser.parseGeneratedAtMillis(html)
             )
         )
         // Persist the self-healed link so the UI immediately follows the
