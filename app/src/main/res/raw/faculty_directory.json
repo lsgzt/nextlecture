@@ -11,7 +11,9 @@
     "phone_mobile": "98156-57551",
     "admin_roles": "HOD - Applied Sciences; Indian Knowledge System Cell",
     "phone_source": "Information Brochure 2026",
-    "image_url": "https://gndec.ac.in/images/drhkgrewal%20pic.jpg"
+    "image_url": "https://gndec.ac.in/images/drhkgrewal%20pic.jpg",
+    "date_of_birth": "1974-07-16",
+    "date_of_birth_raw": "16/07/1974"
   },
   {
     "name": "DR AMANPREET KAUR SODHI",
@@ -28,7 +30,9 @@
     "also_published_as": [
       "DR APK SODHI"
     ],
-    "image_url": "https://gndec.ac.in/images/passport%20size%20photo%20APK_11zon%20%281%29.jpg"
+    "image_url": "https://gndec.ac.in/images/passport%20size%20photo%20APK_11zon%20%281%29.jpg",
+    "date_of_birth": "1972-01-01",
+    "date_of_birth_raw": "01/01/1972"
   },
   {
     "name": "DR. DEVINDER SINGH PATHANIA",
@@ -41,7 +45,9 @@
     "phone_mobile": "9878634245",
     "phone_source": "GNDEC Telephone Directory",
     "phone_office": "ext 4531",
-    "image_url": "https://gndec.ac.in/images/dsp%20photo.jpg"
+    "image_url": "https://gndec.ac.in/images/dsp%20photo.jpg",
+    "date_of_birth": "1967-01-14",
+    "date_of_birth_raw": "14/01/1967"
   },
   {
     "name": "DR. RANDHIR SINGH",
@@ -55,7 +61,9 @@
     "phone_mobile": "98761-91987",
     "admin_roles": "Deputy Controller (Examination)",
     "phone_source": "Information Brochure 2026",
-    "image_url": "https://gndec.ac.in/images/rs%20pic.jpg"
+    "image_url": "https://gndec.ac.in/images/rs%20pic.jpg",
+    "date_of_birth": "1975-02-01",
+    "date_of_birth_raw": "01/02/1975"
   },
   {
     "name": "DR.PUNEET NARANG",
@@ -69,7 +77,9 @@
     "phone_mobile": "94174-88017",
     "admin_roles": "Assistant Controller (Examination)",
     "phone_source": "Information Brochure 2026",
-    "image_url": "https://gndec.ac.in/images/PUNEET%20NARANG%20PHOTO_page-0001%20%283%29%20%281%29.jpg"
+    "image_url": "https://gndec.ac.in/images/PUNEET%20NARANG%20PHOTO_page-0001%20%283%29%20%281%29.jpg",
+    "date_of_birth": "1975-12-26",
+    "date_of_birth_raw": "26/12/1975"
   },
   {
     "name": "SATWINDER JIT KAUR",
@@ -79,7 +89,12 @@
     "department": "Applied Science",
     "dept_id": 1,
     "profile_url": "https://gndec.ac.in/faculty/?id=2",
-    "image_url": "https://gndec.ac.in/images/sjk.jpg"
+    "image_url": "https://gndec.ac.in/images/sjk.jpg",
+    "phone_mobile": "9463005275",
+    "phone_source": "GNDEC Telephone Directory",
+    "phone_office": "ext 4531",
+    "date_of_birth": "1968-02-19",
+    "date_of_birth_raw": "19/02/1968"
   },
   {
     "name": "AASTIK SHARMA",
@@ -94,7 +109,9 @@
     ],
     "phone_mobile": "8146366113",
     "phone_source": "User-provided faculty contact list (2026-10-19)",
-    "image_url": "https://gndec.ac.in/images/file_0000000025bc71faa8bd5b85ff2bf92c.png"
+    "image_url": "https://gndec.ac.in/images/file_0000000025bc71faa8bd5b85ff2bf92c.png",
+    "date_of_birth": "2001-02-13",
+    "date_of_birth_raw": "13/02/2001"
   },
   {
     "name": "DR. GAGANDEEP KAUR LOTEY",
@@ -107,7 +124,9 @@
     "phone_mobile": "7508627520",
     "phone_source": "GNDEC Telephone Directory",
     "phone_office": "ext 4531",
-    "image_url": "https://gndec.ac.in/images/Screenshot_20250606_215034_WhatsApp.jpg"
+    "image_url": "https://gndec.ac.in/images/Screenshot_20250606_215034_WhatsApp.jpg",
+    "date_of_birth": "1987-07-15",
+    "date_of_birth_raw": "15/07/1987"
   },
   {
     "name": "DR. PURAN SINGH",
@@ -117,7 +136,9 @@
     "department": "Applied Science",
     "dept_id": 1,
     "profile_url": "https://gndec.ac.in/faculty/?id=440",
-    "image_url": "https://gndec.ac.in/images/Puran%20S%20Pic.jpg"
+    "image_url": "https://gndec.ac.in/images/Puran%20S%20Pic.jpg",
+    "date_of_birth": "1961-03-10",
+    "date_of_birth_raw": "10/03/1961"
   },
   {
     "name": "DR. AMANDEEP KAUR",
@@ -128,7 +149,9 @@
     "dept_id": 1,
     "profile_url": "https://gndec.ac.in/faculty/?id=494",
     "image_url": "https://gndec.ac.in/images/IMG_4526.jpeg",
-    "phone_mobile": "7986546380"
+    "phone_mobile": "7986546380",
+    "date_of_birth": "1984-10-28",
+    "date_of_birth_raw": "28/10/1984"
   },
   {
     "name": "DR. AMARJOT KAUR RANDHAWA",
@@ -141,7 +164,9 @@
     "phone_mobile": "6280615940",
     "phone_source": "GNDEC Telephone Directory",
     "phone_office": "ext 4531",
-    "image_url": "https://gndec.ac.in/images/AMARJOTPIC.jpeg"
+    "image_url": "https://gndec.ac.in/images/AMARJOTPIC.jpeg",
+    "date_of_birth": "1990-03-24",
+    "date_of_birth_raw": "24-3-1990"
   },
   {
     "name": "DR. ISHA DUDEJA",
@@ -151,7 +176,9 @@
     "department": "Applied Science",
     "dept_id": 1,
     "profile_url": "https://gndec.ac.in/faculty/?id=495",
-    "image_url": "https://gndec.ac.in/images/Isha%20ap.jpg"
+    "image_url": "https://gndec.ac.in/images/Isha%20ap.jpg",
+    "date_of_birth": "1998-12-30",
+    "date_of_birth_raw": "30/12/1998"
   },
   {
     "name": "DR. JASMEET KAUR DAYAL",
@@ -161,7 +188,9 @@
     "department": "Applied Science",
     "dept_id": 1,
     "profile_url": "https://gndec.ac.in/faculty/?id=469",
-    "image_url": "https://gndec.ac.in/images/as_jasmeet.png"
+    "image_url": "https://gndec.ac.in/images/as_jasmeet.png",
+    "date_of_birth": "1987-07-24",
+    "date_of_birth_raw": "24/07/1987"
   },
   {
     "name": "DR. JASPREET SINGH",
@@ -174,7 +203,9 @@
     "phone_mobile": "9914797422",
     "phone_source": "GNDEC Telephone Directory",
     "phone_office": "ext 4531",
-    "image_url": "https://gndec.ac.in/images/profile_pic.png"
+    "image_url": "https://gndec.ac.in/images/profile_pic.png",
+    "date_of_birth": "1994-02-11",
+    "date_of_birth_raw": "11/02/1994"
   },
   {
     "name": "DR. PARAMJIT SINGH",
@@ -186,7 +217,9 @@
     "profile_url": "https://gndec.ac.in/faculty/?id=388",
     "phone_mobile": "9888020728",
     "phone_source": "User-provided faculty contact list (2026-10-19)",
-    "image_url": "https://gndec.ac.in/images/pstarsikka.jpg"
+    "image_url": "https://gndec.ac.in/images/pstarsikka.jpg",
+    "date_of_birth": "1961-11-13",
+    "date_of_birth_raw": "13/11/1961"
   },
   {
     "name": "DR. RAJBIR KAUR",
@@ -196,7 +229,12 @@
     "department": "Applied Science",
     "dept_id": 1,
     "profile_url": "https://gndec.ac.in/faculty/?id=313",
-    "image_url": "https://gndec.ac.in/images/F26BE1F5-BDE5-432B-ACCF-0CD1F352B195.png"
+    "image_url": "https://gndec.ac.in/images/F26BE1F5-BDE5-432B-ACCF-0CD1F352B195.png",
+    "phone_mobile": "9814482728",
+    "phone_source": "GNDEC Telephone Directory",
+    "phone_office": "ext 4531",
+    "date_of_birth": "1976-08-19",
+    "date_of_birth_raw": "19/08/1976"
   },
   {
     "name": "DR. RAJVIR KAUR SRAW",
@@ -212,7 +250,9 @@
     "phone_mobile": "8872300538",
     "phone_source": "GNDEC Telephone Directory",
     "phone_office": "ext 4531",
-    "image_url": "https://gndec.ac.in/images/IMG_4339.JPG"
+    "image_url": "https://gndec.ac.in/images/IMG_4339.JPG",
+    "date_of_birth": "1987-01-31",
+    "date_of_birth_raw": "31/01/1987"
   },
   {
     "name": "DR. SANDEEP KAUR GILL",
@@ -225,7 +265,9 @@
     "phone_mobile": "9781302813",
     "phone_source": "GNDEC Telephone Directory",
     "phone_office": "ext 4531",
-    "image_url": "https://gndec.ac.in/images/20220209_214129.jpg"
+    "image_url": "https://gndec.ac.in/images/20220209_214129.jpg",
+    "date_of_birth": "1990-07-24",
+    "date_of_birth_raw": "24/07/1990"
   },
   {
     "name": "HITIKA DHAWAN",
@@ -235,7 +277,9 @@
     "department": "Applied Science",
     "dept_id": 1,
     "profile_url": "https://gndec.ac.in/faculty/?id=452",
-    "image_url": "https://gndec.ac.in/images/Screenshot_20260829_170901.jpg"
+    "image_url": "https://gndec.ac.in/images/Screenshot_20260829_170901.jpg",
+    "date_of_birth": "2001-01-06",
+    "date_of_birth_raw": "06/01/2001"
   },
   {
     "name": "JASMINE KAUR MAKKAR",
@@ -248,7 +292,9 @@
     "phone_mobile": "8360527183",
     "phone_source": "GNDEC Telephone Directory",
     "phone_office": "ext 4531",
-    "image_url": "https://gndec.ac.in/images/IMG-20220324-WA0008.jpg"
+    "image_url": "https://gndec.ac.in/images/IMG-20220324-WA0008.jpg",
+    "date_of_birth": "1998-07-17",
+    "date_of_birth_raw": "17/07/1998"
   },
   {
     "name": "KARAN BHALLA",
@@ -261,7 +307,9 @@
     "phone_mobile": "8146955800",
     "phone_source": "GNDEC Telephone Directory",
     "phone_office": "ext 4531",
-    "image_url": "https://gndec.ac.in/images/karanbhalla.jpg"
+    "image_url": "https://gndec.ac.in/images/karanbhalla.jpg",
+    "date_of_birth": "1988-06-17",
+    "date_of_birth_raw": "17-06-1988"
   },
   {
     "name": "KOMALPREET KAUR",
@@ -273,7 +321,9 @@
     "profile_url": "https://gndec.ac.in/faculty/?id=509",
     "phone_mobile": "7814242450",
     "phone_source": "User-provided faculty contact list (2026-10-19)",
-    "image_url": "https://gndec.ac.in/images/WhatsApp%20Image%202026-09-22%20at%209.22.37%20AM.jpeg"
+    "image_url": "https://gndec.ac.in/images/WhatsApp%20Image%202026-09-22%20at%209.22.37%20AM.jpeg",
+    "date_of_birth": "2002-02-03",
+    "date_of_birth_raw": "03/02/2002"
   },
   {
     "name": "MANDEEP KAUR",
@@ -285,7 +335,9 @@
     "profile_url": "https://gndec.ac.in/faculty/?id=319",
     "phone_mobile": "9988015346",
     "phone_source": "User-provided faculty contact list (2026-10-19)",
-    "image_url": "https://gndec.ac.in/images/mandeep%20photo.jpg"
+    "image_url": "https://gndec.ac.in/images/mandeep%20photo.jpg",
+    "date_of_birth": "1988-03-21",
+    "date_of_birth_raw": "21/03/1988"
   },
   {
     "name": "MANJOT KAUR",
@@ -298,7 +350,9 @@
     "phone_mobile": "8847055224",
     "phone_source": "GNDEC Telephone Directory",
     "phone_office": "ext 4531",
-    "image_url": "https://gndec.ac.in/images/IMG-20230704-WA0013.jpg"
+    "image_url": "https://gndec.ac.in/images/IMG-20230704-WA0013.jpg",
+    "date_of_birth": "1999-09-21",
+    "date_of_birth_raw": "21.09.1999"
   },
   {
     "name": "NEERAJ KUMAR",
@@ -311,7 +365,9 @@
     "phone_mobile": "6283447889",
     "phone_source": "GNDEC Telephone Directory",
     "phone_office": "ext 4531",
-    "image_url": "https://gndec.ac.in/images/jkkj.jpg.jpeg"
+    "image_url": "https://gndec.ac.in/images/jkkj.jpg.jpeg",
+    "date_of_birth": "1999-11-30",
+    "date_of_birth_raw": "30/11/1999"
   },
   {
     "name": "NISHA MASSON",
@@ -324,7 +380,9 @@
     "phone_mobile": "8360624692",
     "phone_source": "User-provided faculty contact list (2026-10-19)",
     "phone_office": "ext 4531",
-    "image_url": "https://gndec.ac.in/images/IMG_20230220_111724.jpg"
+    "image_url": "https://gndec.ac.in/images/IMG_20230220_111724.jpg",
+    "date_of_birth": "1993-06-06",
+    "date_of_birth_raw": "6/6/1993"
   },
   {
     "name": "PARAMJIT KAUR",
@@ -336,7 +394,9 @@
     "profile_url": "https://gndec.ac.in/faculty/?id=508",
     "phone_mobile": "6239718672",
     "phone_source": "User-provided faculty contact list (2026-10-19)",
-    "image_url": "https://gndec.ac.in/images/IMG_3372.jpeg"
+    "image_url": "https://gndec.ac.in/images/IMG_3372.jpeg",
+    "date_of_birth": "1997-09-25",
+    "date_of_birth_raw": "25 September 1997"
   },
   {
     "name": "PARNEET KAUR",
@@ -348,7 +408,9 @@
     "profile_url": "https://gndec.ac.in/faculty/?id=473",
     "phone_mobile": "7347359006",
     "phone_source": "User-provided faculty contact list (2026-10-19)",
-    "image_url": "https://gndec.ac.in/images/WhatsApp%20Image%202026-01-03%20at%209.38.18%20PM.jpeg"
+    "image_url": "https://gndec.ac.in/images/WhatsApp%20Image%202026-01-03%20at%209.38.18%20PM.jpeg",
+    "date_of_birth": "1996-10-15",
+    "date_of_birth_raw": "15/10/1996"
   },
   {
     "name": "PRAGYA GOYAL",
@@ -361,7 +423,12 @@
     "also_published_as": [
       "PF. PRAGYA"
     ],
-    "image_url": "https://gndec.ac.in/images/pragya.jpg"
+    "image_url": "https://gndec.ac.in/images/pragya.jpg",
+    "phone_mobile": "9357655111",
+    "phone_source": "GNDEC Telephone Directory",
+    "phone_office": "ext 4531",
+    "date_of_birth": "1980-01-06",
+    "date_of_birth_raw": "06/01/1980"
   },
   {
     "name": "SAHIL",
@@ -371,7 +438,9 @@
     "department": "Applied Science",
     "dept_id": 1,
     "profile_url": "https://gndec.ac.in/faculty/?id=510",
-    "image_url": "https://gndec.ac.in/images/Sahil5901.jpg"
+    "image_url": "https://gndec.ac.in/images/Sahil5901.jpg",
+    "date_of_birth": "2001-09-05",
+    "date_of_birth_raw": "05/09/2001"
   },
   {
     "name": "SANJAM KAUR SIDHU",
@@ -381,7 +450,11 @@
     "department": "Applied Science",
     "dept_id": 1,
     "profile_url": "https://gndec.ac.in/faculty/?id=470",
-    "image_url": "https://gndec.ac.in/images/IMG_9104.JPG"
+    "image_url": "https://gndec.ac.in/images/IMG_9104.JPG",
+    "date_of_birth": "2000-07-13",
+    "date_of_birth_raw": "13 JULY 2000",
+    "phone_mobile": "8264711515",
+    "phone_source": "User-provided"
   },
   {
     "name": "SHREYA",
@@ -391,7 +464,9 @@
     "department": "Applied Science",
     "dept_id": 1,
     "profile_url": "https://gndec.ac.in/faculty/?id=467",
-    "image_url": "https://gndec.ac.in/images/Snapchat-705250158.jpg"
+    "image_url": "https://gndec.ac.in/images/Snapchat-705250158.jpg",
+    "date_of_birth": "2002-02-09",
+    "date_of_birth_raw": "09/02/2002"
   },
   {
     "name": "SUKHMINDER SINGH",
@@ -404,7 +479,9 @@
     "phone_mobile": "9417154930",
     "phone_source": "GNDEC Telephone Directory",
     "phone_office": "ext 4531",
-    "image_url": "https://gndec.ac.in/images/WhatsApp%20Image%202025-06-06%20at%2009.38.18_82ddcd68.jpg"
+    "image_url": "https://gndec.ac.in/images/WhatsApp%20Image%202025-06-06%20at%2009.38.18_82ddcd68.jpg",
+    "date_of_birth": "1984-04-15",
+    "date_of_birth_raw": "15/04/1984"
   },
   {
     "name": "SUMANPREET KAUR",
@@ -414,7 +491,11 @@
     "department": "Applied Science",
     "dept_id": 1,
     "profile_url": "https://gndec.ac.in/faculty/?id=466",
-    "image_url": "https://gndec.ac.in/images/Suman10432%20gndec.jpg"
+    "image_url": "https://gndec.ac.in/images/Suman10432%20gndec.jpg",
+    "date_of_birth": "2004-10-18",
+    "date_of_birth_raw": "18/10/2004",
+    "phone_mobile": "8360468366",
+    "phone_source": "User-provided"
   },
   {
     "name": "SUNIL KUMAR",
@@ -424,7 +505,9 @@
     "department": "Applied Science",
     "dept_id": 1,
     "profile_url": "https://gndec.ac.in/faculty/?id=471",
-    "image_url": "https://gndec.ac.in/images/WhatsApp%20Image%202026-06-09%20at%209.53.43%20AM.jpeg"
+    "image_url": "https://gndec.ac.in/images/WhatsApp%20Image%202026-06-09%20at%209.53.43%20AM.jpeg",
+    "date_of_birth": "1999-05-15",
+    "date_of_birth_raw": "15/05/1999"
   },
   {
     "name": "UPKARJEET KAUR",
@@ -438,7 +521,9 @@
       "MS. UPKARJIT KAUR",
       "PF. UPKARJIT KAUR"
     ],
-    "image_url": "https://gndec.ac.in/images/Upk%2003.png"
+    "image_url": "https://gndec.ac.in/images/Upk%2003.png",
+    "date_of_birth": "1994-08-03",
+    "date_of_birth_raw": "August 3,1994"
   },
   {
     "name": "KIRAN KUMARI",
@@ -451,7 +536,9 @@
     "also_published_as": [
       "PF. KIRAN"
     ],
-    "image_url": "https://gndec.ac.in/images/IMG_20261001_170330.jpg"
+    "image_url": "https://gndec.ac.in/images/IMG_20261001_170330.jpg",
+    "date_of_birth": "2004-01-06",
+    "date_of_birth_raw": "06-01-2004"
   },
   {
     "name": "MANPREET KAUR",
@@ -463,7 +550,9 @@
     "profile_url": "https://gndec.ac.in/faculty/?id=472",
     "phone_mobile": "9878587778",
     "phone_source": "User-provided faculty contact list (2026-10-19)",
-    "image_url": "https://gndec.ac.in/images/WhatsApp%20Image%202026-10-06%20at%203.03.40%20PM.jpeg"
+    "image_url": "https://gndec.ac.in/images/WhatsApp%20Image%202026-10-06%20at%203.03.40%20PM.jpeg",
+    "date_of_birth": "1983-08-07",
+    "date_of_birth_raw": "August 7, 1983"
   },
   {
     "name": "DR, JASBIR SINGH SAINI",
@@ -477,7 +566,9 @@
     "phone_mobile": "98767-00810",
     "admin_roles": "HOD - Computer Applications; Head of Department, Computer Applications",
     "phone_source": "Information Brochure 2026, Statutory Committees (conflicts with IB26)",
-    "image_url": "https://gndec.ac.in/images/jss.jpeg"
+    "image_url": "https://gndec.ac.in/images/jss.jpeg",
+    "date_of_birth": "1974-05-20",
+    "date_of_birth_raw": "20/05/1974"
   },
   {
     "name": "DR. JAGDEEP SINGH",
@@ -491,7 +582,9 @@
     "phone_mobile": "",
     "admin_roles": "Industrial Relation Cell",
     "phone_source": "Information Brochure 2026",
-    "image_url": "https://gndec.ac.in/images/IMG_1971.JPG"
+    "image_url": "https://gndec.ac.in/images/IMG_1971.JPG",
+    "date_of_birth": "1989-06-01",
+    "date_of_birth_raw": "01/06/1989"
   },
   {
     "name": "DR. SATINDERPAL SINGH",
@@ -501,7 +594,9 @@
     "department": "Computer Center",
     "dept_id": 2,
     "profile_url": "https://gndec.ac.in/faculty/?id=229",
-    "image_url": "https://gndec.ac.in/images/satinderpal_singh.jpeg"
+    "image_url": "https://gndec.ac.in/images/satinderpal_singh.jpeg",
+    "date_of_birth": "1991-07-06",
+    "date_of_birth_raw": "06/07/1991"
   },
   {
     "name": "AMANDEEP SINGH BHATHAL",
@@ -511,7 +606,9 @@
     "department": "Computer Center",
     "dept_id": 2,
     "profile_url": "https://gndec.ac.in/faculty/?id=54",
-    "image_url": "https://gndec.ac.in/sites/default/files/amandeep.jpg"
+    "image_url": "https://gndec.ac.in/sites/default/files/amandeep.jpg",
+    "date_of_birth": "1979-09-07",
+    "date_of_birth_raw": "07/09/1979"
   },
   {
     "name": "GURMUKH SINGH KHURAL",
@@ -521,7 +618,9 @@
     "department": "Computer Center",
     "dept_id": 2,
     "profile_url": "https://gndec.ac.in/faculty/?id=103",
-    "image_url": "https://gndec.ac.in/images/gurmukh.jpg"
+    "image_url": "https://gndec.ac.in/images/gurmukh.jpg",
+    "date_of_birth": "1964-02-09",
+    "date_of_birth_raw": "09/02/1964"
   },
   {
     "name": "HARBHAG SINGH",
@@ -545,7 +644,9 @@
     "phone_mobile": "98153-23023",
     "admin_roles": "Controller of Examinations",
     "phone_source": "Information Brochure 2026",
-    "image_url": "https://gndec.ac.in/images/jasman.jpg"
+    "image_url": "https://gndec.ac.in/images/jasman.jpg",
+    "date_of_birth": "1969-05-23",
+    "date_of_birth_raw": "23/05/1969"
   },
   {
     "name": "NAVPREET SINGH DHILLON",
@@ -555,7 +656,9 @@
     "department": "Workshops",
     "dept_id": 3,
     "profile_url": "https://gndec.ac.in/faculty/?id=16",
-    "image_url": ""
+    "image_url": "",
+    "date_of_birth": "1976-06-27",
+    "date_of_birth_raw": "27/06/1976"
   },
   {
     "name": "AMRITPAL SINGH",
@@ -568,7 +671,9 @@
     "also_published_as": [
       "PF. AMRITPAL SINGH"
     ],
-    "image_url": "https://gndec.ac.in/images/amritpal.jpg"
+    "image_url": "https://gndec.ac.in/images/amritpal.jpg",
+    "date_of_birth": "1975-07-20",
+    "date_of_birth_raw": "20/07/1975"
   },
   {
     "name": "BALWANT RAJ",
@@ -578,7 +683,9 @@
     "department": "Workshops",
     "dept_id": 3,
     "profile_url": "https://gndec.ac.in/faculty/?id=93",
-    "image_url": "https://gndec.ac.in/images/balwant.jpg"
+    "image_url": "https://gndec.ac.in/images/balwant.jpg",
+    "date_of_birth": "1969-03-30",
+    "date_of_birth_raw": "30/03/1969"
   },
   {
     "name": "CHARANJIT SINGH",
@@ -588,7 +695,9 @@
     "department": "Workshops",
     "dept_id": 3,
     "profile_url": "https://gndec.ac.in/faculty/?id=89",
-    "image_url": "https://gndec.ac.in/images/cshara.jpg"
+    "image_url": "https://gndec.ac.in/images/cshara.jpg",
+    "date_of_birth": "1963-11-20",
+    "date_of_birth_raw": "20/11/1963"
   },
   {
     "name": "GURMEET SINGH",
@@ -598,7 +707,9 @@
     "department": "Workshops",
     "dept_id": 3,
     "profile_url": "https://gndec.ac.in/faculty/?id=88",
-    "image_url": "https://gndec.ac.in/images/gurmeet.jpg"
+    "image_url": "https://gndec.ac.in/images/gurmeet.jpg",
+    "date_of_birth": "1966-04-01",
+    "date_of_birth_raw": "01/04/1966"
   },
   {
     "name": "HAKAM SINGH",
@@ -608,7 +719,9 @@
     "department": "Workshops",
     "dept_id": 3,
     "profile_url": "https://gndec.ac.in/faculty/?id=85",
-    "image_url": "https://gndec.ac.in/images/hakam.jpg"
+    "image_url": "https://gndec.ac.in/images/hakam.jpg",
+    "date_of_birth": "1966-02-18",
+    "date_of_birth_raw": "18/02/1966"
   },
   {
     "name": "JASBIR SINGH",
@@ -618,7 +731,9 @@
     "department": "Workshops",
     "dept_id": 3,
     "profile_url": "https://gndec.ac.in/faculty/?id=83",
-    "image_url": "https://gndec.ac.in/images/jasbir.jpg"
+    "image_url": "https://gndec.ac.in/images/jasbir.jpg",
+    "date_of_birth": "1966-06-01",
+    "date_of_birth_raw": "01/06/1966"
   },
   {
     "name": "JASGUR SINGH",
@@ -628,7 +743,9 @@
     "department": "Workshops",
     "dept_id": 3,
     "profile_url": "https://gndec.ac.in/faculty/?id=86",
-    "image_url": "https://gndec.ac.in/images/jasgur.jpg"
+    "image_url": "https://gndec.ac.in/images/jasgur.jpg",
+    "date_of_birth": "1969-06-01",
+    "date_of_birth_raw": "01/06/1969"
   },
   {
     "name": "RAJINDER SINGH",
@@ -638,7 +755,9 @@
     "department": "Workshops",
     "dept_id": 3,
     "profile_url": "https://gndec.ac.in/faculty/?id=94",
-    "image_url": "https://gndec.ac.in/images/rajind.jpg"
+    "image_url": "https://gndec.ac.in/images/rajind.jpg",
+    "date_of_birth": "1960-10-15",
+    "date_of_birth_raw": "15/10/1960"
   },
   {
     "name": "RAM PARTAP SINGH",
@@ -648,7 +767,9 @@
     "department": "Workshops",
     "dept_id": 3,
     "profile_url": "https://gndec.ac.in/faculty/?id=84",
-    "image_url": "https://gndec.ac.in/images/rampar.jpg"
+    "image_url": "https://gndec.ac.in/images/rampar.jpg",
+    "date_of_birth": "1966-02-26",
+    "date_of_birth_raw": "26/02/1966"
   },
   {
     "name": "SUKHPAL SINGH",
@@ -658,7 +779,9 @@
     "department": "Workshops",
     "dept_id": 3,
     "profile_url": "https://gndec.ac.in/faculty/?id=90",
-    "image_url": "https://gndec.ac.in/images/sukhpal.jpg"
+    "image_url": "https://gndec.ac.in/images/sukhpal.jpg",
+    "date_of_birth": "1972-09-07",
+    "date_of_birth_raw": "07/09/1972"
   },
   {
     "name": "VARINDER SINGH",
@@ -668,7 +791,9 @@
     "department": "Workshops",
     "dept_id": 3,
     "profile_url": "https://gndec.ac.in/faculty/?id=92",
-    "image_url": "https://gndec.ac.in/images/varinder.jpg"
+    "image_url": "https://gndec.ac.in/images/varinder.jpg",
+    "date_of_birth": "1960-05-31",
+    "date_of_birth_raw": "31/05/1960"
   },
   {
     "name": "DR. GUNJAN BHARDWAJ",
@@ -678,7 +803,9 @@
     "department": "Sports",
     "dept_id": 4,
     "profile_url": "https://gndec.ac.in/faculty/?id=33",
-    "image_url": "https://gndec.ac.in/images/gunjan.jpg"
+    "image_url": "https://gndec.ac.in/images/gunjan.jpg",
+    "date_of_birth": "1976-05-02",
+    "date_of_birth_raw": "02/05/1976"
   },
   {
     "name": "SUMINDER SINGH",
@@ -688,7 +815,9 @@
     "department": "Sports",
     "dept_id": 4,
     "profile_url": "https://gndec.ac.in/faculty/?id=255",
-    "image_url": "https://gndec.ac.in/images/suminder%20singh.jpg"
+    "image_url": "https://gndec.ac.in/images/suminder%20singh.jpg",
+    "date_of_birth": "1982-02-15",
+    "date_of_birth_raw": "15/02/1982"
   },
   {
     "name": "JAGBIR SINGH",
@@ -702,7 +831,9 @@
     "phone_mobile": "92164-08335",
     "admin_roles": "HOD - Civil Engineering",
     "phone_source": "Information Brochure 2026",
-    "image_url": "https://gndec.ac.in/images/Photograph.png"
+    "image_url": "https://gndec.ac.in/images/Photograph.png",
+    "date_of_birth": "1969-01-26",
+    "date_of_birth_raw": "26/01/1969"
   },
   {
     "name": "GURDEEPAK SINGH",
@@ -714,7 +845,10 @@
     "profile_url": "https://gndec.ac.in/faculty/?id=69",
     "phone_office": "ext 4737",
     "phone_source": "GNDEC Telephone Directory",
-    "image_url": "https://gndec.ac.in/images/file_00000000fb0c720ba19b7ded92d7d9e4.png"
+    "image_url": "https://gndec.ac.in/images/file_00000000fb0c720ba19b7ded92d7d9e4.png",
+    "phone_mobile": "9855965901",
+    "date_of_birth": "1973-03-28",
+    "date_of_birth_raw": "28/03/1973"
   },
   {
     "name": "HARDEEP SINGH RAI",
@@ -726,7 +860,10 @@
     "profile_url": "https://gndec.ac.in/faculty/?id=268",
     "phone_office": "ext 4540",
     "phone_source": "GNDEC Telephone Directory",
-    "image_url": "https://gndec.ac.in/images/hsraiPP.jpg"
+    "image_url": "https://gndec.ac.in/images/hsraiPP.jpg",
+    "phone_mobile": "9855225007",
+    "date_of_birth": "1965-11-10",
+    "date_of_birth_raw": "10/11/1965"
   },
   {
     "name": "HARVINDER SINGH",
@@ -738,7 +875,10 @@
     "profile_url": "https://gndec.ac.in/faculty/?id=23",
     "phone_office": "ext 4508",
     "phone_source": "GNDEC Telephone Directory",
-    "image_url": "https://gndec.ac.in/images/HVS_1_photo.jpg"
+    "image_url": "https://gndec.ac.in/images/HVS_1_photo.jpg",
+    "phone_mobile": "9914800906",
+    "date_of_birth": "1978-01-27",
+    "date_of_birth_raw": "27/01/1978"
   },
   {
     "name": "PRASHANT GARG",
@@ -750,7 +890,10 @@
     "profile_url": "https://gndec.ac.in/faculty/?id=13",
     "phone_office": "ext 4741",
     "phone_source": "GNDEC Telephone Directory",
-    "image_url": "https://gndec.ac.in/images/WhatsApp%20Image%202026-03-18%20at%203.45.57%20PM.jpeg"
+    "image_url": "https://gndec.ac.in/images/WhatsApp%20Image%202026-03-18%20at%203.45.57%20PM.jpeg",
+    "phone_mobile": "9914313435",
+    "date_of_birth": "1970-06-28",
+    "date_of_birth_raw": "28/06/1970"
   },
   {
     "name": "PUNEET PAL SINGH CHEEMA",
@@ -764,7 +907,9 @@
     "phone_mobile": "97818-16320",
     "admin_roles": "Officer I/C M.Tech - Civil Engg.",
     "phone_source": "Information Brochure 2026",
-    "image_url": "https://gndec.ac.in/images/IMG_0701%20%281%29.jpg"
+    "image_url": "https://gndec.ac.in/images/IMG_0701%20%281%29.jpg",
+    "date_of_birth": "1980-02-08",
+    "date_of_birth_raw": "08/02/1980"
   },
   {
     "name": "AMANDEEP SINGH",
@@ -776,7 +921,10 @@
     "profile_url": "https://gndec.ac.in/faculty/?id=266",
     "phone_office": "ext 4537",
     "phone_source": "GNDEC Telephone Directory",
-    "image_url": "https://gndec.ac.in/images/aman%20pic.jpg"
+    "image_url": "https://gndec.ac.in/images/aman%20pic.jpg",
+    "phone_mobile": "9417398110",
+    "date_of_birth": "1989-01-31",
+    "date_of_birth_raw": "31/01/1989"
   },
   {
     "name": "AS SIDHU",
@@ -788,7 +936,9 @@
     "profile_url": "https://gndec.ac.in/faculty/?id=418",
     "phone_office": "ext 4537",
     "phone_source": "GNDEC Telephone Directory",
-    "image_url": "https://gndec.ac.in/images/IMG_20250529_102537.jpg"
+    "image_url": "https://gndec.ac.in/images/IMG_20250529_102537.jpg",
+    "date_of_birth": "1996-12-05",
+    "date_of_birth_raw": "05-12-1996"
   },
   {
     "name": "AVNEET KAUR SEKHON",
@@ -803,7 +953,9 @@
     ],
     "phone_office": "ext 4537",
     "phone_source": "GNDEC Telephone Directory",
-    "image_url": "https://gndec.ac.in/images/IMG_4235.jpg"
+    "image_url": "https://gndec.ac.in/images/IMG_4235.jpg",
+    "date_of_birth": "1994-10-23",
+    "date_of_birth_raw": "23/10/1994"
   },
   {
     "name": "BALIHAR SINGH",
@@ -815,7 +967,9 @@
     "profile_url": "https://gndec.ac.in/faculty/?id=348",
     "phone_mobile": "9872323794",
     "phone_source": "GNDEC permanent section list 2026",
-    "image_url": "https://gndec.ac.in/images/IMG_4244.jpg"
+    "image_url": "https://gndec.ac.in/images/IMG_4244.jpg",
+    "date_of_birth": "1994-07-10",
+    "date_of_birth_raw": "10 July, 1994"
   },
   {
     "name": "CHARNJEET SINGH",
@@ -827,7 +981,10 @@
     "profile_url": "https://gndec.ac.in/faculty/?id=122",
     "phone_office": "ext 4732",
     "phone_source": "GNDEC Telephone Directory",
-    "image_url": "https://gndec.ac.in/images/CJS_Profile_Pic_GNE.jpg"
+    "image_url": "https://gndec.ac.in/images/CJS_Profile_Pic_GNE.jpg",
+    "phone_mobile": "9465196630",
+    "date_of_birth": "1989-09-23",
+    "date_of_birth_raw": "23/09/1989"
   },
   {
     "name": "HEENA MALHOTRA",
@@ -839,7 +996,9 @@
     "profile_url": "https://gndec.ac.in/faculty/?id=289",
     "phone_office": "ext 4537",
     "phone_source": "GNDEC Telephone Directory",
-    "image_url": "https://gndec.ac.in/images/8B774E6F-A9E8-4635-B484-AE35FBD11D66.jpeg"
+    "image_url": "https://gndec.ac.in/images/8B774E6F-A9E8-4635-B484-AE35FBD11D66.jpeg",
+    "date_of_birth": "1991-01-01",
+    "date_of_birth_raw": "01/01/1991"
   },
   {
     "name": "JASHANDEEP SINGH",
@@ -851,7 +1010,9 @@
     "profile_url": "https://gndec.ac.in/faculty/?id=417",
     "phone_office": "ext 4537",
     "phone_source": "GNDEC Telephone Directory",
-    "image_url": "https://gndec.ac.in/images/IMG_4213%20%281%29.jpg"
+    "image_url": "https://gndec.ac.in/images/IMG_4213%20%281%29.jpg",
+    "date_of_birth": "1996-08-07",
+    "date_of_birth_raw": "07/08/1996"
   },
   {
     "name": "MANDEEP KAUR",
@@ -863,7 +1024,9 @@
     "profile_url": "https://gndec.ac.in/faculty/?id=249",
     "phone_office": "ext 4537",
     "phone_source": "GNDEC Telephone Directory",
-    "image_url": "https://gndec.ac.in/images/IMG_4241.jpg"
+    "image_url": "https://gndec.ac.in/images/IMG_4241.jpg",
+    "date_of_birth": "1991-06-28",
+    "date_of_birth_raw": "28/06/1991"
   },
   {
     "name": "MANVINDER KINGRA",
@@ -875,7 +1038,9 @@
     "profile_url": "https://gndec.ac.in/faculty/?id=247",
     "phone_office": "ext 4537",
     "phone_source": "GNDEC Telephone Directory",
-    "image_url": "https://gndec.ac.in/images/AM1706..jpg"
+    "image_url": "https://gndec.ac.in/images/AM1706..jpg",
+    "date_of_birth": "1993-04-19",
+    "date_of_birth_raw": "19/04/1993"
   },
   {
     "name": "PARDEEP SINGH JOIA",
@@ -887,7 +1052,10 @@
     "profile_url": "https://gndec.ac.in/faculty/?id=241",
     "phone_office": "ext 4537",
     "phone_source": "GNDEC Telephone Directory",
-    "image_url": "https://gndec.ac.in/images/IMG_3879.jpeg"
+    "image_url": "https://gndec.ac.in/images/IMG_3879.jpeg",
+    "phone_mobile": "9779815920",
+    "date_of_birth": "1986-12-04",
+    "date_of_birth_raw": "4/12/1986"
   },
   {
     "name": "PRABHJOT SINGH",
@@ -902,7 +1070,9 @@
     ],
     "phone_mobile": "9988991633",
     "phone_source": "GNDEC permanent section list 2026",
-    "image_url": "https://gndec.ac.in/images/Latest%20Pic%28pannu%29.jpg"
+    "image_url": "https://gndec.ac.in/images/Latest%20Pic%28pannu%29.jpg",
+    "date_of_birth": "1989-03-07",
+    "date_of_birth_raw": "07/03/1989"
   },
   {
     "name": "PRITPAL KAUR",
@@ -912,7 +1082,11 @@
     "department": "Civil Engineering",
     "dept_id": 14,
     "profile_url": "https://gndec.ac.in/faculty/?id=129",
-    "image_url": "https://gndec.ac.in/images/IMG_20180307_142551.jpg"
+    "image_url": "https://gndec.ac.in/images/IMG_20180307_142551.jpg",
+    "phone_mobile": "8427706043",
+    "phone_source": "GNDEC Telephone Directory",
+    "date_of_birth": "1988-07-22",
+    "date_of_birth_raw": "22-7-1988"
   },
   {
     "name": "PUSHPINDER SINGH",
@@ -925,7 +1099,9 @@
     "phone_office": "ext 4537",
     "phone_source": "User-provided faculty contact list (2026-10-19)",
     "phone_mobile": "8146000426",
-    "image_url": "https://gndec.ac.in/images/IMG_4212.jpg"
+    "image_url": "https://gndec.ac.in/images/IMG_4212.jpg",
+    "date_of_birth": "1998-02-26",
+    "date_of_birth_raw": "26/02/1998"
   },
   {
     "name": "SANDEEP KAUR",
@@ -937,7 +1113,9 @@
     "profile_url": "https://gndec.ac.in/faculty/?id=291",
     "phone_office": "ext 4537",
     "phone_source": "GNDEC Telephone Directory",
-    "image_url": "https://gndec.ac.in/images/new%20doc%202018-07-09%2011.49.30-1.jpg"
+    "image_url": "https://gndec.ac.in/images/new%20doc%202018-07-09%2011.49.30-1.jpg",
+    "date_of_birth": "1991-07-06",
+    "date_of_birth_raw": "06/07/1991"
   },
   {
     "name": "SAVLEEN TAKKAR",
@@ -949,7 +1127,9 @@
     "profile_url": "https://gndec.ac.in/faculty/?id=349",
     "phone_mobile": "9988336072",
     "phone_source": "GNDEC permanent section list 2026",
-    "image_url": "https://gndec.ac.in/images/0356B163-1994-4CEB-AA62-436E0656A8D7.jpeg"
+    "image_url": "https://gndec.ac.in/images/0356B163-1994-4CEB-AA62-436E0656A8D7.jpeg",
+    "date_of_birth": "1993-05-06",
+    "date_of_birth_raw": "06/05/1993"
   },
   {
     "name": "SUKHWINDER SINGH",
@@ -961,7 +1141,10 @@
     "profile_url": "https://gndec.ac.in/faculty/?id=406",
     "phone_office": "ext 4537",
     "phone_source": "GNDEC Telephone Directory",
-    "image_url": "https://gndec.ac.in/images/WhatsApp%20Image%202023-10-06%20at%2012.08.50%20PM.jpeg"
+    "image_url": "https://gndec.ac.in/images/WhatsApp%20Image%202023-10-06%20at%2012.08.50%20PM.jpeg",
+    "phone_mobile": "9876510717",
+    "date_of_birth": "1987-02-02",
+    "date_of_birth_raw": "02/02/1987"
   },
   {
     "name": "SUKHWINDERPAL SINGH",
@@ -973,7 +1156,9 @@
     "profile_url": "https://gndec.ac.in/faculty/?id=248",
     "phone_office": "ext 4537",
     "phone_source": "GNDEC Telephone Directory",
-    "image_url": "https://gndec.ac.in/images/IMG_20260319_185414.jpg"
+    "image_url": "https://gndec.ac.in/images/IMG_20260319_185414.jpg",
+    "date_of_birth": "1992-01-27",
+    "date_of_birth_raw": "27/01/1992"
   },
   {
     "name": "VARINDER SINGH",
@@ -989,7 +1174,9 @@
     "phone_office": "ext 4537",
     "phone_source": "User-provided faculty contact list (2026-10-19)",
     "phone_mobile": "9872598214",
-    "image_url": "https://gndec.ac.in/images/IMG_4252.jpg"
+    "image_url": "https://gndec.ac.in/images/IMG_4252.jpg",
+    "date_of_birth": "1992-07-29",
+    "date_of_birth_raw": "29/07/1992"
   },
   {
     "name": "YUVRAJ SINGH",
@@ -1001,7 +1188,9 @@
     "profile_url": "https://gndec.ac.in/faculty/?id=244",
     "phone_mobile": "9815830889",
     "phone_source": "GNDEC permanent section list 2026",
-    "image_url": "https://gndec.ac.in/images/IMG_20260324_022833_903.jpg"
+    "image_url": "https://gndec.ac.in/images/IMG_20260324_022833_903.jpg",
+    "date_of_birth": "1991-04-23",
+    "date_of_birth_raw": "23/04/1991"
   },
   {
     "name": "DR. KIRAN JYOTI",
@@ -1015,7 +1204,9 @@
     "phone_mobile": "98722-24422",
     "admin_roles": "HOD - Computer Science & Engg.",
     "phone_source": "Information Brochure 2026",
-    "image_url": "https://gndec.ac.in/images/Kj-Pic%20Website.JPG"
+    "image_url": "https://gndec.ac.in/images/Kj-Pic%20Website.JPG",
+    "date_of_birth": "1977-08-14",
+    "date_of_birth_raw": "14-08-1977"
   },
   {
     "name": "DR. PARMINDER SINGH",
@@ -1027,7 +1218,10 @@
     "profile_url": "https://gndec.ac.in/faculty/?id=4",
     "phone_office": "ext 4550",
     "phone_source": "GNDEC Telephone Directory",
-    "image_url": "https://gndec.ac.in/images/Parminder%20Singh.jpg"
+    "image_url": "https://gndec.ac.in/images/Parminder%20Singh.jpg",
+    "phone_mobile": "9855576176",
+    "date_of_birth": "1978-07-12",
+    "date_of_birth_raw": "12/07/1978"
   },
   {
     "name": "AMANPREET SINGH BRAR",
@@ -1039,7 +1233,10 @@
     "profile_url": "https://gndec.ac.in/faculty/?id=50",
     "phone_office": "ext 4551",
     "phone_source": "GNDEC Telephone Directory",
-    "image_url": "https://gndec.ac.in/images/brar.jpg"
+    "image_url": "https://gndec.ac.in/images/brar.jpg",
+    "phone_mobile": "9814282749",
+    "date_of_birth": "1974-02-28",
+    "date_of_birth_raw": "28/2/74"
   },
   {
     "name": "DR. JASBIR SINGH SAINI",
@@ -1053,7 +1250,9 @@
     "phone_mobile": "98767-00810",
     "admin_roles": "HOD - Computer Applications; Head of Department, Computer Applications",
     "phone_source": "Information Brochure 2026, Statutory Committees (conflicts with IB26)",
-    "image_url": "https://gndec.ac.in/images/jss.jpeg"
+    "image_url": "https://gndec.ac.in/images/jss.jpeg",
+    "date_of_birth": "1974-05-20",
+    "date_of_birth_raw": "20-05-1974"
   },
   {
     "name": "DR. VIVEK THAPAR",
@@ -1065,7 +1264,9 @@
     "profile_url": "https://gndec.ac.in/faculty/?id=11",
     "phone_office": "ext 4551",
     "phone_source": "GNDEC Telephone Directory",
-    "image_url": "https://gndec.ac.in/images/vivek.jpg"
+    "image_url": "https://gndec.ac.in/images/vivek.jpg",
+    "date_of_birth": "1979-03-11",
+    "date_of_birth_raw": "11/03/1979"
   },
   {
     "name": "ER. KHUSHI DHUNNA",
@@ -1077,7 +1278,9 @@
     "profile_url": "https://gndec.ac.in/faculty/?id=445",
     "phone_mobile": "7973564254",
     "phone_source": "GNDEC permanent section list 2026",
-    "image_url": "https://gndec.ac.in/images/Screenshot%202025-04-20%20at%203.15.55%20PM.png"
+    "image_url": "https://gndec.ac.in/images/Screenshot%202025-04-20%20at%203.15.55%20PM.png",
+    "date_of_birth": "1998-11-24",
+    "date_of_birth_raw": "24/11/1998"
   },
   {
     "name": "DR. AMANDEEP KAUR SOHAL",
@@ -1091,7 +1294,9 @@
     "phone_mobile": "95011-99815",
     "admin_roles": "Officer I/C M.Tech - Computer Science & Engg.",
     "phone_source": "Information Brochure 2026",
-    "image_url": "https://gndec.ac.in/images/AKS.jpg.jpeg"
+    "image_url": "https://gndec.ac.in/images/AKS.jpg.jpeg",
+    "date_of_birth": "1978-03-23",
+    "date_of_birth_raw": "23/03/1978"
   },
   {
     "name": "DR. AMIT JAIN",
@@ -1103,7 +1308,9 @@
     "profile_url": "https://gndec.ac.in/faculty/?id=332",
     "phone_office": "ext 4551",
     "phone_source": "GNDEC Telephone Directory",
-    "image_url": "https://gndec.ac.in/images/PRE04261.JPG"
+    "image_url": "https://gndec.ac.in/images/PRE04261.JPG",
+    "date_of_birth": "1987-12-17",
+    "date_of_birth_raw": "17/12/1987"
   },
   {
     "name": "DR. DALJEET SINGH",
@@ -1118,7 +1325,9 @@
     ],
     "phone_office": "ext 4551",
     "phone_source": "GNDEC Telephone Directory",
-    "image_url": "https://gndec.ac.in/images/PHOTO.jpg"
+    "image_url": "https://gndec.ac.in/images/PHOTO.jpg",
+    "date_of_birth": "1985-11-27",
+    "date_of_birth_raw": "27/11/1985"
   },
   {
     "name": "DR. DIANA NAGPAL",
@@ -1130,7 +1339,10 @@
     "profile_url": "https://gndec.ac.in/faculty/?id=131",
     "phone_office": "ext 4551",
     "phone_source": "GNDEC Telephone Directory",
-    "image_url": "https://gndec.ac.in/images/photo.png"
+    "image_url": "https://gndec.ac.in/images/photo.png",
+    "phone_mobile": "9888893018",
+    "date_of_birth": "1988-09-25",
+    "date_of_birth_raw": "25/09/1988"
   },
   {
     "name": "DR. HARDEEP SINGH KANG",
@@ -1142,7 +1354,10 @@
     "profile_url": "https://gndec.ac.in/faculty/?id=160",
     "phone_office": "ext 4551",
     "phone_source": "GNDEC Telephone Directory",
-    "image_url": "https://gndec.ac.in/images/Hardeep%20singh.jpg"
+    "image_url": "https://gndec.ac.in/images/Hardeep%20singh.jpg",
+    "phone_mobile": "9781404142",
+    "date_of_birth": "1984-11-12",
+    "date_of_birth_raw": "12/11/1984"
   },
   {
     "name": "DR. INDERJIT SINGH DHANOA",
@@ -1157,7 +1372,10 @@
     ],
     "phone_office": "ext 4551",
     "phone_source": "GNDEC Telephone Directory",
-    "image_url": "https://gndec.ac.in/images/InderjitDhanoaCSE.jpg"
+    "image_url": "https://gndec.ac.in/images/InderjitDhanoaCSE.jpg",
+    "phone_mobile": "9855655244",
+    "date_of_birth": "1980-10-26",
+    "date_of_birth_raw": "26/10/1980"
   },
   {
     "name": "DR. KAMALDEEP KAUR",
@@ -1169,7 +1387,10 @@
     "profile_url": "https://gndec.ac.in/faculty/?id=143",
     "phone_office": "ext 4551",
     "phone_source": "GNDEC Telephone Directory",
-    "image_url": "https://gndec.ac.in/images/passport%20pic.jpg"
+    "image_url": "https://gndec.ac.in/images/passport%20pic.jpg",
+    "phone_mobile": "9815452427",
+    "date_of_birth": "1986-05-20",
+    "date_of_birth_raw": "20/05/1986"
   },
   {
     "name": "DR. KAPIL SHARMA",
@@ -1181,7 +1402,9 @@
     "profile_url": "https://gndec.ac.in/faculty/?id=209",
     "phone_office": "ext 4551",
     "phone_source": "GNDEC Telephone Directory",
-    "image_url": "https://gndec.ac.in/images/WhatsApp%20Image%202026-10-02%20at%203.37.22%20PM.jpeg"
+    "image_url": "https://gndec.ac.in/images/WhatsApp%20Image%202026-10-02%20at%203.37.22%20PM.jpeg",
+    "date_of_birth": "1986-11-20",
+    "date_of_birth_raw": "20/11/1986"
   },
   {
     "name": "DR. LOVEJIT SINGH",
@@ -1197,7 +1420,9 @@
     ],
     "phone_mobile": "9317473000",
     "phone_source": "GNDEC permanent section list 2026",
-    "image_url": "https://gndec.ac.in/images/Lovejit_25_Aug.jpeg"
+    "image_url": "https://gndec.ac.in/images/Lovejit_25_Aug.jpeg",
+    "date_of_birth": "1989-09-30",
+    "date_of_birth_raw": "30/09/1989"
   },
   {
     "name": "DR. MANPREET KAUR MAND",
@@ -1209,7 +1434,10 @@
     "profile_url": "https://gndec.ac.in/faculty/?id=172",
     "phone_office": "ext 4551",
     "phone_source": "GNDEC Telephone Directory",
-    "image_url": "https://gndec.ac.in/images/photo_my.jpg"
+    "image_url": "https://gndec.ac.in/images/photo_my.jpg",
+    "phone_mobile": "9464368209",
+    "date_of_birth": "1986-01-01",
+    "date_of_birth_raw": "01/01/1986"
   },
   {
     "name": "DR. PRIYANKA ARORA",
@@ -1221,7 +1449,10 @@
     "profile_url": "https://gndec.ac.in/faculty/?id=120",
     "phone_office": "ext 4551",
     "phone_source": "GNDEC Telephone Directory",
-    "image_url": "https://gndec.ac.in/images/priyanka%20arora.jpg"
+    "image_url": "https://gndec.ac.in/images/priyanka%20arora.jpg",
+    "phone_mobile": "9888899029",
+    "date_of_birth": "1986-10-29",
+    "date_of_birth_raw": "29/10/86"
   },
   {
     "name": "DR. SATINDERPAL SINGH",
@@ -1233,7 +1464,9 @@
     "profile_url": "https://gndec.ac.in/faculty/?id=338",
     "phone_office": "ext 4551",
     "phone_source": "GNDEC Telephone Directory",
-    "image_url": "https://gndec.ac.in/images/satinderpal_singh.jpeg"
+    "image_url": "https://gndec.ac.in/images/satinderpal_singh.jpeg",
+    "date_of_birth": "1991-07-06",
+    "date_of_birth_raw": "06/07/1991"
   },
   {
     "name": "DR. SITA RANI",
@@ -1245,7 +1478,9 @@
     "profile_url": "https://gndec.ac.in/faculty/?id=383",
     "phone_mobile": "7508008004",
     "phone_source": "GNDEC permanent section list 2026",
-    "image_url": "https://gndec.ac.in/images/Dr.%20Sita%20Rani_Photo.jpg"
+    "image_url": "https://gndec.ac.in/images/Dr.%20Sita%20Rani_Photo.jpg",
+    "date_of_birth": "1980-07-08",
+    "date_of_birth_raw": "08/07/1980"
   },
   {
     "name": "ER. MANINDER KAUR",
@@ -1257,7 +1492,9 @@
     "profile_url": "https://gndec.ac.in/faculty/?id=447",
     "phone_office": "ext 4551",
     "phone_source": "GNDEC Telephone Directory",
-    "image_url": "https://gndec.ac.in/images/csefaculty.jpeg"
+    "image_url": "https://gndec.ac.in/images/csefaculty.jpeg",
+    "date_of_birth": "1988-12-08",
+    "date_of_birth_raw": "08/12/1988"
   },
   {
     "name": "ER. DIKSHA SHARMA",
@@ -1267,7 +1504,9 @@
     "department": "Computer Science & Engg.",
     "dept_id": 15,
     "profile_url": "https://gndec.ac.in/faculty/?id=501",
-    "image_url": "https://gndec.ac.in/images/IMG_0066.JPG.jpeg"
+    "image_url": "https://gndec.ac.in/images/IMG_0066.JPG.jpeg",
+    "date_of_birth": "2003-02-05",
+    "date_of_birth_raw": "05-02-2003"
   },
   {
     "name": "ER. GOLDENDEEP KAUR",
@@ -1279,7 +1518,9 @@
     "profile_url": "https://gndec.ac.in/faculty/?id=206",
     "phone_mobile": "8727063634",
     "phone_source": "GNDEC permanent section list 2026",
-    "image_url": "https://gndec.ac.in/images/2604.JPG"
+    "image_url": "https://gndec.ac.in/images/2604.JPG",
+    "date_of_birth": "1991-09-01",
+    "date_of_birth_raw": "01/09/1991"
   },
   {
     "name": "ER. JASDEEP KAUR JOIA",
@@ -1294,7 +1535,10 @@
     ],
     "phone_office": "ext 4551",
     "phone_source": "GNDEC Telephone Directory",
-    "image_url": "https://gndec.ac.in/images/IMG_4159.jpeg"
+    "image_url": "https://gndec.ac.in/images/IMG_4159.jpeg",
+    "phone_mobile": "9417263502",
+    "date_of_birth": "1986-12-22",
+    "date_of_birth_raw": "22/12/1986"
   },
   {
     "name": "ER. JASMINE KAUR",
@@ -1306,7 +1550,9 @@
     "profile_url": "https://gndec.ac.in/faculty/?id=76",
     "phone_mobile": "9988033488",
     "phone_source": "GNDEC permanent section list 2026",
-    "image_url": "https://gndec.ac.in/images/jasmine%20photo.JPG"
+    "image_url": "https://gndec.ac.in/images/jasmine%20photo.JPG",
+    "date_of_birth": "1988-06-07",
+    "date_of_birth_raw": "07/06/1988"
   },
   {
     "name": "ER. JASWANT SINGH",
@@ -1321,7 +1567,9 @@
     ],
     "phone_mobile": "9646863063",
     "phone_source": "GNDEC permanent section list 2026",
-    "image_url": "https://gndec.ac.in/images/735A903F-7460-4E9F-8115-B2670F02E4D9.png"
+    "image_url": "https://gndec.ac.in/images/735A903F-7460-4E9F-8115-B2670F02E4D9.png",
+    "date_of_birth": "1992-08-25",
+    "date_of_birth_raw": "25/08/1992"
   },
   {
     "name": "ER. KAJAL CHUGH",
@@ -1333,7 +1581,9 @@
     "profile_url": "https://gndec.ac.in/faculty/?id=507",
     "phone_mobile": "9876956479",
     "phone_source": "GNDEC permanent section list 2026",
-    "image_url": "https://gndec.ac.in/images/kajal.JPG"
+    "image_url": "https://gndec.ac.in/images/kajal.JPG",
+    "date_of_birth": "1999-10-30",
+    "date_of_birth_raw": "30/10/1999"
   },
   {
     "name": "ER. KAMALJEET KAUR",
@@ -1343,7 +1593,9 @@
     "department": "Computer Science & Engg.",
     "dept_id": 15,
     "profile_url": "https://gndec.ac.in/faculty/?id=425",
-    "image_url": "https://gndec.ac.in/images/IMG_20211212_202135_829.JPG"
+    "image_url": "https://gndec.ac.in/images/IMG_20211212_202135_829.JPG",
+    "date_of_birth": "1989-10-13",
+    "date_of_birth_raw": "13/10/1989"
   },
   {
     "name": "ER. KULJIT KAUR",
@@ -1356,7 +1608,9 @@
     "phone_office": "ext 4551",
     "phone_source": "User-provided faculty contact list (2026-10-19)",
     "phone_mobile": "9464318881",
-    "image_url": "https://gndec.ac.in/images/91855451-D4C8-4C06-8661-31B8A8632A0C.jpeg"
+    "image_url": "https://gndec.ac.in/images/91855451-D4C8-4C06-8661-31B8A8632A0C.jpeg",
+    "date_of_birth": "1992-08-30",
+    "date_of_birth_raw": "30/08/1992"
   },
   {
     "name": "ER. LAKHVIR KAUR GREWAL",
@@ -1371,7 +1625,9 @@
     ],
     "phone_office": "ext 4551",
     "phone_source": "GNDEC Telephone Directory",
-    "image_url": "https://gndec.ac.in/images/lucky%20pic.jpg"
+    "image_url": "https://gndec.ac.in/images/lucky%20pic.jpg",
+    "date_of_birth": "1991-11-16",
+    "date_of_birth_raw": "16 November,1991"
   },
   {
     "name": "ER. MANJOT KAUR GILL",
@@ -1383,7 +1639,10 @@
     "profile_url": "https://gndec.ac.in/faculty/?id=112",
     "phone_office": "ext 4551",
     "phone_source": "GNDEC Telephone Directory",
-    "image_url": "https://gndec.ac.in/images/CamScanner%2008-14-2020%2011.20.48_1.jpg"
+    "image_url": "https://gndec.ac.in/images/CamScanner%2008-14-2020%2011.20.48_1.jpg",
+    "phone_mobile": "9463058915",
+    "date_of_birth": "1984-09-05",
+    "date_of_birth_raw": "05/09/1984"
   },
   {
     "name": "ER. MEETALI",
@@ -1395,7 +1654,9 @@
     "profile_url": "https://gndec.ac.in/faculty/?id=382",
     "phone_mobile": "6283041751",
     "phone_source": "GNDEC permanent section list 2026",
-    "image_url": "https://gndec.ac.in/images/r.jpg"
+    "image_url": "https://gndec.ac.in/images/r.jpg",
+    "date_of_birth": "1995-06-17",
+    "date_of_birth_raw": "17/06/1995"
   },
   {
     "name": "ER. PALAK SOOD",
@@ -1405,7 +1666,9 @@
     "department": "Computer Science & Engg.",
     "dept_id": 15,
     "profile_url": "https://gndec.ac.in/faculty/?id=427",
-    "image_url": "https://gndec.ac.in/images/WhatsApp%20Image%202024-08-08%20at%2010.07.32%20AM.jpeg"
+    "image_url": "https://gndec.ac.in/images/WhatsApp%20Image%202024-08-08%20at%2010.07.32%20AM.jpeg",
+    "date_of_birth": "1993-01-30",
+    "date_of_birth_raw": "30/Jan/1993"
   },
   {
     "name": "ER. SHAILJA",
@@ -1417,7 +1680,10 @@
     "profile_url": "https://gndec.ac.in/faculty/?id=146",
     "phone_office": "ext 4551",
     "phone_source": "GNDEC Telephone Directory",
-    "image_url": "https://gndec.ac.in/images/IMG-20210211-WA0029.jpg"
+    "image_url": "https://gndec.ac.in/images/IMG-20210211-WA0029.jpg",
+    "phone_mobile": "9501421234",
+    "date_of_birth": "1984-02-15",
+    "date_of_birth_raw": "15/02/1984"
   },
   {
     "name": "ER.HARKOMAL PREET KAUR",
@@ -1429,7 +1695,9 @@
     "profile_url": "https://gndec.ac.in/faculty/?id=228",
     "phone_office": "ext 4551",
     "phone_source": "GNDEC Telephone Directory",
-    "image_url": "https://gndec.ac.in/images/CCF06012018.jpg"
+    "image_url": "https://gndec.ac.in/images/CCF06012018.jpg",
+    "date_of_birth": "1986-02-05",
+    "date_of_birth_raw": "05/02/1986"
   },
   {
     "name": "ER.HARMAN PREET KAUR",
@@ -1439,7 +1707,9 @@
     "department": "Computer Science & Engg.",
     "dept_id": 15,
     "profile_url": "https://gndec.ac.in/faculty/?id=500",
-    "image_url": "https://gndec.ac.in/images/Screenshot_20260825_142157_One%20UI%20Home.jpg"
+    "image_url": "https://gndec.ac.in/images/Screenshot_20260825_142157_One%20UI%20Home.jpg",
+    "date_of_birth": "2002-08-23",
+    "date_of_birth_raw": "23/08/2002"
   },
   {
     "name": "GAGNEET KAUR",
@@ -1456,7 +1726,9 @@
     "phone_mobile": "9614000313",
     "phone_source": "GNDEC Telephone Directory",
     "phone_office": "ext 4549",
-    "image_url": "https://gndec.ac.in/images/Gagneet.jpeg"
+    "image_url": "https://gndec.ac.in/images/Gagneet.jpeg",
+    "date_of_birth": "1993-07-21",
+    "date_of_birth_raw": "21-July-1993"
   },
   {
     "name": "HONEY RAWAT",
@@ -1466,7 +1738,9 @@
     "department": "Computer Science & Engg.",
     "dept_id": 15,
     "profile_url": "https://gndec.ac.in/faculty/?id=499",
-    "image_url": "https://gndec.ac.in/images/pss_photo.jpg"
+    "image_url": "https://gndec.ac.in/images/pss_photo.jpg",
+    "date_of_birth": "1990-11-10",
+    "date_of_birth_raw": "10/11/1990"
   },
   {
     "name": "JAGDEEP KAUR",
@@ -1478,7 +1752,9 @@
     "profile_url": "https://gndec.ac.in/faculty/?id=446",
     "phone_mobile": "9592007098",
     "phone_source": "GNDEC permanent section list 2026",
-    "image_url": "https://gndec.ac.in/images/pic1.jpeg"
+    "image_url": "https://gndec.ac.in/images/pic1.jpeg",
+    "date_of_birth": "1989-08-12",
+    "date_of_birth_raw": "12/08/1989"
   },
   {
     "name": "JASJIT KAUR",
@@ -1488,7 +1764,9 @@
     "department": "Computer Science & Engg.",
     "dept_id": 15,
     "profile_url": "https://gndec.ac.in/faculty/?id=505",
-    "image_url": "https://gndec.ac.in/images/image.png"
+    "image_url": "https://gndec.ac.in/images/image.png",
+    "date_of_birth": "2002-02-18",
+    "date_of_birth_raw": "18-02-2002"
   },
   {
     "name": "HARMINDER KAUR",
@@ -1504,7 +1782,9 @@
     "phone_mobile": "9914810097",
     "phone_source": "GNDEC Telephone Directory",
     "phone_office": "ext 4549",
-    "image_url": "https://gndec.ac.in/images/picc.jpg.jpeg"
+    "image_url": "https://gndec.ac.in/images/picc.jpg.jpeg",
+    "date_of_birth": "1991-05-25",
+    "date_of_birth_raw": "25/05/1991"
   },
   {
     "name": "KANWARDEEP SINGH",
@@ -1518,7 +1798,9 @@
     "phone_mobile": "95014-11533",
     "admin_roles": "HOD - Electrical Engg.",
     "phone_source": "Information Brochure 2026",
-    "image_url": "https://gndec.ac.in/images/kds.jpg"
+    "image_url": "https://gndec.ac.in/images/kds.jpg",
+    "date_of_birth": "1974-12-06",
+    "date_of_birth_raw": "06/12/1974"
   },
   {
     "name": "ARVIND DHINGRA",
@@ -1532,7 +1814,9 @@
     "phone_mobile": "98141-63429",
     "admin_roles": "Officer I/C M.Tech - Electrical Engg.; Executive Director, STEP; Institution Innovation Council",
     "phone_source": "Information Brochure 2026",
-    "image_url": "https://gndec.ac.in/images/Latest%20Photo.jpg"
+    "image_url": "https://gndec.ac.in/images/Latest%20Photo.jpg",
+    "date_of_birth": "1972-02-20",
+    "date_of_birth_raw": "20/02/1972"
   },
   {
     "name": "HARMEET SINGH GILL",
@@ -1546,7 +1830,9 @@
     "phone_mobile": "95010-95000",
     "admin_roles": "Deputy Registrar",
     "phone_source": "Information Brochure 2026",
-    "image_url": "https://gndec.ac.in/images/827D0DFC-EEF8-49EA-90BB-A56EF67DA03C.jpeg"
+    "image_url": "https://gndec.ac.in/images/827D0DFC-EEF8-49EA-90BB-A56EF67DA03C.jpeg",
+    "date_of_birth": "1980-01-02",
+    "date_of_birth_raw": "02/01/1980"
   },
   {
     "name": "NAVNEET SINGH BHANGU",
@@ -1559,7 +1845,9 @@
     "phone_mobile": "9872827229",
     "phone_source": "GNDEC Telephone Directory",
     "phone_office": "ext 4756",
-    "image_url": "https://gndec.ac.in/images/IMG_7900.JPG"
+    "image_url": "https://gndec.ac.in/images/IMG_7900.JPG",
+    "date_of_birth": "1976-02-16",
+    "date_of_birth_raw": "16/02/1976"
   },
   {
     "name": "PREETINDER SINGH",
@@ -1572,7 +1860,9 @@
     "phone_mobile": "9815618224",
     "phone_source": "GNDEC Telephone Directory",
     "phone_office": "ext 4560",
-    "image_url": "https://gndec.ac.in/images/PTS%20passport%20photo.jpg"
+    "image_url": "https://gndec.ac.in/images/PTS%20passport%20photo.jpg",
+    "date_of_birth": "1969-08-11",
+    "date_of_birth_raw": "11/08/1969"
   },
   {
     "name": "RUPINDERJIT SINGH KATHURIA",
@@ -1588,7 +1878,9 @@
     "phone_mobile": "9815657107",
     "phone_source": "GNDEC Telephone Directory",
     "phone_office": "ext 4560",
-    "image_url": "https://gndec.ac.in/images/IMG_1915.jpeg"
+    "image_url": "https://gndec.ac.in/images/IMG_1915.jpeg",
+    "date_of_birth": "1969-01-09",
+    "date_of_birth_raw": "09/01/1969"
   },
   {
     "name": "ARSHDEEP KAUR",
@@ -1601,7 +1893,9 @@
     "phone_mobile": "8872489340",
     "phone_source": "GNDEC Telephone Directory",
     "phone_office": "ext 4560",
-    "image_url": "https://gndec.ac.in/images/IMG_4210.jpg"
+    "image_url": "https://gndec.ac.in/images/IMG_4210.jpg",
+    "date_of_birth": "1990-12-12",
+    "date_of_birth_raw": "12/12/1990"
   },
   {
     "name": "BALJEET SINGH",
@@ -1614,7 +1908,9 @@
     "phone_mobile": "8437130007",
     "phone_source": "GNDEC Telephone Directory",
     "phone_office": "ext 4560",
-    "image_url": "https://gndec.ac.in/images/20260201_133418.jpg"
+    "image_url": "https://gndec.ac.in/images/20260201_133418.jpg",
+    "date_of_birth": "1989-01-20",
+    "date_of_birth_raw": "20/01/1989"
   },
   {
     "name": "BALWINDER SINGH",
@@ -1627,7 +1923,9 @@
     "phone_mobile": "9501395714",
     "phone_source": "GNDEC Telephone Directory",
     "phone_office": "ext 4560",
-    "image_url": "https://gndec.ac.in/images/IMG_4219.jpg"
+    "image_url": "https://gndec.ac.in/images/IMG_4219.jpg",
+    "date_of_birth": "1990-05-21",
+    "date_of_birth_raw": "21/05/1990"
   },
   {
     "name": "BHAWNA",
@@ -1640,7 +1938,9 @@
     "phone_mobile": "9988826611",
     "phone_source": "GNDEC Telephone Directory",
     "phone_office": "ext 4560",
-    "image_url": "https://gndec.ac.in/images/IMG_4214.jpg"
+    "image_url": "https://gndec.ac.in/images/IMG_4214.jpg",
+    "date_of_birth": "1988-10-23",
+    "date_of_birth_raw": "23/10/1988"
   },
   {
     "name": "GAGANDEEP SINGH SODHI",
@@ -1654,7 +1954,9 @@
     "phone_mobile": "9872219178",
     "admin_roles": "Training & Placement Officer",
     "phone_source": "User-provided faculty contact list (2026-10-19)",
-    "image_url": "https://gndec.ac.in/images/sodhi.jpg"
+    "image_url": "https://gndec.ac.in/images/sodhi.jpg",
+    "date_of_birth": "1976-05-06",
+    "date_of_birth_raw": "06/05/1976"
   },
   {
     "name": "KARANBIR SINGH",
@@ -1667,7 +1969,9 @@
     "phone_mobile": "8872713231",
     "phone_source": "GNDEC Telephone Directory",
     "phone_office": "ext 4560",
-    "image_url": "https://gndec.ac.in/images/IMG_1901.JPG"
+    "image_url": "https://gndec.ac.in/images/IMG_1901.JPG",
+    "date_of_birth": "1995-09-13",
+    "date_of_birth_raw": "13/09/1995"
   },
   {
     "name": "KULDEEP SINGH KOONER",
@@ -1680,7 +1984,9 @@
     "phone_mobile": "9779348866",
     "phone_source": "GNDEC Telephone Directory",
     "phone_office": "ext 4560",
-    "image_url": "https://gndec.ac.in/images/IMG_2607.jpeg"
+    "image_url": "https://gndec.ac.in/images/IMG_2607.jpeg",
+    "date_of_birth": "1986-01-02",
+    "date_of_birth_raw": "02/01/1986"
   },
   {
     "name": "MANDEEP KAUR",
@@ -1693,7 +1999,9 @@
     "phone_mobile": "8283824735",
     "phone_source": "GNDEC Telephone Directory",
     "phone_office": "ext 4560",
-    "image_url": "https://gndec.ac.in/images/IMG_4208.jpg"
+    "image_url": "https://gndec.ac.in/images/IMG_4208.jpg",
+    "date_of_birth": "1986-03-25",
+    "date_of_birth_raw": "25/03/1986"
   },
   {
     "name": "RANVIR KAUR",
@@ -1706,7 +2014,9 @@
     "phone_mobile": "9814820271",
     "phone_source": "GNDEC Telephone Directory",
     "phone_office": "ext 4560",
-    "image_url": "https://gndec.ac.in/images/IMG_4209.jpg"
+    "image_url": "https://gndec.ac.in/images/IMG_4209.jpg",
+    "date_of_birth": "1985-08-29",
+    "date_of_birth_raw": "29/08/1985"
   },
   {
     "name": "RAVINDER KAUR RANDHAWA",
@@ -1719,7 +2029,9 @@
     "phone_mobile": "9876843200",
     "phone_source": "GNDEC Telephone Directory",
     "phone_office": "ext 4560",
-    "image_url": "https://gndec.ac.in/images/rr.jpg"
+    "image_url": "https://gndec.ac.in/images/rr.jpg",
+    "date_of_birth": "1972-02-10",
+    "date_of_birth_raw": "10/02/1972"
   },
   {
     "name": "SAMREET KAUR",
@@ -1732,7 +2044,9 @@
     "phone_mobile": "9815510219",
     "phone_source": "GNDEC Telephone Directory",
     "phone_office": "ext 4560",
-    "image_url": "https://gndec.ac.in/images/sm.jpg"
+    "image_url": "https://gndec.ac.in/images/sm.jpg",
+    "date_of_birth": "1985-01-11",
+    "date_of_birth_raw": "11/01/1985"
   },
   {
     "name": "SUKHPAL SINGH",
@@ -1745,7 +2059,9 @@
     "phone_mobile": "9779422219",
     "phone_source": "GNDEC Telephone Directory",
     "phone_office": "ext 4560",
-    "image_url": "https://gndec.ac.in/images/IMG_4226%20%283%29.jpg"
+    "image_url": "https://gndec.ac.in/images/IMG_4226%20%283%29.jpg",
+    "date_of_birth": "1983-07-03",
+    "date_of_birth_raw": "03.07.1983"
   },
   {
     "name": "SWAPANDEEP KAUR",
@@ -1758,7 +2074,9 @@
     "phone_mobile": "9872580084",
     "phone_source": "GNDEC Telephone Directory",
     "phone_office": "ext 4756",
-    "image_url": "https://gndec.ac.in/images/IMG_4207%20%281%29.jpg"
+    "image_url": "https://gndec.ac.in/images/IMG_4207%20%281%29.jpg",
+    "date_of_birth": "1980-10-22",
+    "date_of_birth_raw": "22/10/1980"
   },
   {
     "name": "SANPREET SINGH",
@@ -1785,7 +2103,9 @@
     "phone_mobile": "9855018703",
     "phone_source": "GNDEC Telephone Directory",
     "phone_office": "ext 4570",
-    "image_url": "https://gndec.ac.in/images/narwant_3.jpg"
+    "image_url": "https://gndec.ac.in/images/narwant_3.jpg",
+    "date_of_birth": "1972-05-09",
+    "date_of_birth_raw": "09/05/1972"
   },
   {
     "name": "AMEETA SEEHRA",
@@ -1798,7 +2118,9 @@
     "phone_mobile": "9872139597",
     "phone_source": "GNDEC Telephone Directory",
     "phone_office": "ext 4767",
-    "image_url": "https://gndec.ac.in/images/aks.png"
+    "image_url": "https://gndec.ac.in/images/aks.png",
+    "date_of_birth": "1964-12-11",
+    "date_of_birth_raw": "11/12/1964"
   },
   {
     "name": "DR. MUNISH RATTAN",
@@ -1812,7 +2134,9 @@
     "phone_mobile": "98550-04325",
     "admin_roles": "HOD - Electronics & Comm. Engg.",
     "phone_source": "Information Brochure 2026",
-    "image_url": "https://gndec.ac.in/images/75972.JPG"
+    "image_url": "https://gndec.ac.in/images/75972.JPG",
+    "date_of_birth": "1980-07-01",
+    "date_of_birth_raw": "01-07-1980"
   },
   {
     "name": "BALJEET KAUR WADHWA",
@@ -1825,7 +2149,9 @@
     "phone_mobile": "9872544399",
     "phone_source": "GNDEC Telephone Directory",
     "phone_office": "ext 4766",
-    "image_url": "https://gndec.ac.in/images/baljeet%20pic.jpg"
+    "image_url": "https://gndec.ac.in/images/baljeet%20pic.jpg",
+    "date_of_birth": "1978-11-12",
+    "date_of_birth_raw": "12/11/1978"
   },
   {
     "name": "DALJIT SINGH DEOSI",
@@ -1838,7 +2164,9 @@
     "phone_mobile": "9855578987",
     "phone_source": "GNDEC Telephone Directory",
     "phone_office": "ext 4769",
-    "image_url": "https://gndec.ac.in/images/PP_Photo_DS.jpg"
+    "image_url": "https://gndec.ac.in/images/PP_Photo_DS.jpg",
+    "date_of_birth": "1989-06-12",
+    "date_of_birth_raw": "12/06/1989"
   },
   {
     "name": "DR. CHAHAT JAIN",
@@ -1851,7 +2179,9 @@
     "phone_mobile": "7837005620",
     "phone_source": "GNDEC Telephone Directory",
     "phone_office": "ext 4576",
-    "image_url": "https://gndec.ac.in/images/photo.jpg"
+    "image_url": "https://gndec.ac.in/images/photo.jpg",
+    "date_of_birth": "1987-12-26",
+    "date_of_birth_raw": "26.12.1987"
   },
   {
     "name": "DR. GURJOT KAUR WALIA",
@@ -1864,7 +2194,9 @@
     "phone_mobile": "9888182283",
     "phone_source": "GNDEC Telephone Directory",
     "phone_office": "ext 4768",
-    "image_url": "https://gndec.ac.in/images/Screenshot_20250828_112443_Gallery.jpg"
+    "image_url": "https://gndec.ac.in/images/Screenshot_20250828_112443_Gallery.jpg",
+    "date_of_birth": "1988-02-10",
+    "date_of_birth_raw": "10/02/1988"
   },
   {
     "name": "DR. GURPURNEET KAUR",
@@ -1878,7 +2210,9 @@
     "phone_mobile": "99888-25855",
     "admin_roles": "Officer I/C M.Tech - Electronics & Comm. Engg.",
     "phone_source": "Information Brochure 2026",
-    "image_url": "https://gndec.ac.in/images/WhatsApp%20Image%202026-01-24%20at%209.59.16%20PM.jpeg"
+    "image_url": "https://gndec.ac.in/images/WhatsApp%20Image%202026-01-24%20at%209.59.16%20PM.jpeg",
+    "date_of_birth": "1985-09-24",
+    "date_of_birth_raw": "24/09/1985"
   },
   {
     "name": "DR. NAVNEET KAUR",
@@ -1892,7 +2226,9 @@
     "phone_mobile": "82838-44114, 98142-29753",
     "admin_roles": "Assistant Registrar; National Education Policy Cell; AP (ECE), Academic Council member",
     "phone_source": "Information Brochure 2026, Statutory Committees",
-    "image_url": "https://gndec.ac.in/images/NAVNEET.jpeg"
+    "image_url": "https://gndec.ac.in/images/NAVNEET.jpeg",
+    "date_of_birth": "1988-10-15",
+    "date_of_birth_raw": "15/10/1988"
   },
   {
     "name": "DR. SHIVMANMEET SINGH",
@@ -1905,7 +2241,9 @@
     "phone_mobile": "9888887314",
     "phone_source": "GNDEC Telephone Directory",
     "phone_office": "ext 4571",
-    "image_url": "https://gndec.ac.in/images/shiv.jpg"
+    "image_url": "https://gndec.ac.in/images/shiv.jpg",
+    "date_of_birth": "1993-01-14",
+    "date_of_birth_raw": "14/01/1993"
   },
   {
     "name": "GURLEEN KAUR",
@@ -1920,7 +2258,9 @@
     ],
     "phone_mobile": "9877798647",
     "phone_source": "GNDEC permanent section list 2026",
-    "image_url": "https://gndec.ac.in/images/IMG_20251116_073126.jpg"
+    "image_url": "https://gndec.ac.in/images/IMG_20251116_073126.jpg",
+    "date_of_birth": "1999-09-20",
+    "date_of_birth_raw": "20/09/1999"
   },
   {
     "name": "HARLEEN KAUR",
@@ -1933,7 +2273,9 @@
     "phone_mobile": "9842800003",
     "phone_source": "GNDEC Telephone Directory",
     "phone_office": "ext 4572",
-    "image_url": "https://gndec.ac.in/images/PHOTO.jpeg"
+    "image_url": "https://gndec.ac.in/images/PHOTO.jpeg",
+    "date_of_birth": "1986-03-20",
+    "date_of_birth_raw": "20/03/1986"
   },
   {
     "name": "HARMINDER KAUR",
@@ -1949,7 +2291,9 @@
     "phone_mobile": "8968124574",
     "phone_source": "GNDEC Telephone Directory",
     "phone_office": "ext 4574",
-    "image_url": "https://gndec.ac.in/images/image%20hk1.jpeg"
+    "image_url": "https://gndec.ac.in/images/image%20hk1.jpeg",
+    "date_of_birth": "1987-05-01",
+    "date_of_birth_raw": "01/05/1987"
   },
   {
     "name": "HARMINDER KAUR",
@@ -1959,7 +2303,9 @@
     "department": "Electronics & Communication Engineering",
     "dept_id": 17,
     "profile_url": "https://gndec.ac.in/faculty/?id=116",
-    "image_url": "https://gndec.ac.in/images/WhatsApp%20Image%202026-02-10%20at%209.17.50%20PM.jpeg"
+    "image_url": "https://gndec.ac.in/images/WhatsApp%20Image%202026-02-10%20at%209.17.50%20PM.jpeg",
+    "date_of_birth": "1989-08-04",
+    "date_of_birth_raw": "04/08/1989"
   },
   {
     "name": "KAMALPREET KAUR",
@@ -1974,7 +2320,9 @@
     ],
     "phone_mobile": "7986903288",
     "phone_source": "GNDEC permanent section list 2026",
-    "image_url": "https://gndec.ac.in/images/pic.jpeg"
+    "image_url": "https://gndec.ac.in/images/pic.jpeg",
+    "date_of_birth": "1989-12-23",
+    "date_of_birth_raw": "23/12/1989"
   },
   {
     "name": "KULDEEPAK SINGH",
@@ -1984,7 +2332,9 @@
     "department": "Electronics & Communication Engineering",
     "dept_id": 17,
     "profile_url": "https://gndec.ac.in/faculty/?id=115",
-    "image_url": "https://gndec.ac.in/images/Kuldeepak%20Singh-%20old.jpg"
+    "image_url": "https://gndec.ac.in/images/Kuldeepak%20Singh-%20old.jpg",
+    "date_of_birth": "1988-10-25",
+    "date_of_birth_raw": "25/10/1988"
   },
   {
     "name": "KUNWAR PARTAP SINGH",
@@ -1994,7 +2344,9 @@
     "department": "Electronics & Communication Engineering",
     "dept_id": 17,
     "profile_url": "https://gndec.ac.in/faculty/?id=368",
-    "image_url": "https://gndec.ac.in/images/WhatsApp%20Image%202021-12-29%20at%204.23.55%20PM.jpeg"
+    "image_url": "https://gndec.ac.in/images/WhatsApp%20Image%202021-12-29%20at%204.23.55%20PM.jpeg",
+    "date_of_birth": "1994-03-15",
+    "date_of_birth_raw": "15/03/1994"
   },
   {
     "name": "SIMRANJIT KAUR",
@@ -2007,7 +2359,9 @@
     "phone_mobile": "9814338830",
     "phone_source": "GNDEC Telephone Directory",
     "phone_office": "ext 4572",
-    "image_url": "https://gndec.ac.in/images/1sim_%20compressed.jpg"
+    "image_url": "https://gndec.ac.in/images/1sim_%20compressed.jpg",
+    "date_of_birth": "1985-07-01",
+    "date_of_birth_raw": "01/07/1985"
   },
   {
     "name": "DR PREETI PANNU",
@@ -2021,7 +2375,9 @@
     "phone_mobile": "98189-47360",
     "admin_roles": "Assistant Public Relation Officer",
     "phone_source": "Information Brochure 2026",
-    "image_url": "https://gndec.ac.in/images/pic.jpg"
+    "image_url": "https://gndec.ac.in/images/pic.jpg",
+    "date_of_birth": "1989-04-18",
+    "date_of_birth_raw": "18-04-1989"
   },
   {
     "name": "NAVJOT SINGH",
@@ -2035,7 +2391,9 @@
     "phone_mobile": "9501724761",
     "admin_roles": "",
     "phone_source": "Section List 2026",
-    "image_url": "https://gndec.ac.in/images/1.JPG"
+    "image_url": "https://gndec.ac.in/images/1.JPG",
+    "date_of_birth": "1989-11-29",
+    "date_of_birth_raw": "29/11/1989"
   },
   {
     "name": "DR. KULVINDER SINGH MANN",
@@ -2049,7 +2407,9 @@
     "phone_mobile": "99155-07920",
     "admin_roles": "HOD - Information Technology",
     "phone_source": "Information Brochure 2026",
-    "image_url": "https://gndec.ac.in/images/IMG_1639.jpeg"
+    "image_url": "https://gndec.ac.in/images/IMG_1639.jpeg",
+    "date_of_birth": "1973-08-07",
+    "date_of_birth_raw": "07/08/1973"
   },
   {
     "name": "DR. AKSHAY GIRDHAR",
@@ -2063,7 +2423,9 @@
     "phone_mobile": "98559-61620",
     "admin_roles": "Dean - Academics",
     "phone_source": "Information Brochure 2026",
-    "image_url": "https://gndec.ac.in/sites/default/files/DSC_0477.JPG"
+    "image_url": "https://gndec.ac.in/sites/default/files/DSC_0477.JPG",
+    "date_of_birth": "1976-06-23",
+    "date_of_birth_raw": "23/06/1976"
   },
   {
     "name": "DR. AMIT KAMRA",
@@ -2077,7 +2439,9 @@
     "phone_mobile": "98142-29753",
     "admin_roles": "Officer I/C M.Tech - Information Technology",
     "phone_source": "Information Brochure 2026",
-    "image_url": "https://gndec.ac.in/images/WhatsApp%20Image%202025-10-27%20at%2011.38.01%20AM.jpeg"
+    "image_url": "https://gndec.ac.in/images/WhatsApp%20Image%202025-10-27%20at%2011.38.01%20AM.jpeg",
+    "date_of_birth": "1978-07-05",
+    "date_of_birth_raw": "05/07/1978"
   },
   {
     "name": "DR. KAMALJIT KAUR DHILLON",
@@ -2090,7 +2454,9 @@
     "phone_mobile": "9888829422",
     "phone_source": "GNDEC Telephone Directory",
     "phone_office": "ext 4549",
-    "image_url": "https://gndec.ac.in/images/IMG_8850.JPG.jpeg"
+    "image_url": "https://gndec.ac.in/images/IMG_8850.JPG.jpeg",
+    "date_of_birth": "1977-06-26",
+    "date_of_birth_raw": "26/06/1977"
   },
   {
     "name": "DR. PANKAJ BHAMBRI",
@@ -2103,7 +2469,9 @@
     "phone_mobile": "9814828414",
     "phone_source": "GNDEC Telephone Directory",
     "phone_office": "ext 4549",
-    "image_url": "https://gndec.ac.in/images/Photo-17.png"
+    "image_url": "https://gndec.ac.in/images/Photo-17.png",
+    "date_of_birth": "1979-10-03",
+    "date_of_birth_raw": "03/10/1979"
   },
   {
     "name": "DR. PRADEEP JASWAL",
@@ -2119,7 +2487,9 @@
     "phone_mobile": "9501791600",
     "phone_source": "GNDEC Telephone Directory",
     "phone_office": "ext 4554",
-    "image_url": "https://gndec.ac.in/images/FB_IMG_1506436954027.jpg"
+    "image_url": "https://gndec.ac.in/images/FB_IMG_1506436954027.jpg",
+    "date_of_birth": "1977-02-16",
+    "date_of_birth_raw": "16/02/1977"
   },
   {
     "name": "DR. SANDEEP KUMAR SINGLA",
@@ -2134,7 +2504,9 @@
     ],
     "phone_office": "ext 4549",
     "phone_source": "GNDEC Telephone Directory",
-    "image_url": "https://gndec.ac.in/images/IMG_1651.jpeg"
+    "image_url": "https://gndec.ac.in/images/IMG_1651.jpeg",
+    "date_of_birth": "1978-09-13",
+    "date_of_birth_raw": "13/09/1978"
   },
   {
     "name": "DR. JAGDEEP SINGH",
@@ -2148,7 +2520,9 @@
     "phone_mobile": "",
     "admin_roles": "Industrial Relation Cell",
     "phone_source": "GNDEC Telephone Directory",
-    "image_url": "https://gndec.ac.in/images/jagdeep.jpg"
+    "image_url": "https://gndec.ac.in/images/jagdeep.jpg",
+    "date_of_birth": "1989-06-01",
+    "date_of_birth_raw": "01/06/1989"
   },
   {
     "name": "ER. RUPINDER KAUR",
@@ -2161,7 +2535,9 @@
     "phone_mobile": "6284162034",
     "phone_source": "GNDEC Telephone Directory",
     "phone_office": "ext 4549",
-    "image_url": "https://gndec.ac.in/images/IMG_20250216_085112.jpg"
+    "image_url": "https://gndec.ac.in/images/IMG_20250216_085112.jpg",
+    "date_of_birth": "1988-06-15",
+    "date_of_birth_raw": "15/06/1988"
   },
   {
     "name": "DR. PALWINDER KAUR BHANGU",
@@ -2171,7 +2547,9 @@
     "department": "Information Technology",
     "dept_id": 21,
     "profile_url": "https://gndec.ac.in/faculty/?id=442",
-    "image_url": "https://gndec.ac.in/images/mypic.jpeg"
+    "image_url": "https://gndec.ac.in/images/mypic.jpeg",
+    "date_of_birth": "1981-11-19",
+    "date_of_birth_raw": "19/11/1981"
   },
   {
     "name": "DR. PREET KAMAL SINGH",
@@ -2183,7 +2561,9 @@
     "profile_url": "https://gndec.ac.in/faculty/?id=444",
     "phone_mobile": "9872769887",
     "phone_source": "GNDEC permanent section list 2026",
-    "image_url": "https://gndec.ac.in/images/6f023565-cb16-4371-9cef-85e6fc6caaf2.jpg"
+    "image_url": "https://gndec.ac.in/images/6f023565-cb16-4371-9cef-85e6fc6caaf2.jpg",
+    "date_of_birth": "1989-12-04",
+    "date_of_birth_raw": "04/12/1989"
   },
   {
     "name": "DR. RANDEEP KAUR",
@@ -2196,7 +2576,9 @@
     "phone_mobile": "9855766656",
     "phone_source": "GNDEC Telephone Directory",
     "phone_office": "ext 4549",
-    "image_url": "https://gndec.ac.in/images/randeep.jpeg"
+    "image_url": "https://gndec.ac.in/images/randeep.jpeg",
+    "date_of_birth": "1984-12-06",
+    "date_of_birth_raw": "06/12/1984"
   },
   {
     "name": "DR. SIDHARATH JAIN",
@@ -2209,7 +2591,9 @@
     "phone_mobile": "9501011768",
     "phone_source": "GNDEC Telephone Directory",
     "phone_office": "ext 4549",
-    "image_url": "https://gndec.ac.in/images/Sidharath%20Pic.jpg"
+    "image_url": "https://gndec.ac.in/images/Sidharath%20Pic.jpg",
+    "date_of_birth": "1987-08-07",
+    "date_of_birth_raw": "07/08/1987"
   },
   {
     "name": "DR.MOHANJIT KAUR KANG",
@@ -2222,7 +2606,9 @@
     "phone_mobile": "9872046435",
     "phone_source": "GNDEC Telephone Directory",
     "phone_office": "ext 4549",
-    "image_url": "https://gndec.ac.in/images/WhatsApp%20Image%202022-12-02%20at%207.27.14%20PM.jpeg"
+    "image_url": "https://gndec.ac.in/images/WhatsApp%20Image%202022-12-02%20at%207.27.14%20PM.jpeg",
+    "date_of_birth": "1983-12-06",
+    "date_of_birth_raw": "06/12/1983"
   },
   {
     "name": "DR.SACHIN BAGGA",
@@ -2235,7 +2621,9 @@
     "phone_mobile": "9779903785",
     "phone_source": "GNDEC Telephone Directory",
     "phone_office": "ext 4549",
-    "image_url": "https://gndec.ac.in/images/SB.jpg"
+    "image_url": "https://gndec.ac.in/images/SB.jpg",
+    "date_of_birth": "1988-01-10",
+    "date_of_birth_raw": "10/01/1988"
   },
   {
     "name": "ER. HIMANI SHARMA",
@@ -2248,7 +2636,9 @@
     "phone_mobile": "7009737083",
     "phone_source": "GNDEC Telephone Directory",
     "phone_office": "ext 4549",
-    "image_url": "https://gndec.ac.in/images/himani.jpeg"
+    "image_url": "https://gndec.ac.in/images/himani.jpeg",
+    "date_of_birth": "1995-11-23",
+    "date_of_birth_raw": "23/11/95"
   },
   {
     "name": "GITANJALI",
@@ -2261,7 +2651,9 @@
     "phone_mobile": "7508018440",
     "phone_source": "GNDEC Telephone Directory",
     "phone_office": "ext 4549",
-    "image_url": "https://gndec.ac.in/images/Snapchat-1506621369.jpg"
+    "image_url": "https://gndec.ac.in/images/Snapchat-1506621369.jpg",
+    "date_of_birth": "1994-05-02",
+    "date_of_birth_raw": "02-05-1994"
   },
   {
     "name": "HARJOT KAUR GILL",
@@ -2277,7 +2669,9 @@
     "phone_mobile": "9814747728",
     "phone_source": "GNDEC Telephone Directory",
     "phone_office": "ext 4549",
-    "image_url": "https://gndec.ac.in/images/IMG_7212.jpeg"
+    "image_url": "https://gndec.ac.in/images/IMG_7212.jpeg",
+    "date_of_birth": "1991-01-11",
+    "date_of_birth_raw": "11/01/1991"
   },
   {
     "name": "HARPREET KAUR",
@@ -2287,7 +2681,9 @@
     "department": "Information Technology",
     "dept_id": 21,
     "profile_url": "https://gndec.ac.in/faculty/?id=463",
-    "image_url": "https://gndec.ac.in/images/IMG_8808.JPG.jpeg"
+    "image_url": "https://gndec.ac.in/images/IMG_8808.JPG.jpeg",
+    "date_of_birth": "1995-06-18",
+    "date_of_birth_raw": "18-06-1995"
   },
   {
     "name": "HARSHIM",
@@ -2299,7 +2695,9 @@
     "profile_url": "https://gndec.ac.in/faculty/?id=430",
     "phone_mobile": "8196000983",
     "phone_source": "GNDEC permanent section list 2026",
-    "image_url": "https://gndec.ac.in/images/268284D3-A8C9-4C6E-86D7-8E71A1A55798.jpeg"
+    "image_url": "https://gndec.ac.in/images/268284D3-A8C9-4C6E-86D7-8E71A1A55798.jpeg",
+    "date_of_birth": "1997-04-06",
+    "date_of_birth_raw": "06/04/1997"
   },
   {
     "name": "JASLEEN KAUR",
@@ -2309,7 +2707,9 @@
     "department": "Information Technology",
     "dept_id": 21,
     "profile_url": "https://gndec.ac.in/faculty/?id=443",
-    "image_url": "https://gndec.ac.in/images/Screenshot_20260806_101527_Gallery.jpg"
+    "image_url": "https://gndec.ac.in/images/Screenshot_20260806_101527_Gallery.jpg",
+    "date_of_birth": "1991-04-18",
+    "date_of_birth_raw": "18/04/1991"
   },
   {
     "name": "JASPREET KAUR",
@@ -2321,7 +2721,9 @@
     "profile_url": "https://gndec.ac.in/faculty/?id=454",
     "phone_mobile": "8968801937",
     "phone_source": "User-provided faculty contact list (2026-10-19)",
-    "image_url": "https://gndec.ac.in/images/Snapchat-438796799.jpg"
+    "image_url": "https://gndec.ac.in/images/Snapchat-438796799.jpg",
+    "date_of_birth": "1999-11-06",
+    "date_of_birth_raw": "06/11/1999"
   },
   {
     "name": "PARMINDER KAUR WADHWA",
@@ -2334,7 +2736,9 @@
     "phone_mobile": "9814611273",
     "phone_source": "GNDEC Telephone Directory",
     "phone_office": "ext 4549",
-    "image_url": "https://gndec.ac.in/images/IMG-7273.jpg"
+    "image_url": "https://gndec.ac.in/images/IMG-7273.jpg",
+    "date_of_birth": "1983-04-02",
+    "date_of_birth_raw": "02/04/1983"
   },
   {
     "name": "RANJODH KAUR",
@@ -2347,7 +2751,9 @@
     "phone_mobile": "9855107246",
     "phone_source": "GNDEC Telephone Directory",
     "phone_office": "ext 4549",
-    "image_url": "https://gndec.ac.in/images/IMG_20210618_152129.jpg"
+    "image_url": "https://gndec.ac.in/images/IMG_20210618_152129.jpg",
+    "date_of_birth": "1987-11-03",
+    "date_of_birth_raw": "03/11/1987"
   },
   {
     "name": "SARABMEET SINGH MASSON",
@@ -2371,7 +2777,9 @@
     "phone_mobile": "98761-56364",
     "admin_roles": "HOD - Business Administration",
     "phone_source": "Information Brochure 2026",
-    "image_url": "https://gndec.ac.in/images/amanjot_gill.jpg"
+    "image_url": "https://gndec.ac.in/images/amanjot_gill.jpg",
+    "date_of_birth": "1971-01-07",
+    "date_of_birth_raw": "07/01/1971"
   },
   {
     "name": "DR. PARAMPAL SINGH",
@@ -2383,7 +2791,10 @@
     "profile_url": "https://gndec.ac.in/faculty/?id=168",
     "phone_office": "ext 4592",
     "phone_source": "GNDEC Telephone Directory",
-    "image_url": "https://gndec.ac.in/images/compressed%20pps.jpg"
+    "image_url": "https://gndec.ac.in/images/compressed%20pps.jpg",
+    "phone_mobile": "9815903230",
+    "date_of_birth": "1973-03-12",
+    "date_of_birth_raw": "12/03/1973"
   },
   {
     "name": "AMARPREET KAUR",
@@ -2393,7 +2804,9 @@
     "department": "Business Administration",
     "dept_id": 28,
     "profile_url": "https://gndec.ac.in/faculty/?id=170",
-    "image_url": "https://gndec.ac.in/images/70714241-4338-4058-b993-6117b636ce0a.jpg"
+    "image_url": "https://gndec.ac.in/images/70714241-4338-4058-b993-6117b636ce0a.jpg",
+    "date_of_birth": "1977-12-05",
+    "date_of_birth_raw": "5 December,1977"
   },
   {
     "name": "DR JASPREET KAUR",
@@ -2403,7 +2816,9 @@
     "department": "Business Administration",
     "dept_id": 28,
     "profile_url": "https://gndec.ac.in/faculty/?id=502",
-    "image_url": "https://gndec.ac.in/images/IMG_20260617_151833.jpg"
+    "image_url": "https://gndec.ac.in/images/IMG_20260617_151833.jpg",
+    "date_of_birth": "1997-10-07",
+    "date_of_birth_raw": "07/10/1997"
   },
   {
     "name": "DR. PRABHPREET KAUR",
@@ -2413,7 +2828,9 @@
     "department": "Business Administration",
     "dept_id": 28,
     "profile_url": "https://gndec.ac.in/faculty/?id=395",
-    "image_url": "https://gndec.ac.in/images/blessy.jpeg"
+    "image_url": "https://gndec.ac.in/images/blessy.jpeg",
+    "date_of_birth": "1992-04-01",
+    "date_of_birth_raw": "01/04/1992"
   },
   {
     "name": "DR. KSHMA KAUSHAL",
@@ -2423,7 +2840,9 @@
     "department": "Business Administration",
     "dept_id": 28,
     "profile_url": "https://gndec.ac.in/faculty/?id=394",
-    "image_url": "https://gndec.ac.in/images/kkphoto.jpeg"
+    "image_url": "https://gndec.ac.in/images/kkphoto.jpeg",
+    "date_of_birth": "1980-10-02",
+    "date_of_birth_raw": "02/10/1980"
   },
   {
     "name": "DR. MANDEEP KAUR KHOSA",
@@ -2435,7 +2854,9 @@
     "profile_url": "https://gndec.ac.in/faculty/?id=353",
     "phone_office": "ext 4592",
     "phone_source": "GNDEC Telephone Directory",
-    "image_url": "https://gndec.ac.in/images/81b2e25d-866e-42ef-be80-bc38fb5759bc.jpeg"
+    "image_url": "https://gndec.ac.in/images/81b2e25d-866e-42ef-be80-bc38fb5759bc.jpeg",
+    "date_of_birth": "1982-05-09",
+    "date_of_birth_raw": "09/05/1982"
   },
   {
     "name": "DR. SHIVANGI JAIN SHARMA",
@@ -2445,7 +2866,9 @@
     "department": "Business Administration",
     "dept_id": 28,
     "profile_url": "https://gndec.ac.in/faculty/?id=503",
-    "image_url": "https://gndec.ac.in/images/IMG_9110.jpeg"
+    "image_url": "https://gndec.ac.in/images/IMG_9110.jpeg",
+    "date_of_birth": "1992-05-03",
+    "date_of_birth_raw": "03/05/1992"
   },
   {
     "name": "HARMOHAN SINGH DHALL",
@@ -2457,7 +2880,9 @@
     "profile_url": "https://gndec.ac.in/faculty/?id=15",
     "phone_office": "ext 4592",
     "phone_source": "GNDEC Telephone Directory",
-    "image_url": ""
+    "image_url": "",
+    "date_of_birth": "1975-07-03",
+    "date_of_birth_raw": "03/07/1975"
   },
   {
     "name": "HARNEET KAUR",
@@ -2467,7 +2892,9 @@
     "department": "Business Administration",
     "dept_id": 28,
     "profile_url": "https://gndec.ac.in/faculty/?id=461",
-    "image_url": "https://gndec.ac.in/images/WhatsApp%20Image%202025-09-11%20at%2010.01.29%20PM.jpeg"
+    "image_url": "https://gndec.ac.in/images/WhatsApp%20Image%202025-09-11%20at%2010.01.29%20PM.jpeg",
+    "date_of_birth": "2000-11-11",
+    "date_of_birth_raw": "11/11/2000"
   },
   {
     "name": "MANPREET KAUR",
@@ -2477,7 +2904,9 @@
     "department": "Business Administration",
     "dept_id": 28,
     "profile_url": "https://gndec.ac.in/faculty/?id=464",
-    "image_url": "https://gndec.ac.in/images/manpreet.jpg"
+    "image_url": "https://gndec.ac.in/images/manpreet.jpg",
+    "date_of_birth": "1993-06-13",
+    "date_of_birth_raw": "13.06.1993"
   },
   {
     "name": "NAVJOT KAUR GILL",
@@ -2487,7 +2916,9 @@
     "department": "Business Administration",
     "dept_id": 28,
     "profile_url": "https://gndec.ac.in/faculty/?id=460",
-    "image_url": "https://gndec.ac.in/images/PIC.jpg"
+    "image_url": "https://gndec.ac.in/images/PIC.jpg",
+    "date_of_birth": "1995-06-12",
+    "date_of_birth_raw": "12/06/1995"
   },
   {
     "name": "PARAMJIT SINGH",
@@ -2499,7 +2930,9 @@
     "profile_url": "https://gndec.ac.in/faculty/?id=441",
     "phone_office": "ext 4592",
     "phone_source": "GNDEC Telephone Directory",
-    "image_url": "https://gndec.ac.in/images/Paramjit%20Singh%20Passport%20Pic.JPG"
+    "image_url": "https://gndec.ac.in/images/Paramjit%20Singh%20Passport%20Pic.JPG",
+    "date_of_birth": "1994-08-05",
+    "date_of_birth_raw": "05/08/1994"
   },
   {
     "name": "RAMANDEEP KAUR",
@@ -2509,7 +2942,9 @@
     "department": "Business Administration",
     "dept_id": 28,
     "profile_url": "https://gndec.ac.in/faculty/?id=462",
-    "image_url": "https://gndec.ac.in/images/rrrrrr.jpg"
+    "image_url": "https://gndec.ac.in/images/rrrrrr.jpg",
+    "date_of_birth": "1992-01-21",
+    "date_of_birth_raw": "21-01-1992"
   },
   {
     "name": "SIMRANPREET KAUR",
@@ -2519,7 +2954,9 @@
     "department": "Business Administration",
     "dept_id": 28,
     "profile_url": "https://gndec.ac.in/faculty/?id=496",
-    "image_url": "https://gndec.ac.in/images/Screenshot_20230903_214852.jpg"
+    "image_url": "https://gndec.ac.in/images/Screenshot_20230903_214852.jpg",
+    "date_of_birth": "1995-12-10",
+    "date_of_birth_raw": "10/12/1995"
   },
   {
     "name": "DR. JASBIR SINGH SAINI",
@@ -2533,7 +2970,9 @@
     "phone_mobile": "98767-00810",
     "admin_roles": "HOD - Computer Applications; Head of Department, Computer Applications",
     "phone_source": "Information Brochure 2026, Statutory Committees (conflicts with IB26)",
-    "image_url": "https://gndec.ac.in/images/jss.jpeg"
+    "image_url": "https://gndec.ac.in/images/jss.jpeg",
+    "date_of_birth": "1974-05-20",
+    "date_of_birth_raw": "20/05/1974"
   },
   {
     "name": "AMANDEEP KAUR",
@@ -2543,7 +2982,9 @@
     "department": "Computer Applications",
     "dept_id": 29,
     "profile_url": "https://gndec.ac.in/faculty/?id=480",
-    "image_url": "https://gndec.ac.in/images/IMG_7420.JPG"
+    "image_url": "https://gndec.ac.in/images/IMG_7420.JPG",
+    "date_of_birth": "1991-06-12",
+    "date_of_birth_raw": "12-06-1991"
   },
   {
     "name": "AMANPREET KAUR",
@@ -2556,7 +2997,9 @@
     "phone_mobile": "9988838543",
     "phone_source": "GNDEC Telephone Directory",
     "phone_office": "ext 4591",
-    "image_url": "https://gndec.ac.in/images/IMG-20260209-WA0006.jpg"
+    "image_url": "https://gndec.ac.in/images/IMG-20260209-WA0006.jpg",
+    "date_of_birth": "1981-10-05",
+    "date_of_birth_raw": "05/10/1981"
   },
   {
     "name": "DINESH ANAND",
@@ -2566,7 +3009,9 @@
     "department": "Computer Applications",
     "dept_id": 29,
     "profile_url": "https://gndec.ac.in/faculty/?id=210",
-    "image_url": "https://gndec.ac.in/images/IMG_7418.jpeg"
+    "image_url": "https://gndec.ac.in/images/IMG_7418.jpeg",
+    "date_of_birth": "1979-02-09",
+    "date_of_birth_raw": "09/02/1979"
   },
   {
     "name": "DR. GEETIKA BHARDWAJ",
@@ -2579,7 +3024,9 @@
     "phone_mobile": "9888888035",
     "phone_source": "GNDEC Telephone Directory",
     "phone_office": "ext 4591",
-    "image_url": "https://gndec.ac.in/images/IMG_7402.JPG"
+    "image_url": "https://gndec.ac.in/images/IMG_7402.JPG",
+    "date_of_birth": "1984-12-26",
+    "date_of_birth_raw": "26/12/1984"
   },
   {
     "name": "DR. GURVIR KAUR",
@@ -2589,7 +3036,9 @@
     "department": "Computer Applications",
     "dept_id": 29,
     "profile_url": "https://gndec.ac.in/faculty/?id=451",
-    "image_url": "https://gndec.ac.in/images/g%20e.jpg"
+    "image_url": "https://gndec.ac.in/images/g%20e.jpg",
+    "date_of_birth": "1989-12-13",
+    "date_of_birth_raw": "13/12/1989"
   },
   {
     "name": "DR. MANREET SOHAL",
@@ -2602,7 +3051,9 @@
     "phone_mobile": "9592958596",
     "phone_source": "GNDEC Telephone Directory",
     "phone_office": "ext 4591",
-    "image_url": "https://gndec.ac.in/images/IMG_7400.JPG"
+    "image_url": "https://gndec.ac.in/images/IMG_7400.JPG",
+    "date_of_birth": "1992-06-10",
+    "date_of_birth_raw": "10/06/1992"
   },
   {
     "name": "GAGANDEEP KAUR",
@@ -2612,7 +3063,9 @@
     "department": "Computer Applications",
     "dept_id": 29,
     "profile_url": "https://gndec.ac.in/faculty/?id=476",
-    "image_url": "https://gndec.ac.in/images/IMG_7407.JPG"
+    "image_url": "https://gndec.ac.in/images/IMG_7407.JPG",
+    "date_of_birth": "1992-04-06",
+    "date_of_birth_raw": "06/04/1992"
   },
   {
     "name": "GURJIWAN SINGH",
@@ -2625,7 +3078,9 @@
     "phone_mobile": "9781218003",
     "phone_source": "GNDEC Telephone Directory",
     "phone_office": "ext 4591",
-    "image_url": "https://gndec.ac.in/images/IMG_7419.JPG"
+    "image_url": "https://gndec.ac.in/images/IMG_7419.JPG",
+    "date_of_birth": "1985-07-27",
+    "date_of_birth_raw": "27/07/1985"
   },
   {
     "name": "GURLEEN KAUR",
@@ -2635,7 +3090,9 @@
     "department": "Computer Applications",
     "dept_id": 29,
     "profile_url": "https://gndec.ac.in/faculty/?id=474",
-    "image_url": "https://gndec.ac.in/images/IMG_20260209_154602.jpg"
+    "image_url": "https://gndec.ac.in/images/IMG_20260209_154602.jpg",
+    "date_of_birth": "2002-11-04",
+    "date_of_birth_raw": "04/11/2002"
   },
   {
     "name": "HARMANDEEP KAUR",
@@ -2645,7 +3102,9 @@
     "department": "Computer Applications",
     "dept_id": 29,
     "profile_url": "https://gndec.ac.in/faculty/?id=386",
-    "image_url": "https://gndec.ac.in/images/WhatsApp%20Image%202022-09-30%20at%2017.49.51.jpg"
+    "image_url": "https://gndec.ac.in/images/WhatsApp%20Image%202022-09-30%20at%2017.49.51.jpg",
+    "date_of_birth": "1991-11-06",
+    "date_of_birth_raw": "06/11/1991"
   },
   {
     "name": "KAMALPREET KAUR",
@@ -2658,7 +3117,9 @@
     "phone_mobile": "9781118861",
     "phone_source": "GNDEC Telephone Directory",
     "phone_office": "ext 4591",
-    "image_url": "https://gndec.ac.in/images/IMG_7414.JPG"
+    "image_url": "https://gndec.ac.in/images/IMG_7414.JPG",
+    "date_of_birth": "1991-07-01",
+    "date_of_birth_raw": "01-07-1991"
   },
   {
     "name": "MANPREET BHATTY",
@@ -2668,7 +3129,9 @@
     "department": "Computer Applications",
     "dept_id": 29,
     "profile_url": "https://gndec.ac.in/faculty/?id=481",
-    "image_url": "https://gndec.ac.in/images/IMG_7410.JPG"
+    "image_url": "https://gndec.ac.in/images/IMG_7410.JPG",
+    "date_of_birth": "1983-12-02",
+    "date_of_birth_raw": "02/December/1983"
   },
   {
     "name": "MANPREET KAUR",
@@ -2680,7 +3143,9 @@
     "profile_url": "https://gndec.ac.in/faculty/?id=424",
     "phone_office": "ext 4591",
     "phone_source": "GNDEC Telephone Directory",
-    "image_url": "https://gndec.ac.in/images/IMG_7412.JPG"
+    "image_url": "https://gndec.ac.in/images/IMG_7412.JPG",
+    "date_of_birth": "1992-11-24",
+    "date_of_birth_raw": "24/11/1992"
   },
   {
     "name": "MANVIR SINGH",
@@ -2690,7 +3155,9 @@
     "department": "Computer Applications",
     "dept_id": 29,
     "profile_url": "https://gndec.ac.in/faculty/?id=475",
-    "image_url": "https://gndec.ac.in/images/IMG_7405.JPG"
+    "image_url": "https://gndec.ac.in/images/IMG_7405.JPG",
+    "date_of_birth": "2000-11-22",
+    "date_of_birth_raw": "22-11-2000"
   },
   {
     "name": "NEHA GUPTA",
@@ -2703,7 +3170,9 @@
     "phone_mobile": "9779504300",
     "phone_source": "GNDEC Telephone Directory",
     "phone_office": "ext 4591",
-    "image_url": "https://gndec.ac.in/images/WhatsApp%20Image%202024-07-10%20at%2010.36.17%20AM.jpeg"
+    "image_url": "https://gndec.ac.in/images/WhatsApp%20Image%202024-07-10%20at%2010.36.17%20AM.jpeg",
+    "date_of_birth": "1995-05-02",
+    "date_of_birth_raw": "02/05/1995"
   },
   {
     "name": "PRITI AGGARWAL",
@@ -2716,7 +3185,9 @@
     "phone_mobile": "9501241374",
     "phone_source": "GNDEC Telephone Directory",
     "phone_office": "ext 4591",
-    "image_url": "https://gndec.ac.in/images/IMG_7417.JPG"
+    "image_url": "https://gndec.ac.in/images/IMG_7417.JPG",
+    "date_of_birth": "1989-11-30",
+    "date_of_birth_raw": "30/11/1989"
   },
   {
     "name": "SATVEER KAUR",
@@ -2729,7 +3200,9 @@
     "phone_mobile": "7747000021",
     "phone_source": "GNDEC Telephone Directory",
     "phone_office": "ext 4591",
-    "image_url": "https://gndec.ac.in/images/SATVEER.jpg"
+    "image_url": "https://gndec.ac.in/images/SATVEER.jpg",
+    "date_of_birth": "1988-03-12",
+    "date_of_birth_raw": "12/03/1988"
   },
   {
     "name": "SONIA",
@@ -2742,7 +3215,9 @@
     "phone_mobile": "8968244400",
     "phone_source": "GNDEC Telephone Directory",
     "phone_office": "ext 4591",
-    "image_url": "https://gndec.ac.in/images/SONIA-PIC-1.jpeg"
+    "image_url": "https://gndec.ac.in/images/SONIA-PIC-1.jpeg",
+    "date_of_birth": "1987-08-20",
+    "date_of_birth_raw": "20/08/1987"
   },
   {
     "name": "DR. HARMEET SINGH",
@@ -2756,7 +3231,9 @@
     "phone_mobile": "95922-00299",
     "admin_roles": "HOD - Mechanical & Production Engg.",
     "phone_source": "Information Brochure 2026",
-    "image_url": "https://gndec.ac.in/images/me%20new.JPG"
+    "image_url": "https://gndec.ac.in/images/me%20new.JPG",
+    "date_of_birth": "1977-10-19",
+    "date_of_birth_raw": "19th October, 1977"
   },
   {
     "name": "DR. DEEPINDER SINGH",
@@ -2769,7 +3246,9 @@
     "phone_mobile": "9815611057",
     "phone_source": "GNDEC Telephone Directory",
     "phone_office": "ext 4578",
-    "image_url": "https://gndec.ac.in/images/1.DS.jpg"
+    "image_url": "https://gndec.ac.in/images/1.DS.jpg",
+    "date_of_birth": "1973-08-10",
+    "date_of_birth_raw": "10th August, 1973"
   },
   {
     "name": "DR. HARWINDER SINGH",
@@ -2783,7 +3262,9 @@
     "phone_mobile": "99155-07920",
     "admin_roles": "President Sports",
     "phone_source": "Information Brochure 2026",
-    "image_url": "https://gndec.ac.in/images/Photo.png"
+    "image_url": "https://gndec.ac.in/images/Photo.png",
+    "date_of_birth": "1975-09-21",
+    "date_of_birth_raw": "21st September, 1975"
   },
   {
     "name": "DR. JASMANINDER SINGH GREWAL",
@@ -2797,7 +3278,9 @@
     "phone_mobile": "98153-23023",
     "admin_roles": "Controller of Examinations",
     "phone_source": "Information Brochure 2026",
-    "image_url": "https://gndec.ac.in/images/JS%20Grewal_0.jpg"
+    "image_url": "https://gndec.ac.in/images/JS%20Grewal_0.jpg",
+    "date_of_birth": "1969-05-23",
+    "date_of_birth_raw": "23/05/1969"
   },
   {
     "name": "DR. JATINDER KAPOOR",
@@ -2810,7 +3293,8 @@
     "phone_mobile": "9814857865",
     "phone_source": "GNDEC Telephone Directory",
     "phone_office": "ext 4578",
-    "image_url": "https://gndec.ac.in/images/photo%20JK.jpg"
+    "image_url": "https://gndec.ac.in/images/photo%20JK.jpg",
+    "date_of_birth_raw": "4th October"
   },
   {
     "name": "DR. PARAMJIT SINGH BILGA",
@@ -2823,7 +3307,9 @@
     "phone_mobile": "9815906659",
     "phone_source": "GNDEC Telephone Directory",
     "phone_office": "ext 4578",
-    "image_url": "https://gndec.ac.in/images/Personal%20Photo_PSB1.jpg"
+    "image_url": "https://gndec.ac.in/images/Personal%20Photo_PSB1.jpg",
+    "date_of_birth": "1967-01-29",
+    "date_of_birth_raw": "29th January, 1967"
   },
   {
     "name": "DR. SEHIJPAL SINGH KHANGURA",
@@ -2837,7 +3323,9 @@
     "phone_mobile": "9855279865",
     "admin_roles": "Principal",
     "phone_source": "GNDEC Telephone Directory",
-    "image_url": "https://gndec.ac.in/images/Photo.jpg"
+    "image_url": "https://gndec.ac.in/images/Photo.jpg",
+    "date_of_birth": "1969-04-08",
+    "date_of_birth_raw": "08th April, 1969"
   },
   {
     "name": "DR. HARPUNEET SINGH",
@@ -2851,7 +3339,9 @@
     "phone_mobile": "99142-55011",
     "admin_roles": "Officer I/C M.Tech - Mechanical & Production Engg.",
     "phone_source": "Information Brochure 2026",
-    "image_url": "https://gndec.ac.in/images/WhatsApp%20Image%202022-02-02%20at%203.34.44%20PM.jpeg"
+    "image_url": "https://gndec.ac.in/images/WhatsApp%20Image%202022-02-02%20at%203.34.44%20PM.jpeg",
+    "date_of_birth": "1976-08-03",
+    "date_of_birth_raw": "03-08-1976"
   },
   {
     "name": "DR. PREM SINGH",
@@ -2864,7 +3354,9 @@
     "phone_mobile": "9464190665",
     "phone_source": "GNDEC Telephone Directory",
     "phone_office": "ext 4578",
-    "image_url": "https://gndec.ac.in/images/Prem%20SIngh.jpeg"
+    "image_url": "https://gndec.ac.in/images/Prem%20SIngh.jpeg",
+    "date_of_birth": "1975-09-08",
+    "date_of_birth_raw": "08th September. 1975"
   },
   {
     "name": "DR. ARDAMANBIR SINGH SIDHU",
@@ -2877,7 +3369,9 @@
     "phone_mobile": "9814123832",
     "phone_source": "GNDEC Telephone Directory",
     "phone_office": "ext 4578",
-    "image_url": "https://gndec.ac.in/images/A.Sidhu%20%282%29.jpg"
+    "image_url": "https://gndec.ac.in/images/A.Sidhu%20%282%29.jpg",
+    "date_of_birth": "1965-10-03",
+    "date_of_birth_raw": "03/10/1965"
   },
   {
     "name": "DR. AMRINDER SINGH PANNU",
@@ -2890,7 +3384,9 @@
     "phone_mobile": "9914330555",
     "phone_source": "GNDEC Telephone Directory",
     "phone_office": "ext 4578",
-    "image_url": "https://gndec.ac.in/images/Pi7_Passport_Photo.jpeg"
+    "image_url": "https://gndec.ac.in/images/Pi7_Passport_Photo.jpeg",
+    "date_of_birth": "1985-08-09",
+    "date_of_birth_raw": "09/08/1985"
   },
   {
     "name": "DR. BHUPINDER SINGH DHILLON",
@@ -2903,7 +3399,9 @@
     "phone_mobile": "9779135300",
     "phone_source": "GNDEC Telephone Directory",
     "phone_office": "ext 4578",
-    "image_url": "https://gndec.ac.in/images/BSD%20Pic.JPG"
+    "image_url": "https://gndec.ac.in/images/BSD%20Pic.JPG",
+    "date_of_birth": "1973-04-15",
+    "date_of_birth_raw": "15th April, 1973"
   },
   {
     "name": "DR. CHAMKAUR JINDAL",
@@ -2917,7 +3415,9 @@
     "phone_mobile": "84276-66994",
     "admin_roles": "Assistant Controller (Examination)",
     "phone_source": "Information Brochure 2026",
-    "image_url": "https://gndec.ac.in/images/unnamed.jpg"
+    "image_url": "https://gndec.ac.in/images/unnamed.jpg",
+    "date_of_birth": "1986-03-11",
+    "date_of_birth_raw": "11th March, 1986"
   },
   {
     "name": "DR. CHATWANT SINGH PANDHER",
@@ -2930,7 +3430,9 @@
     "phone_mobile": "9478230013",
     "phone_source": "GNDEC Telephone Directory",
     "phone_office": "ext 4572",
-    "image_url": "https://gndec.ac.in/images/WhatsApp%20Image%202021-04-27%20at%209.28.06%20AM.jpeg"
+    "image_url": "https://gndec.ac.in/images/WhatsApp%20Image%202021-04-27%20at%209.28.06%20AM.jpeg",
+    "date_of_birth": "1986-02-02",
+    "date_of_birth_raw": "02/02/1986"
   },
   {
     "name": "DR. DEEPAK DHAND",
@@ -2944,7 +3446,9 @@
     "phone_mobile": "98557-26093",
     "admin_roles": "Assistant Controller (Examination)",
     "phone_source": "Information Brochure 2026",
-    "image_url": "https://gndec.ac.in/images/Deep%20pp.jpg"
+    "image_url": "https://gndec.ac.in/images/Deep%20pp.jpg",
+    "date_of_birth": "1983-10-11",
+    "date_of_birth_raw": "11th October, 1983"
   },
   {
     "name": "DR. GULRAJ SINGH",
@@ -2957,7 +3461,9 @@
     "phone_mobile": "9876402628",
     "phone_source": "GNDEC Telephone Directory",
     "phone_office": "ext 4578",
-    "image_url": "https://gndec.ac.in/images/IMG-20260412-WA0002.jpg"
+    "image_url": "https://gndec.ac.in/images/IMG-20260412-WA0002.jpg",
+    "date_of_birth": "1990-09-10",
+    "date_of_birth_raw": "10/09/1990"
   },
   {
     "name": "DR. GULVIR SINGH",
@@ -2970,7 +3476,9 @@
     "phone_mobile": "9592457515",
     "phone_source": "GNDEC Telephone Directory",
     "phone_office": "ext 4578",
-    "image_url": "https://gndec.ac.in/images/40%20KB%20photo_Gulvir.JPG"
+    "image_url": "https://gndec.ac.in/images/40%20KB%20photo_Gulvir.JPG",
+    "date_of_birth": "1975-01-26",
+    "date_of_birth_raw": "January 26, 1975"
   },
   {
     "name": "DR. HARNAM SINGH FARWAHA",
@@ -2984,7 +3492,9 @@
     "phone_mobile": "99883-32600",
     "admin_roles": "Assistant Registrar (Accounts)",
     "phone_source": "Information Brochure 2026",
-    "image_url": "https://gndec.ac.in/images/Harnam.jpg"
+    "image_url": "https://gndec.ac.in/images/Harnam.jpg",
+    "date_of_birth": "1987-10-16",
+    "date_of_birth_raw": "16th October, 1987"
   },
   {
     "name": "DR. JAGDEEP SINGH",
@@ -3001,7 +3511,9 @@
     "also_published_as": [
       "DR. JAGDEEP SINGH"
     ],
-    "image_url": "https://gndec.ac.in/images/Jagdeep.jpg"
+    "image_url": "https://gndec.ac.in/images/Jagdeep.jpg",
+    "date_of_birth": "1983-07-08",
+    "date_of_birth_raw": "08/07/1983"
   },
   {
     "name": "DR. JATINDER PAL",
@@ -3014,7 +3526,9 @@
     "phone_mobile": "9888073363",
     "phone_source": "GNDEC Telephone Directory",
     "phone_office": "ext 4578",
-    "image_url": "https://gndec.ac.in/images/JP%20%281%29.jpg"
+    "image_url": "https://gndec.ac.in/images/JP%20%281%29.jpg",
+    "date_of_birth": "1972-04-13",
+    "date_of_birth_raw": "13 April,1972"
   },
   {
     "name": "DR. RAMAN KUMAR",
@@ -3030,7 +3544,9 @@
     "phone_mobile": "9855100530",
     "phone_source": "GNDEC Telephone Directory",
     "phone_office": "ext 4578",
-    "image_url": "https://gndec.ac.in/images/12%20Raman%20Snap%202019.jpg"
+    "image_url": "https://gndec.ac.in/images/12%20Raman%20Snap%202019.jpg",
+    "date_of_birth": "1976-10-29",
+    "date_of_birth_raw": "29/10/1976"
   },
   {
     "name": "DR. SATJOT SINGH DHILLON",
@@ -3044,7 +3560,9 @@
     "phone_mobile": "92920-00089",
     "admin_roles": "HOD - Workshops; Public Relation Officer",
     "phone_source": "Information Brochure 2026",
-    "image_url": "https://gndec.ac.in/images/d6ab2c15-cadf-4a19-956b-1cc9a157955c.jpg"
+    "image_url": "https://gndec.ac.in/images/d6ab2c15-cadf-4a19-956b-1cc9a157955c.jpg",
+    "date_of_birth": "1987-04-24",
+    "date_of_birth_raw": "24th April, 1987"
   },
   {
     "name": "DR. SHEHBAAZ SINGH BRAR",
@@ -3058,7 +3576,9 @@
     "phone_mobile": "98779-33535",
     "admin_roles": "Chief Warden (Hostels)",
     "phone_source": "Information Brochure 2026",
-    "image_url": "https://gndec.ac.in/images/shehbaaz.jpeg"
+    "image_url": "https://gndec.ac.in/images/shehbaaz.jpeg",
+    "date_of_birth": "1987-04-12",
+    "date_of_birth_raw": "12th April, 1987"
   },
   {
     "name": "ER. ARSHPREET KAUR",
@@ -3071,7 +3591,9 @@
     "phone_mobile": "9779844312",
     "phone_source": "GNDEC Telephone Directory",
     "phone_office": "ext 4578",
-    "image_url": "https://gndec.ac.in/images/Arshpreet%20Kaur%20PHOTO%20%283%29.JPG"
+    "image_url": "https://gndec.ac.in/images/Arshpreet%20Kaur%20PHOTO%20%283%29.JPG",
+    "date_of_birth": "1989-08-24",
+    "date_of_birth_raw": "24/08/1989"
   },
   {
     "name": "ER. DAVINDER SINGH BHOGAL",
@@ -3085,7 +3607,9 @@
     "phone_mobile": "95011-99916",
     "admin_roles": "Assistant Professor, Mechanical & Production",
     "phone_source": "Statutory Committees",
-    "image_url": "https://gndec.ac.in/images/20220126_204346.jpg"
+    "image_url": "https://gndec.ac.in/images/20220126_204346.jpg",
+    "date_of_birth": "1975-02-20",
+    "date_of_birth_raw": "20th February, 1975"
   },
   {
     "name": "ER. GURMEET KAUR",
@@ -3098,7 +3622,9 @@
     "phone_mobile": "9815936932",
     "phone_source": "GNDEC Telephone Directory",
     "phone_office": "ext 4578",
-    "image_url": "https://gndec.ac.in/images/Er.%20Gurmeet%20Kaur.jpg"
+    "image_url": "https://gndec.ac.in/images/Er.%20Gurmeet%20Kaur.jpg",
+    "date_of_birth": "1978-10-15",
+    "date_of_birth_raw": "15th October, 1978"
   },
   {
     "name": "ER. GURPREET SINGH",
@@ -3111,7 +3637,9 @@
     "phone_mobile": "9888460916",
     "phone_source": "GNDEC Telephone Directory",
     "phone_office": "ext 4578",
-    "image_url": "https://gndec.ac.in/images/Photograph.jpg"
+    "image_url": "https://gndec.ac.in/images/Photograph.jpg",
+    "date_of_birth": "1980-05-23",
+    "date_of_birth_raw": "23th May, 1980"
   },
   {
     "name": "ER. GURWANT SINGH GILL",
@@ -3127,7 +3655,9 @@
     "phone_mobile": "8427605599",
     "phone_source": "GNDEC Telephone Directory",
     "phone_office": "ext 4578",
-    "image_url": "https://gndec.ac.in/images/satwant.jpg"
+    "image_url": "https://gndec.ac.in/images/satwant.jpg",
+    "date_of_birth": "1986-01-14",
+    "date_of_birth_raw": "14/01/1986"
   },
   {
     "name": "ER. JAGJIT KAUR",
@@ -3140,7 +3670,9 @@
     "phone_mobile": "9915424292",
     "phone_source": "GNDEC Telephone Directory",
     "phone_office": "ext 4578",
-    "image_url": "https://gndec.ac.in/images/pic%201.jpg"
+    "image_url": "https://gndec.ac.in/images/pic%201.jpg",
+    "date_of_birth": "1989-05-01",
+    "date_of_birth_raw": "01/05/1989"
   },
   {
     "name": "ER. JASWINDER SINGH",
@@ -3153,7 +3685,9 @@
     "phone_mobile": "9872536035",
     "phone_source": "GNDEC Telephone Directory",
     "phone_office": "ext 4578",
-    "image_url": "https://gndec.ac.in/images/FB_IMG_1523962984914.jpg"
+    "image_url": "https://gndec.ac.in/images/FB_IMG_1523962984914.jpg",
+    "date_of_birth": "1986-11-15",
+    "date_of_birth_raw": "15/11/1986"
   },
   {
     "name": "ER. KANWAL PREET SAHNI",
@@ -3169,7 +3703,9 @@
     "phone_mobile": "9464276150",
     "phone_source": "GNDEC Telephone Directory",
     "phone_office": "ext 4578",
-    "image_url": "https://gndec.ac.in/images/kps%20pic.jpg"
+    "image_url": "https://gndec.ac.in/images/kps%20pic.jpg",
+    "date_of_birth": "1987-10-01",
+    "date_of_birth_raw": "01/10/1987"
   },
   {
     "name": "ER. LAKHVEER SINGH KHANA",
@@ -3185,7 +3721,9 @@
     "phone_mobile": "9464663313",
     "phone_source": "GNDEC Telephone Directory",
     "phone_office": "ext 4713",
-    "image_url": "https://gndec.ac.in/images/IMG_0738.JPG"
+    "image_url": "https://gndec.ac.in/images/IMG_0738.JPG",
+    "date_of_birth": "1989-12-15",
+    "date_of_birth_raw": "15/12/1989"
   },
   {
     "name": "ER. MANJOT SINGH BEDI",
@@ -3198,7 +3736,9 @@
     "phone_mobile": "9803566002",
     "phone_source": "GNDEC Telephone Directory",
     "phone_office": "ext 4578",
-    "image_url": "https://gndec.ac.in/images/msb.jpeg"
+    "image_url": "https://gndec.ac.in/images/msb.jpeg",
+    "date_of_birth": "1991-02-25",
+    "date_of_birth_raw": "25/02/1991"
   },
   {
     "name": "ER. MANMOHAN SINGH",
@@ -3211,7 +3751,9 @@
     "phone_mobile": "9872336630",
     "phone_source": "GNDEC Telephone Directory",
     "phone_office": "ext 4578",
-    "image_url": "https://gndec.ac.in/images/picture.jpg"
+    "image_url": "https://gndec.ac.in/images/picture.jpg",
+    "date_of_birth": "1989-06-24",
+    "date_of_birth_raw": "24/06/1989"
   },
   {
     "name": "ER. PUSHPINDER SINGH",
@@ -3227,7 +3769,9 @@
     "phone_mobile": "8146000426",
     "phone_source": "GNDEC Telephone Directory",
     "phone_office": "ext 4578",
-    "image_url": "https://gndec.ac.in/images/PPS.jpg"
+    "image_url": "https://gndec.ac.in/images/PPS.jpg",
+    "date_of_birth": "1990-07-09",
+    "date_of_birth_raw": "09th July, 1990"
   },
   {
     "name": "ER. RUPINDER SINGH",
@@ -3243,7 +3787,9 @@
     "phone_mobile": "8427000490",
     "phone_source": "GNDEC Telephone Directory",
     "phone_office": "ext 4578",
-    "image_url": "https://gndec.ac.in/images/23E1CD04-84ED-49AA-957B-4F53DB978E43.jpeg"
+    "image_url": "https://gndec.ac.in/images/23E1CD04-84ED-49AA-957B-4F53DB978E43.jpeg",
+    "date_of_birth": "1987-04-11",
+    "date_of_birth_raw": "11th April, 1987"
   },
   {
     "name": "ER. SATWANT SINGH",
@@ -3256,7 +3802,9 @@
     "phone_mobile": "9988702731",
     "phone_source": "GNDEC Telephone Directory",
     "phone_office": "ext 4578",
-    "image_url": "https://gndec.ac.in/images/WhatsApp%20Image%202022-01-25%20at%2012.12.11%20PM.jpeg"
+    "image_url": "https://gndec.ac.in/images/WhatsApp%20Image%202022-01-25%20at%2012.12.11%20PM.jpeg",
+    "date_of_birth": "1989-10-19",
+    "date_of_birth_raw": "19/10/1989"
   },
   {
     "name": "ER. SUKHJEET SINGH",
@@ -3269,7 +3817,9 @@
     "phone_mobile": "6239279237",
     "phone_source": "GNDEC Telephone Directory",
     "phone_office": "ext 4578",
-    "image_url": "https://gndec.ac.in/images/singh%20profile%20pic%2001.jpg"
+    "image_url": "https://gndec.ac.in/images/singh%20profile%20pic%2001.jpg",
+    "date_of_birth": "1991-10-04",
+    "date_of_birth_raw": "04 October 1991"
   },
   {
     "name": "ER.JASVIR SINGH",
@@ -3282,7 +3832,9 @@
     "phone_mobile": "8146616043",
     "phone_source": "GNDEC Telephone Directory",
     "phone_office": "ext 4578",
-    "image_url": "https://gndec.ac.in/images/a63b6f11-2dc1-46ea-8b23-1533d2dc979d.jpg"
+    "image_url": "https://gndec.ac.in/images/a63b6f11-2dc1-46ea-8b23-1533d2dc979d.jpg",
+    "date_of_birth": "1988-04-06",
+    "date_of_birth_raw": "06th April, 1988"
   },
   {
     "name": "JASMANINDER SINGH GREWAL",
@@ -3296,7 +3848,9 @@
     "phone_mobile": "98153-23023",
     "admin_roles": "Controller of Examinations",
     "phone_source": "Information Brochure 2026",
-    "image_url": "https://gndec.ac.in/images/IMG_1855A.jpg"
+    "image_url": "https://gndec.ac.in/images/IMG_1855A.jpg",
+    "date_of_birth": "1969-05-23",
+    "date_of_birth_raw": "23/05/1969"
   },
   {
     "name": "RUPINDER SINGH",
@@ -3306,7 +3860,9 @@
     "department": "Production Engineering",
     "dept_id": 31,
     "profile_url": "https://gndec.ac.in/faculty/?id=164",
-    "image_url": "https://gndec.ac.in/images/Clipboard01.jpg"
+    "image_url": "https://gndec.ac.in/images/Clipboard01.jpg",
+    "date_of_birth": "1979-03-13",
+    "date_of_birth_raw": "13/03/1979"
   },
   {
     "name": "HARPUNEET SINGH",
@@ -3320,7 +3876,9 @@
     "phone_mobile": "99142-55011",
     "admin_roles": "Officer I/C M.Tech - Mechanical & Production Engg.",
     "phone_source": "Information Brochure 2026",
-    "image_url": "https://gndec.ac.in/images/WhatsApp%20Image%202022-02-02%20at%203.34.44%20PM.jpeg"
+    "image_url": "https://gndec.ac.in/images/WhatsApp%20Image%202022-02-02%20at%203.34.44%20PM.jpeg",
+    "date_of_birth": "1976-08-03",
+    "date_of_birth_raw": "03/08/1976"
   },
   {
     "name": "ARSHPREET KAUR",
@@ -3333,7 +3891,9 @@
     "phone_mobile": "9779844312",
     "phone_source": "GNDEC Telephone Directory",
     "phone_office": "ext 4578",
-    "image_url": "https://gndec.ac.in/images/IMG-6757.JPG"
+    "image_url": "https://gndec.ac.in/images/IMG-6757.JPG",
+    "date_of_birth": "1989-08-24",
+    "date_of_birth_raw": "24/08/1989"
   },
   {
     "name": "GULRAJ SINGH",
@@ -3346,7 +3906,9 @@
     "phone_mobile": "9876402628",
     "phone_source": "GNDEC Telephone Directory",
     "phone_office": "ext 4578",
-    "image_url": "https://gndec.ac.in/images/IMG-20260412-WA0002.jpg"
+    "image_url": "https://gndec.ac.in/images/IMG-20260412-WA0002.jpg",
+    "date_of_birth": "1990-09-10",
+    "date_of_birth_raw": "10/09/1990"
   },
   {
     "name": "GURLEEN SINGH SANDHU",
@@ -3356,7 +3918,9 @@
     "department": "Production Engineering",
     "dept_id": 31,
     "profile_url": "https://gndec.ac.in/faculty/?id=296",
-    "image_url": "https://gndec.ac.in/images/download.png"
+    "image_url": "https://gndec.ac.in/images/download.png",
+    "date_of_birth": "1991-10-28",
+    "date_of_birth_raw": "28/10/1991"
   },
   {
     "name": "JAGDEEP SINGH",
@@ -3373,7 +3937,9 @@
     "also_published_as": [
       "DR. JAGDEEP SINGH"
     ],
-    "image_url": "https://gndec.ac.in/images/Jagdeep.jpg"
+    "image_url": "https://gndec.ac.in/images/Jagdeep.jpg",
+    "date_of_birth": "1983-07-08",
+    "date_of_birth_raw": "08/07/1983"
   },
   {
     "name": "KANWAL PREET SAHNI",
@@ -3389,7 +3955,9 @@
     "phone_mobile": "9464276150",
     "phone_source": "GNDEC Telephone Directory",
     "phone_office": "ext 4578",
-    "image_url": "https://gndec.ac.in/images/kps%20pic.jpg"
+    "image_url": "https://gndec.ac.in/images/kps%20pic.jpg",
+    "date_of_birth": "1987-10-01",
+    "date_of_birth_raw": "01/10/1987"
   },
   {
     "name": "MANJOT SINGH BEDI",
@@ -3402,7 +3970,9 @@
     "phone_mobile": "9803566002",
     "phone_source": "GNDEC Telephone Directory",
     "phone_office": "ext 4578",
-    "image_url": "https://gndec.ac.in/images/msb.jpeg"
+    "image_url": "https://gndec.ac.in/images/msb.jpeg",
+    "date_of_birth": "1991-02-25",
+    "date_of_birth_raw": "25/02/1991"
   },
   {
     "name": "AR.AKANKSHA SHARMA",
@@ -3428,7 +3998,9 @@
     "profile_url": "https://gndec.ac.in/faculty/?id=491",
     "phone_office": "ext 4802",
     "phone_source": "GNDEC Telephone Directory",
-    "image_url": "https://gndec.ac.in/images/WhatsApp%20Image%202020-12-11%20at%2011.07.59%20PM%20%282%29.jpeg"
+    "image_url": "https://gndec.ac.in/images/WhatsApp%20Image%202020-12-11%20at%2011.07.59%20PM%20%282%29.jpeg",
+    "date_of_birth": "1982-10-13",
+    "date_of_birth_raw": "13/10/1982"
   },
   {
     "name": "AR. DHARINI MIDDHA",
@@ -3440,7 +4012,9 @@
     "profile_url": "https://gndec.ac.in/faculty/?id=506",
     "phone_office": "ext 4802",
     "phone_source": "GNDEC Telephone Directory",
-    "image_url": "https://gndec.ac.in/images/IMG-20260918-WA0002.jpg"
+    "image_url": "https://gndec.ac.in/images/IMG-20260918-WA0002.jpg",
+    "date_of_birth": "1993-03-16",
+    "date_of_birth_raw": "16.03.1993"
   },
   {
     "name": "AR. HARSIMRANJEET KAUR",
@@ -3450,7 +4024,9 @@
     "department": "School of Architecture",
     "dept_id": 99,
     "profile_url": "https://gndec.ac.in/faculty/?id=488",
-    "image_url": "https://gndec.ac.in/images/WhatsApp%20Image%202026-03-17%20at%2021.02.45.jpeg"
+    "image_url": "https://gndec.ac.in/images/WhatsApp%20Image%202026-03-17%20at%2021.02.45.jpeg",
+    "date_of_birth": "1997-08-01",
+    "date_of_birth_raw": "01.08.1997"
   },
   {
     "name": "AR. MOKSHA BHATIA",
@@ -3460,7 +4036,9 @@
     "department": "School of Architecture",
     "dept_id": 99,
     "profile_url": "https://gndec.ac.in/faculty/?id=487",
-    "image_url": "https://gndec.ac.in/images/Ar%20Moksha%20Bhatia.jpeg"
+    "image_url": "https://gndec.ac.in/images/Ar%20Moksha%20Bhatia.jpeg",
+    "date_of_birth": "1995-12-14",
+    "date_of_birth_raw": "14/12/1995"
   },
   {
     "name": "BALJEET SINGH",
@@ -3476,7 +4054,9 @@
     "phone_mobile": "9996017500",
     "phone_source": "GNDEC Telephone Directory",
     "phone_office": "ext 4802",
-    "image_url": "https://gndec.ac.in/images/IMG_20260310_152637.jpg"
+    "image_url": "https://gndec.ac.in/images/IMG_20260310_152637.jpg",
+    "date_of_birth": "1992-05-11",
+    "date_of_birth_raw": "11/05/1992"
   },
   {
     "name": "NAVJOT KAUR SARAO",
@@ -3488,7 +4068,9 @@
     "profile_url": "https://gndec.ac.in/faculty/?id=490",
     "phone_office": "ext 4802",
     "phone_source": "GNDEC Telephone Directory",
-    "image_url": "https://gndec.ac.in/images/ar_navjot.jpg"
+    "image_url": "https://gndec.ac.in/images/ar_navjot.jpg",
+    "date_of_birth": "1991-11-24",
+    "date_of_birth_raw": "24-11-1991"
   },
   {
     "name": "RAMANPREET KAUR",
@@ -3501,7 +4083,9 @@
     "phone_mobile": "9592705544",
     "phone_source": "GNDEC Telephone Directory",
     "phone_office": "ext 4802",
-    "image_url": "https://gndec.ac.in/images/IMG_20260319_175553.jpg"
+    "image_url": "https://gndec.ac.in/images/IMG_20260319_175553.jpg",
+    "date_of_birth": "1991-10-02",
+    "date_of_birth_raw": "02/10/1991"
   },
   {
     "name": "SUKHMANJIT SINGH",
@@ -3515,7 +4099,9 @@
     "phone_mobile": "9779595124",
     "admin_roles": "",
     "phone_source": "GNDEC Telephone Directory",
-    "image_url": "https://gndec.ac.in/images/Pic_Sukhmanjit%20Singh.jpeg"
+    "image_url": "https://gndec.ac.in/images/Pic_Sukhmanjit%20Singh.jpeg",
+    "date_of_birth": "1985-02-09",
+    "date_of_birth_raw": "09/02/1985"
   },
   {
     "name": "ER. NANCY",
