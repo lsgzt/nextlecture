@@ -549,7 +549,7 @@ private fun HolidayRowCard(row: HolidayRow, isNext: Boolean, onOpen: (String) ->
         border = BorderStroke(1.dp, MaterialTheme.colorScheme.outlineVariant),
         elevation = CardDefaults.cardElevation(0.dp)
     ) {
-        Row(Modifier.padding(horizontal = 14.dp, vertical = 12.dp), verticalAlignment = Alignment.CenterVertically) {
+        Row(Modifier.padding(horizontal = 14.dp, vertical = 12.dp), verticalAlignment = Alignment.Top) {
             Column(Modifier.width(48.dp), horizontalAlignment = Alignment.CenterHorizontally) {
                 Text(
                     row.date?.let { it.dayOfMonth.toString() } ?: "—",
@@ -579,7 +579,7 @@ private fun HolidayRowCard(row: HolidayRow, isNext: Boolean, onOpen: (String) ->
                     color = if (kind == HolidayKind.RESTRICTED) typeColor else MaterialTheme.colorScheme.onSurface,
                     style = MaterialTheme.typography.titleMedium,
                     fontWeight = FontWeight.SemiBold,
-                    maxLines = 1,
+                    maxLines = 2,
                     overflow = TextOverflow.Ellipsis
                 )
                 Text(
