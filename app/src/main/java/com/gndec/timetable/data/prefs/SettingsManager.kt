@@ -83,6 +83,12 @@ data class AppSettings(
     val erpNoticeUpdatedAt: Long = 0L,
     val holidayJson: String = "",
     val holidayUpdatedAt: Long = 0L,
+    /**
+     * yyyy-MM-dd of the one day the student chose "Not a holiday?" on — showing the
+     * timetable despite a full holiday. Day-scoped so it expires on its own at midnight;
+     * blank (or any other date) means the holiday notice is in charge again.
+     */
+    val holidayTimetableOverrideDay: String = "",
     val lastReleaseMarker: String = "",
     val lastReleaseName: String = "",
     val lastReleaseNotes: String = "",
@@ -167,6 +173,7 @@ class SettingsManager(private val context: Context) {
         val ERP_NOTICE_UPDATED_AT = longPreferencesKey("erp_notice_updated_at")
         val HOLIDAY_JSON = stringPreferencesKey("holiday_json")
         val HOLIDAY_UPDATED_AT = longPreferencesKey("holiday_updated_at")
+        val HOLIDAY_TIMETABLE_OVERRIDE_DAY = stringPreferencesKey("holiday_timetable_override_day")
         val LAST_RELEASE_MARKER = stringPreferencesKey("last_release_marker")
         val LAST_RELEASE_NAME = stringPreferencesKey("last_release_name")
         val LAST_RELEASE_NOTES = stringPreferencesKey("last_release_notes")
@@ -233,6 +240,7 @@ class SettingsManager(private val context: Context) {
             erpNoticeUpdatedAt = p[K.ERP_NOTICE_UPDATED_AT] ?: 0L,
             holidayJson = p[K.HOLIDAY_JSON] ?: "",
             holidayUpdatedAt = p[K.HOLIDAY_UPDATED_AT] ?: 0L,
+            holidayTimetableOverrideDay = p[K.HOLIDAY_TIMETABLE_OVERRIDE_DAY] ?: "",
             lastReleaseMarker = p[K.LAST_RELEASE_MARKER] ?: "",
             lastReleaseName = p[K.LAST_RELEASE_NAME] ?: "",
             lastReleaseNotes = p[K.LAST_RELEASE_NOTES] ?: "",
@@ -388,6 +396,15 @@ class SettingsManager(private val context: Context) {
     suspend fun setHolidayCache(json: String, updatedAt: Long) = context.dataStore.edit {
         it[K.HOLIDAY_JSON] = json
         it[K.HOLIDAY_UPDATED_AT] = updatedAt
+    }
+
+    /**
+     * Records (with a non-blank [dayIso]) or clears (blank) the day-scoped
+     * "show the timetable anyway" choice for a full holiday.
+     */
+    suspend fun setHolidayTimetableOverrideDay(dayIso: String) = context.dataStore.edit {
+        if (dayIso.isBlank()) it.remove(K.HOLIDAY_TIMETABLE_OVERRIDE_DAY)
+        else it[K.HOLIDAY_TIMETABLE_OVERRIDE_DAY] = dayIso
     }
     suspend fun setReleaseCache(marker: String, name: String, notes: String, checkedAt: Long) = context.dataStore.edit {
         it[K.LAST_RELEASE_MARKER] = marker.trim()

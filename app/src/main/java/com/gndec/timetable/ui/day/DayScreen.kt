@@ -61,6 +61,7 @@ import androidx.compose.runtime.mutableStateMapOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.produceState
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -95,9 +96,13 @@ import com.gndec.timetable.domain.FriendLateSlot
 import com.gndec.timetable.domain.earlySlotsBefore
 import com.gndec.timetable.domain.lateSlotsAfter
 import com.gndec.timetable.domain.FriendFreeWindow
+import com.gndec.timetable.domain.HolidayGate
 import com.gndec.timetable.domain.friendAvailabilitySentences
 import com.gndec.timetable.domain.friendsFreeWithin
 import com.gndec.timetable.ui.PremiumBottomBarContentClearance
+import com.gndec.timetable.ui.PremiumHolidayHeroCard
+import com.gndec.timetable.ui.PremiumHolidayOverrideStrip
+import com.gndec.timetable.ui.PremiumNextAfterHolidayCard
 import com.gndec.timetable.ui.PremiumPageHeader
 import com.gndec.timetable.ui.PremiumScreenBackground
 import com.gndec.timetable.ui.motion.LocalReducedMotion
@@ -113,6 +118,7 @@ import com.gndec.timetable.util.resolvedVenue
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.launch
 import java.time.DayOfWeek
 import java.time.Instant
 import java.time.ZoneId
@@ -155,6 +161,7 @@ fun DayScreen(
         if (group == null) flowOf(emptyList()) else container.db.lectureDao().observeForGroup(group)
     }.collectAsStateWithLifecycle(initialValue = emptyList())
     val meta by container.db.metaDao().observe().collectAsStateWithLifecycle(initialValue = null)
+    val holidays by container.holidayManager.holidays.collectAsStateWithLifecycle()
     var nowMillis by remember { mutableLongStateOf(System.currentTimeMillis()) }
     var viewModeName by rememberSaveable { mutableStateOf(DayViewMode.TODAY.name) }
     val viewMode = DayViewMode.valueOf(viewModeName)
@@ -183,6 +190,16 @@ fun DayScreen(
     val muted = MaterialTheme.colorScheme.onSurfaceVariant
     val primaryText = MaterialTheme.colorScheme.onSurface
     val accent = MaterialTheme.colorScheme.primary
+    // Full-holiday gate (see HolidayGate): on a full holiday, today's schedule is
+    // replaced by the holiday notice. "Not a holiday?" reveals the timetable for
+    // that one day — day-scoped and closable, so an accidental tap never sticks.
+    val scope = rememberCoroutineScope()
+    val todayIso = time.toLocalDate().toString()
+    val todayFullHolidays = HolidayGate.fullHolidaysOn(holidays, todayIso)
+    val holidayNames = HolidayGate.displayNames(todayFullHolidays)
+    val holidayOverride = settings.holidayTimetableOverrideDay == todayIso
+    val holidayActive = todayFullHolidays.isNotEmpty() && !holidayOverride
+    val nextAfterHoliday = if (holidayActive) HolidayGate.nextLectureAfter(lectures, holidays, todayIso) else null
     val selectedDate = when (viewMode) {
         DayViewMode.TODAY -> time.toLocalDate()
         DayViewMode.TOMORROW -> time.toLocalDate().plusDays(1)
@@ -245,98 +262,120 @@ fun DayScreen(
                             }
                         } else {
                             Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
-                                val modeLectures = when (viewMode) {
-                                    DayViewMode.TODAY -> lectures.filter { it.dayOfWeek == todayDow }
-                                    DayViewMode.TOMORROW -> lectures.filter { it.dayOfWeek == tomorrowDow }
-                                    DayViewMode.WEEK -> emptyList()
-                                }.sortedBy { it.startMinutes }
-                                val modeTimeline = buildTimeline(modeLectures, if (viewMode == DayViewMode.TODAY) nowMinutes else -1)
-                                val modeFreeMinutes = modeTimeline.filterIsInstance<TimelineItem.Free>().sumOf { it.end - it.start }
-                                val modeFriends = if (viewMode == DayViewMode.TODAY) todayFriendDays else tomorrowFriendDays
-                                val myFirstStart = modeLectures.minOfOrNull { it.startMinutes }
-                                val earlyFriendSlots = if (myFirstStart != null) {
-                                    modeFriends.earlySlotsBefore(myFirstStart)
-                                } else {
-                                    emptyList()
-                                }
-                                // Mirror of the top note: friends still in class after
-                                // the student's last lecture of the day ends.
-                                val myLastEnd = modeLectures.maxOfOrNull { it.endMinutes }
-                                val lateFriendSlots = if (myLastEnd != null) {
-                                    modeFriends.lateSlotsAfter(myLastEnd)
-                                } else {
-                                    emptyList()
-                                }
-                                DaySummary(
-                                    lectures = modeLectures.size,
-                                    freeMinutes = modeFreeMinutes,
-                                    reminders = if (viewMode == DayViewMode.TODAY) scheduledReminders else 0,
-                                    accent = accent,
-                                    primaryText = primaryText,
-                                    muted = muted,
-                                    cardColor = MaterialTheme.colorScheme.surface
-                                )
-                                if (earlyFriendSlots.isNotEmpty()) {
-                                    FriendsBeforeDayNote(
-                                        slots = earlyFriendSlots,
-                                        accent = accent,
-                                        muted = muted
+                                if (viewMode == DayViewMode.TODAY && holidayActive) {
+                                    // Full holiday: the timeline itself steps aside for the
+                                    // holiday notice and the next teaching day.
+                                    PremiumHolidayHeroCard(
+                                        holidayNames = holidayNames,
+                                        onViewTimetable = { scope.launch { container.settings.setHolidayTimetableOverrideDay(todayIso) } }
                                     )
-                                }
-                                AnimatedContent(
-                                    targetState = viewMode,
-                                    transitionSpec = {
-                                        if (reduced) {
-                                            fadeIn(tween(Motion.Normal, easing = Motion.EasingStandard)) togetherWith
-                                                fadeOut(tween(Motion.Fast, easing = Motion.EasingStandard))
-                                        } else {
-                                            // Segmented-control motion: content slides toward the
-                                            // direction of the newly selected tab.
-                                            val dir = if (targetState.ordinal >= initialState.ordinal) 1 else -1
-                                            (slideInHorizontally(tween(Motion.Emphasized, easing = Motion.EasingEnter)) { dir * it / 12 } +
-                                                fadeIn(tween(Motion.Emphasized, easing = Motion.EasingEnter))) togetherWith
-                                                (slideOutHorizontally(tween(Motion.Normal, easing = Motion.EasingExit)) { -dir * it / 14 } +
-                                                    fadeOut(tween(Motion.Normal, easing = Motion.EasingExit)))
-                                        }
-                                    },
-                                    label = "dayTimetableFade"
-                                ) { mode ->
-                                    val animatedLectures = when (mode) {
+                                    nextAfterHoliday?.let { next ->
+                                        PremiumNextAfterHolidayCard(
+                                            next = next,
+                                            todayIso = todayIso
+                                        )
+                                    }
+                                } else {
+                                    if (viewMode == DayViewMode.TODAY && todayFullHolidays.isNotEmpty()) {
+                                        // Timetable shown by choice on a holiday: offer the way
+                                        // back to the holiday notice (accidental-tap escape).
+                                        PremiumHolidayOverrideStrip(
+                                            onClose = { scope.launch { container.settings.setHolidayTimetableOverrideDay("") } }
+                                        )
+                                    }
+                                    val modeLectures = when (viewMode) {
                                         DayViewMode.TODAY -> lectures.filter { it.dayOfWeek == todayDow }
                                         DayViewMode.TOMORROW -> lectures.filter { it.dayOfWeek == tomorrowDow }
                                         DayViewMode.WEEK -> emptyList()
                                     }.sortedBy { it.startMinutes }
-                                    val animatedTimeline = buildTimeline(animatedLectures, if (mode == DayViewMode.TODAY) nowMinutes else -1)
-                                    if (animatedTimeline.isEmpty()) {
-                                        EmptyDayCard(
-                                            cardColor = MaterialTheme.colorScheme.surface,
-                                            primaryText = primaryText,
-                                            muted = muted,
-                                            dayLabel = if (mode == DayViewMode.TODAY) "today" else "tomorrow"
-                                        )
+                                    val modeTimeline = buildTimeline(modeLectures, if (viewMode == DayViewMode.TODAY) nowMinutes else -1)
+                                    val modeFreeMinutes = modeTimeline.filterIsInstance<TimelineItem.Free>().sumOf { it.end - it.start }
+                                    val modeFriends = if (viewMode == DayViewMode.TODAY) todayFriendDays else tomorrowFriendDays
+                                    val myFirstStart = modeLectures.minOfOrNull { it.startMinutes }
+                                    val earlyFriendSlots = if (myFirstStart != null) {
+                                        modeFriends.earlySlotsBefore(myFirstStart)
                                     } else {
-                                        val shownDate = if (mode == DayViewMode.TODAY) time.toLocalDate() else time.toLocalDate().plusDays(1)
-                                        TimelineSection(
-                                            timeline = animatedTimeline,
-                                            nowMinutes = if (mode == DayViewMode.TODAY) nowMinutes else -1,
+                                        emptyList()
+                                    }
+                                    // Mirror of the top note: friends still in class after
+                                    // the student's last lecture of the day ends.
+                                    val myLastEnd = modeLectures.maxOfOrNull { it.endMinutes }
+                                    val lateFriendSlots = if (myLastEnd != null) {
+                                        modeFriends.lateSlotsAfter(myLastEnd)
+                                    } else {
+                                        emptyList()
+                                    }
+                                    DaySummary(
+                                        lectures = modeLectures.size,
+                                        freeMinutes = modeFreeMinutes,
+                                        reminders = if (viewMode == DayViewMode.TODAY) scheduledReminders else 0,
+                                        accent = accent,
+                                        primaryText = primaryText,
+                                        muted = muted,
+                                        cardColor = MaterialTheme.colorScheme.surface
+                                    )
+                                    if (earlyFriendSlots.isNotEmpty()) {
+                                        FriendsBeforeDayNote(
+                                            slots = earlyFriendSlots,
                                             accent = accent,
-                                            railBackground = background,
-                                            primaryText = primaryText,
-                                            muted = muted,
-                                            lectureDate = shownDate,
-                                            friends = if (mode == DayViewMode.TODAY) todayFriendDays else tomorrowFriendDays,
-                                            mentorName = settings.mentorName,
-                                            mentorVenue = settings.mentorVenue,
-                                            onOpenLecture = onOpenLecture
+                                            muted = muted
                                         )
                                     }
-                                }
-                                if (lateFriendSlots.isNotEmpty()) {
-                                    FriendsAfterDayNote(
-                                        slots = lateFriendSlots,
-                                        accent = accent,
-                                        muted = muted
-                                    )
+                                    AnimatedContent(
+                                        targetState = viewMode,
+                                        transitionSpec = {
+                                            if (reduced) {
+                                                fadeIn(tween(Motion.Normal, easing = Motion.EasingStandard)) togetherWith
+                                                    fadeOut(tween(Motion.Fast, easing = Motion.EasingStandard))
+                                            } else {
+                                                // Segmented-control motion: content slides toward the
+                                                // direction of the newly selected tab.
+                                                val dir = if (targetState.ordinal >= initialState.ordinal) 1 else -1
+                                                (slideInHorizontally(tween(Motion.Emphasized, easing = Motion.EasingEnter)) { dir * it / 12 } +
+                                                    fadeIn(tween(Motion.Emphasized, easing = Motion.EasingEnter))) togetherWith
+                                                    (slideOutHorizontally(tween(Motion.Normal, easing = Motion.EasingExit)) { -dir * it / 14 } +
+                                                        fadeOut(tween(Motion.Normal, easing = Motion.EasingExit)))
+                                            }
+                                        },
+                                        label = "dayTimetableFade"
+                                    ) { mode ->
+                                        val animatedLectures = when (mode) {
+                                            DayViewMode.TODAY -> lectures.filter { it.dayOfWeek == todayDow }
+                                            DayViewMode.TOMORROW -> lectures.filter { it.dayOfWeek == tomorrowDow }
+                                            DayViewMode.WEEK -> emptyList()
+                                        }.sortedBy { it.startMinutes }
+                                        val animatedTimeline = buildTimeline(animatedLectures, if (mode == DayViewMode.TODAY) nowMinutes else -1)
+                                        if (animatedTimeline.isEmpty()) {
+                                            EmptyDayCard(
+                                                cardColor = MaterialTheme.colorScheme.surface,
+                                                primaryText = primaryText,
+                                                muted = muted,
+                                                dayLabel = if (mode == DayViewMode.TODAY) "today" else "tomorrow"
+                                            )
+                                        } else {
+                                            val shownDate = if (mode == DayViewMode.TODAY) time.toLocalDate() else time.toLocalDate().plusDays(1)
+                                            TimelineSection(
+                                                timeline = animatedTimeline,
+                                                nowMinutes = if (mode == DayViewMode.TODAY) nowMinutes else -1,
+                                                accent = accent,
+                                                railBackground = background,
+                                                primaryText = primaryText,
+                                                muted = muted,
+                                                lectureDate = shownDate,
+                                                friends = if (mode == DayViewMode.TODAY) todayFriendDays else tomorrowFriendDays,
+                                                mentorName = settings.mentorName,
+                                                mentorVenue = settings.mentorVenue,
+                                                onOpenLecture = onOpenLecture
+                                            )
+                                        }
+                                    }
+                                    if (lateFriendSlots.isNotEmpty()) {
+                                        FriendsAfterDayNote(
+                                            slots = lateFriendSlots,
+                                            accent = accent,
+                                            muted = muted
+                                        )
+                                    }
                                 }
                             }
                         }

@@ -40,6 +40,9 @@ data class HomeUiState(
     val lastFetch: Long? = null,
     val nowMillis: Long = System.currentTimeMillis(),
     val status: NextLectureEngine.Status = NextLectureEngine.Status.NoData,
+    /** Every lecture of the selected group — the holiday gate searches these for the
+     * next teaching day, not just today’s rows. */
+    val lectures: List<LectureEntity> = emptyList(),
     val upcomingToday: List<LectureEntity> = emptyList(),
     val todayLectures: List<LectureEntity> = emptyList(),
     val freeGapMinutes: Int? = null,
@@ -82,6 +85,7 @@ class HomeViewModel(private val c: AppContainer) {
                 lastFetch = m?.lastSuccessfulFetch,
                 nowMillis = now,
                 status = NextLectureEngine.compute(lectures, dow, nowMin),
+                lectures = lectures,
                 upcomingToday = todayLectures.filter { it.startMinutes > nowMin },
                 todayLectures = todayLectures,
                 freeGapMinutes = NextLectureEngine.freeGapMinutes(lectures, dow, nowMin),

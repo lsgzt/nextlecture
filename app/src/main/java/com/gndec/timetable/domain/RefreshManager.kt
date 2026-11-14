@@ -206,7 +206,8 @@ class RefreshManager(
         relinkedTo?.let { settings.setGroup(it) }
         val rescheduleGroup = relinkedTo ?: group
         if (rescheduleGroup != null && rawForGroup != null) {
-            scheduler.rescheduleAll(db, rescheduleGroup, ReminderConfig.from(cfg))
+            // Holiday-aware: reminders on full holidays are never armed.
+            scheduler.rescheduleAll(db, rescheduleGroup, ReminderConfig.from(cfg), HolidayGate.decode(cfg.holidayJson))
         }
 
         // Document is already persisted above so Change-group / other sections work.
@@ -293,7 +294,7 @@ class RefreshManager(
             target, monday.toString(), monday.plusDays(6).toString()
         )
         val cfg = settings.flow.first()
-        scheduler.rescheduleAll(db, target, ReminderConfig.from(cfg))
+        scheduler.rescheduleAll(db, target, ReminderConfig.from(cfg), HolidayGate.decode(cfg.holidayJson))
         return true
     }
 }

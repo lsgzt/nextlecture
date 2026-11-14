@@ -199,7 +199,13 @@ class SettingsViewModel(private val c: AppContainer) {
 
     private suspend fun reschedule() {
         val cfg = c.settings.flow.first()
-        cfg.group?.let { g -> c.scheduler.rescheduleAll(c.db, g, com.gndec.timetable.domain.ReminderConfig.from(cfg)) }
+        cfg.group?.let { g ->
+            // Holiday-aware: toggling reminder stages must not arm holiday reminders.
+            c.scheduler.rescheduleAll(
+                c.db, g, com.gndec.timetable.domain.ReminderConfig.from(cfg),
+                com.gndec.timetable.domain.HolidayGate.decode(cfg.holidayJson)
+            )
+        }
     }
 
     /**

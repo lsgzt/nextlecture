@@ -82,7 +82,12 @@ class MainActivity : ComponentActivity() {
                     app.container.db.lectureDao().countForGroup(group) > 0
                 ) {
                     val cfg = app.container.settings.flow.first()
-                    app.container.scheduler.rescheduleAll(app.container.db, group, ReminderConfig.from(cfg))
+                    // Holiday-aware: a full holiday gets no reminders even when the
+                    // self-heal rebuilds the whole reminder set.
+                    app.container.scheduler.rescheduleAll(
+                        app.container.db, group, ReminderConfig.from(cfg),
+                        com.gndec.timetable.domain.HolidayGate.decode(cfg.holidayJson)
+                    )
                 }
             }
         }

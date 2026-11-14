@@ -34,8 +34,10 @@ class BootReceiver : BroadcastReceiver() {
                 val cfg = app.container.settings.flow.first()
                 val group = cfg.group
                 if (group != null && app.container.db.lectureDao().countForGroup(group) > 0) {
+                    // Holiday-aware: a full holiday gets no reminders after a reboot either.
                     app.container.scheduler.rescheduleAll(
-                        app.container.db, group, ReminderConfig.from(cfg)
+                        app.container.db, group, ReminderConfig.from(cfg),
+                        com.gndec.timetable.domain.HolidayGate.decode(cfg.holidayJson)
                     )
                 }
             } finally {

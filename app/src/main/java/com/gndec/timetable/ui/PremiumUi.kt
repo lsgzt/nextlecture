@@ -9,6 +9,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
@@ -29,8 +30,10 @@ import androidx.compose.material.icons.filled.AccessTime
 import androidx.compose.material.icons.filled.Apps
 import androidx.compose.material.icons.filled.CalendarMonth
 import androidx.compose.material.icons.filled.Campaign
+import androidx.compose.material.icons.filled.Celebration
 import androidx.compose.material.icons.filled.ChevronRight
 import androidx.compose.material.icons.filled.CloudDone
+import androidx.compose.material.icons.filled.Event
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.LocationOn
 import androidx.compose.material.icons.filled.MenuBook
@@ -47,6 +50,7 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.ReadOnlyComposable
 import androidx.compose.runtime.getValue
@@ -78,8 +82,12 @@ import com.gndec.timetable.domain.Announcement
 import com.gndec.timetable.domain.AttendanceManager
 import com.gndec.timetable.domain.DailyQuote
 import com.gndec.timetable.domain.ErpNotice
+import com.gndec.timetable.domain.Holiday
+import com.gndec.timetable.domain.HolidayGate
+import com.gndec.timetable.domain.NextLectureEngine
 import com.gndec.timetable.ui.attendance.SubjectAttendance
 import java.time.LocalDate
+import java.time.format.DateTimeFormatter
 import com.gndec.timetable.ui.motion.Motion
 import com.gndec.timetable.ui.motion.hapticTick
 import com.gndec.timetable.ui.motion.pressFeedback
@@ -663,14 +671,9 @@ fun ErpNotice.toHomeBannerItem(): HomeBannerItem = HomeBannerItem(
 )
 
 /** Today / tomorrow holiday and half-day cards for the homepage banner carousel. */
-fun holidayHomeBannerItems(holidays: List<com.gndec.timetable.domain.Holiday>, todayIso: String, tomorrowIso: String): List<HomeBannerItem> {
-    fun isHalfDay(category: String) = category.equals("Half-day holiday", ignoreCase = true) ||
-        category.contains("half", ignoreCase = true)
-    fun isFullHoliday(category: String) = !isHalfDay(category) && (
-        category.equals("Public holiday", ignoreCase = true) ||
-            category.equals("Restricted holiday", ignoreCase = true) ||
-            category.contains("holiday", ignoreCase = true)
-    )
+fun holidayHomeBannerItems(holidays: List<Holiday>, todayIso: String, tomorrowIso: String): List<HomeBannerItem> {
+    fun isHalfDay(category: String) = category.contains("half", ignoreCase = true)
+    fun isFullHoliday(category: String) = HolidayGate.isFullHolidayCategory(category)
 
     val out = mutableListOf<HomeBannerItem>()
     val today = holidays.firstOrNull { it.date == todayIso }
@@ -715,6 +718,156 @@ fun holidayHomeBannerItems(holidays: List<com.gndec.timetable.domain.Holiday>, t
         }
     }
     return out
+}
+
+/**
+ * Full-holiday hero. Replaces the next-lecture hero on Home and the timeline on the
+ * Today screen: no class is scheduled, so the schedule itself steps aside for the
+ * reason the campus is closed. "Not a holiday?" is the escape hatch for a wrong
+ * entry — tapping it reveals the regular timetable for the rest of that day (a
+ * day-scoped choice, closable again from the override strip).
+ */
+@Composable
+fun PremiumHolidayHeroCard(
+    holidayNames: String,
+    onViewTimetable: () -> Unit,
+    modifier: Modifier = Modifier
+) {
+    Card(
+        modifier = modifier,
+        shape = RoundedCornerShape(30.dp),
+        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.secondaryContainer),
+        elevation = CardDefaults.cardElevation(0.dp)
+    ) {
+        Column(
+            Modifier.fillMaxWidth().padding(horizontal = 26.dp, vertical = 30.dp),
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            Box(
+                Modifier.size(56.dp).background(MaterialTheme.colorScheme.primary.copy(alpha = 0.12f), CircleShape),
+                contentAlignment = Alignment.Center
+            ) {
+                Icon(Icons.Default.Celebration, contentDescription = null, tint = MaterialTheme.colorScheme.primary, modifier = Modifier.size(28.dp))
+            }
+            Spacer(Modifier.height(14.dp))
+            Text("Today is a holiday", style = MaterialTheme.typography.headlineSmall, fontWeight = FontWeight.Bold)
+            if (holidayNames.isNotBlank()) {
+                Spacer(Modifier.height(6.dp))
+                Text(
+                    "on account of $holidayNames",
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    textAlign = TextAlign.Center
+                )
+            }
+            Spacer(Modifier.height(12.dp))
+            Text(
+                "Not a holiday? Tap here to view today’s timetable",
+                color = MaterialTheme.colorScheme.primary,
+                style = MaterialTheme.typography.bodyMedium,
+                fontWeight = FontWeight.SemiBold,
+                textAlign = TextAlign.Center,
+                modifier = Modifier
+                    .clickable(onClick = onViewTimetable)
+                    .padding(horizontal = 8.dp, vertical = 4.dp)
+            )
+        }
+    }
+}
+
+/** Long-day label format for the next-lecture card: "Monday, 9 March". */
+private val NextAfterHolidayDateFormat = DateTimeFormatter.ofPattern("EEEE, d MMMM")
+
+/**
+ * Small card under the holiday hero: when classes actually resume. It already
+ * skips any further full holidays, so a run of holidays reads as one break.
+ */
+@Composable
+fun PremiumNextAfterHolidayCard(
+    next: NextLectureEngine.TimedLecture,
+    todayIso: String,
+    modifier: Modifier = Modifier
+) {
+    val dateLabel = remember(todayIso, next.daysAhead) {
+        runCatching {
+            NextAfterHolidayDateFormat.format(LocalDate.parse(todayIso).plusDays(next.daysAhead.toLong()))
+        }.getOrNull()
+    }
+    val dayLabel = when (next.daysAhead) {
+        1 -> "Tomorrow"
+        else -> "In ${next.daysAhead} days"
+    }
+    val lecture = next.lecture
+    Card(
+        modifier = modifier,
+        shape = RoundedCornerShape(20.dp),
+        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
+        border = BorderStroke(1.dp, MaterialTheme.colorScheme.outlineVariant),
+        elevation = CardDefaults.cardElevation(0.dp)
+    ) {
+        Column(Modifier.padding(16.dp)) {
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                Box(Modifier.size(38.dp).background(MaterialTheme.colorScheme.primary.copy(alpha = 0.13f), CircleShape), contentAlignment = Alignment.Center) {
+                    Icon(Icons.Default.Event, contentDescription = null, tint = MaterialTheme.colorScheme.primary, modifier = Modifier.size(20.dp))
+                }
+                Spacer(Modifier.width(10.dp))
+                Column(Modifier.weight(1f)) {
+                    Text("Next lecture after the holiday", style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.Bold)
+                    val whenLabel = if (dateLabel != null) "$dayLabel · $dateLabel" else dayLabel
+                    Text(whenLabel, color = MaterialTheme.colorScheme.onSurfaceVariant, style = MaterialTheme.typography.bodySmall)
+                }
+            }
+            Spacer(Modifier.height(13.dp))
+            Row(
+                Modifier.fillMaxWidth().clip(RoundedCornerShape(14.dp))
+                    .background(MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.58f)).padding(10.dp),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Column(Modifier.width(68.dp)) {
+                    val range = Formatters.range(lecture.startMinutes, lecture.endMinutes)
+                    Text(range.substringBefore(" – "), fontWeight = FontWeight.Bold, style = MaterialTheme.typography.bodySmall)
+                    Text(range.substringAfter(" – "), color = MaterialTheme.colorScheme.onSurfaceVariant, style = MaterialTheme.typography.labelSmall)
+                }
+                Box(Modifier.width(3.dp).height(34.dp).background(MaterialTheme.colorScheme.primary))
+                Spacer(Modifier.width(10.dp))
+                Column(Modifier.weight(1f)) {
+                    Text(lecture.subject ?: "Lecture", fontWeight = FontWeight.SemiBold, maxLines = 1, overflow = TextOverflow.Ellipsis)
+                    Text(lecture.venue ?: "", color = MaterialTheme.colorScheme.onSurfaceVariant, style = MaterialTheme.typography.bodySmall, maxLines = 1, overflow = TextOverflow.Ellipsis)
+                }
+            }
+        }
+    }
+}
+
+/**
+ * Slim strip shown while the timetable is displayed despite today being a full
+ * holiday (after "Not a holiday?" was used). Close returns to the holiday notice —
+ * the escape hatch for an accidental tap.
+ */
+@Composable
+fun PremiumHolidayOverrideStrip(
+    onClose: () -> Unit,
+    modifier: Modifier = Modifier
+) {
+    Row(
+        modifier.fillMaxWidth().clip(RoundedCornerShape(14.dp))
+            .background(MaterialTheme.colorScheme.secondaryContainer.copy(alpha = 0.6f))
+            .padding(start = 14.dp, top = 4.dp, bottom = 4.dp, end = 4.dp),
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        Icon(Icons.Default.Celebration, contentDescription = null, tint = MaterialTheme.colorScheme.primary, modifier = Modifier.size(17.dp))
+        Spacer(Modifier.width(8.dp))
+        Text(
+            "Today is still a holiday — timetable shown",
+            color = MaterialTheme.colorScheme.onSurfaceVariant,
+            style = MaterialTheme.typography.bodySmall,
+            maxLines = 1,
+            overflow = TextOverflow.Ellipsis,
+            modifier = Modifier.weight(1f)
+        )
+        TextButton(onClick = onClose, contentPadding = PaddingValues(horizontal = 10.dp)) {
+            Text("Close")
+        }
+    }
 }
 
 /**
