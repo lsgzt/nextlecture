@@ -26,6 +26,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.AccessTime
+import androidx.compose.material.icons.filled.Apps
 import androidx.compose.material.icons.filled.CalendarMonth
 import androidx.compose.material.icons.filled.Campaign
 import androidx.compose.material.icons.filled.ChevronRight
@@ -1069,7 +1070,8 @@ fun PremiumBottomBar(
         Triple("home", "Home", Icons.Default.Home),
         Triple("today", "Today", Icons.Default.Today),
         Triple("notice", "Notice", Icons.Default.Campaign),
-        Triple("syllabus", "Syllabus", Icons.Default.MenuBook)
+        Triple("syllabus", "Syllabus", Icons.Default.MenuBook),
+        Triple("more", "More", Icons.Default.Apps)
     )
     // Every dimension below is FIXED; selection is expressed purely through animated
     // color fills and draw-phase scaling, so tapping a destination never shifts layout.

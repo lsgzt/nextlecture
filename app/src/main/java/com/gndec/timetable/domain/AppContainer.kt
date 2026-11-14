@@ -9,6 +9,7 @@ import com.gndec.timetable.net.AttendanceClient
 import com.gndec.timetable.net.BackendClient
 import com.gndec.timetable.net.TimetableFetcher
 import com.gndec.timetable.net.TimetableSourceResolver
+import com.gndec.timetable.net.LostFoundClient
 import com.gndec.timetable.net.PyqRagClient
 import com.gndec.timetable.net.ZenQuoteClient
 import kotlinx.coroutines.CoroutineScope
@@ -36,6 +37,9 @@ class AppContainer(val context: Context) {
     val studentDirectoryManager by lazy { StudentDirectoryManager(context, settings, keys) }
     val groupTimetableManager by lazy { GroupTimetableManager(context) }
     val vacantRoomsManager by lazy { VacantRoomsManager(context) }
+    val downloadsManager by lazy { DownloadsManager(context) }
+    val lostFoundManager by lazy { LostFoundManager(context, LostFoundClient()) }
+    val lostFoundImages by lazy { LostFoundImageStore(context) }
     val facultyDirectory by lazy { FacultyDirectoryManager(context) }
     val facultyTimetables by lazy { FacultyTimetableManager(context, facultyDirectory) }
     val facultyPhotos by lazy { FacultyPhotoStore(context) }

@@ -31,6 +31,7 @@ import com.gndec.timetable.ui.alerts.AlertsScreen
 import com.gndec.timetable.ui.attendance.AttendanceScreen
 import com.gndec.timetable.ui.day.DayScreen
 import com.gndec.timetable.ui.details.LectureDetailScreen
+import com.gndec.timetable.ui.downloads.DownloadsScreen
 import com.gndec.timetable.ui.faculty.FacultyDetailScreen
 import com.gndec.timetable.ui.faculty.FacultyMembersScreen
 import com.gndec.timetable.ui.home.HomeScreen
@@ -42,8 +43,10 @@ import com.gndec.timetable.ui.motion.screenExit
 import com.gndec.timetable.ui.onboarding.NotificationPermissionOnboardingScreen
 import com.gndec.timetable.ui.onboarding.OnboardingScreen
 import com.gndec.timetable.domain.ErpNotice
+import com.gndec.timetable.ui.more.MoreScreen
 import com.gndec.timetable.ui.notice.NoticeDetailScreen
 import com.gndec.timetable.ui.notice.NoticeScreen
+import com.gndec.timetable.ui.lostfound.LostFoundScreen
 import com.gndec.timetable.ui.profile.ProfileScreen
 import com.gndec.timetable.ui.search.SearchScreen
 import com.gndec.timetable.ui.settings.SettingsScreen
@@ -338,10 +341,31 @@ class MainActivity : ComponentActivity() {
                                             onOpenSettings = { navigate("settings") }
                                         )
                                     }
+                                    composable("more") {
+                                        MoreScreen(
+                                            onOpenDownloads = { navigate("downloads") },
+                                            onOpenLostFound = { navigate("lost_found") },
+                                            onOpenVacantRooms = { navigate("vacant_rooms") },
+                                            onOpenFacultyMembers = { navigate("faculty_members") },
+                                            onOpenSettings = { navigate("settings") }
+                                        )
+                                    }
+                                    composable("downloads") {
+                                        DownloadsScreen(
+                                            container = container,
+                                            onBack = { nav.popBackStack() }
+                                        )
+                                    }
+                                    composable("lost_found") {
+                                        LostFoundScreen(
+                                            container = container,
+                                            onBack = { nav.popBackStack() }
+                                        )
+                                    }
                                 }
                                 val backStackEntry by nav.currentBackStackEntryAsState()
                                 val tabRoute = when (val route = backStackEntry?.destination?.route) {
-                                    "home", "today", "notice" -> route
+                                    "home", "today", "notice", "more" -> route
                                     "notice/holidays" -> "notice"
                                     // Detail keeps its previous behavior of highlighting Home.
                                     "detail" -> "home"

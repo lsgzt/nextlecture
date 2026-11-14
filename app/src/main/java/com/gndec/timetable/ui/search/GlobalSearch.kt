@@ -366,6 +366,20 @@ private data class QuickAction(
 private val QuickActions = listOf(
     QuickAction("vacant", "Find vacant rooms", "vacant_rooms", listOf("vacantroom", "vacantrooms", "freeclass", "freeclasses", "freeslot", "freeslots", "emptylab", "roomavailability", "isroomfree", "roomstatus", "whichroom")),
     QuickAction(
+        "downloads",
+        "Downloads",
+        "downloads",
+        listOf("download", "downloads", "forms", "form", "buspass", "gatepass", "vehiclepass", "bonafide", "documents", "document", "files", "pdf", "idcard", "nodues"),
+        hint = "Bus pass, vehicle pass and every official form"
+    ),
+    QuickAction(
+        "lostfound",
+        "Lost & Found",
+        "lost_found",
+        listOf("lost", "found", "lostandfound", "lostitem", "founditem", "lostfound", "missing", "mislaid"),
+        hint = "Campus lost & found noticeboard"
+    ),
+    QuickAction(
         "faculty",
         "Faculty members",
         "faculty_members",
