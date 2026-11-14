@@ -228,6 +228,7 @@ fun DayScreen(
                                     muted = muted,
                                     accent = accent
                                 )
+                                WeekTypeLegend(muted = muted)
                                 (0L..6L).map { selectedDate.plusDays(it) }.forEach { date ->
                                     WeekDaySection(
                                         date = date,
@@ -436,6 +437,48 @@ private fun WeekSummary(totalLectures: Int, weekStart: java.time.LocalDate, card
         }
     }
 }
+
+/** Colour key for the full-week rail marks (teal / blue / orange). */
+@Composable
+private fun WeekTypeLegend(muted: Color) {
+    Row(
+        Modifier
+            .fillMaxWidth()
+            .padding(horizontal = 24.dp, vertical = 2.dp),
+        horizontalArrangement = Arrangement.SpaceEvenly,
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        WeekTypeLegendItem(color = lectureTypeColors("LECTURE").line, label = "Lecture", muted = muted)
+        WeekTypeLegendItem(color = lectureTypeColors("PRACTICAL").line, label = "Practical", muted = muted)
+        WeekTypeLegendItem(color = lectureTypeColors("TUTORIAL").line, label = "Tutorial", muted = muted)
+    }
+}
+
+@Composable
+private fun WeekTypeLegendItem(
+    color: Color,
+    label: String,
+    muted: Color
+) {
+    Row(
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.spacedBy(7.dp)
+    ) {
+        Box(
+            Modifier
+                .width(14.dp)
+                .height(3.dp)
+                .background(color, RoundedCornerShape(2.dp))
+        )
+        Text(
+            label,
+            color = muted,
+            style = MaterialTheme.typography.labelMedium,
+            maxLines = 1
+        )
+    }
+}
+
 
 @Composable
 private fun WeekDaySection(date: java.time.LocalDate, lectures: List<LectureEntity>, primaryText: Color, muted: Color, accent: Color, onOpenLecture: (LectureEntity, java.time.LocalDate) -> Unit) {
