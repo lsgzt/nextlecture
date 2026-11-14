@@ -14,8 +14,10 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Groups
 import androidx.compose.material3.Card
@@ -63,12 +65,72 @@ fun FriendsSection(
     var name by remember { mutableStateOf("") }
     var group by remember { mutableStateOf("") }
     var message by remember { mutableStateOf<String?>(null) }
+    var messageIsError by remember { mutableStateOf(false) }
 
     // Group names come from the parsed document, so a typo cannot silently add a
-    // friend whose timetable will never resolve. Suggestions only, never a limit.
-    val knownGroups by produceState<Pair<List<String>, Boolean>>(emptyList<String>() to true, expanded) {
+    // friend whose timetable will never resolve.
+    val knownGroups by produceState(emptyList<String>(), expanded) {
         if (!expanded) return@produceState
-        value = runCatching { container.db.lectureDao().distinctGroups() }.getOrDefault(emptyList()) to false
+        value = runCatching { container.db.lectureDao().distinctGroups() }
+            .getOrDefault(emptyList())
+            .filter { it.isNotBlank() }
+            .sorted()
+    }
+    val groupsReady = knownGroups.isNotEmpty()
+
+    fun clearForm() {
+        name = ""
+        group = ""
+    }
+
+    /**
+     * Saves the draft friend using a canonical group name from the timetable.
+     * Returns true when a friend was added so the form can close/reset.
+     */
+    suspend fun tryAddFriend(): Boolean {
+        val trimmedName = name.trim()
+        val trimmedGroup = group.trim()
+        if (trimmedName.isEmpty()) {
+            message = "Enter your friend’s name"
+            messageIsError = true
+            return false
+        }
+        if (trimmedGroup.isEmpty()) {
+            message = "Type a group, then tap a match below"
+            messageIsError = true
+            return false
+        }
+        val resolved = resolveFriendGroup(trimmedGroup, knownGroups)
+        if (resolved == null) {
+            message = if (!groupsReady) {
+                "No timetable groups on this device yet. Refresh your timetable first."
+            } else {
+                "Tap a group chip below so it matches the timetable exactly"
+            }
+            messageIsError = true
+            return false
+        }
+        container.settings.addFriend(Friend(name = trimmedName, group = resolved))
+        message = "Added $trimmedName · $resolved"
+        messageIsError = false
+        clearForm()
+        return true
+    }
+
+    fun onDoneClick() {
+        val hasDraft = name.isNotBlank() || group.isNotBlank()
+        if (!hasDraft) {
+            expanded = false
+            message = null
+            return
+        }
+        scope.launch {
+            // Users often hit Done instead of Add friend — commit the draft first.
+            if (tryAddFriend()) {
+                expanded = false
+            }
+            // If validation failed, stay open so they can fix the group.
+        }
     }
 
     Card(
@@ -100,8 +162,15 @@ fun FriendsSection(
                         style = MaterialTheme.typography.bodySmall
                     )
                 }
-                TextButton(onClick = { expanded = !expanded }) {
-                    Text(if (expanded) "Done" else "Edit")
+                TextButton(
+                    onClick = {
+                        if (expanded) onDoneClick() else {
+                            expanded = true
+                            message = null
+                        }
+                    }
+                ) {
+                    Text(if (expanded) "Done" else "Add")
                 }
             }
 
@@ -109,21 +178,23 @@ fun FriendsSection(
                 Spacer(Modifier.height(10.dp))
                 friends.forEach { friend ->
                     Row(
-                        Modifier.fillMaxWidth().padding(vertical = 3.dp),
+                        Modifier.fillMaxWidth().padding(vertical = 2.dp),
                         verticalAlignment = Alignment.CenterVertically
                     ) {
                         Column(Modifier.weight(1f)) {
                             Text(
                                 friend.name,
                                 style = MaterialTheme.typography.bodyLarge,
-                                fontWeight = FontWeight.Medium,
+                                fontWeight = FontWeight.SemiBold,
                                 maxLines = 1,
                                 overflow = TextOverflow.Ellipsis
                             )
                             Text(
                                 friend.group,
-                                color = MaterialTheme.colorScheme.onSurfaceVariant,
-                                style = MaterialTheme.typography.bodySmall
+                                color = MaterialTheme.colorScheme.primary,
+                                style = MaterialTheme.typography.bodySmall,
+                                maxLines = 1,
+                                overflow = TextOverflow.Ellipsis
                             )
                         }
                         if (expanded) {
@@ -131,8 +202,7 @@ fun FriendsSection(
                                 Icon(
                                     Icons.Default.Delete,
                                     contentDescription = "Remove ${friend.name}",
-                                    tint = MaterialTheme.colorScheme.onSurfaceVariant,
-                                    modifier = Modifier.size(20.dp)
+                                    tint = MaterialTheme.colorScheme.error
                                 )
                             }
                         }
@@ -142,11 +212,17 @@ fun FriendsSection(
 
             if (expanded) {
                 Spacer(Modifier.height(12.dp))
+                Text(
+                    "Enter a name, then pick their section from the list so free periods match correctly.",
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    style = MaterialTheme.typography.bodySmall
+                )
+                Spacer(Modifier.height(8.dp))
                 OutlinedTextField(
                     value = name,
                     onValueChange = { name = it; message = null },
                     modifier = Modifier.fillMaxWidth(),
-                    label = { Text("Friend's name") },
+                    label = { Text("Friend’s name") },
                     singleLine = true,
                     keyboardOptions = KeyboardOptions(
                         capitalization = KeyboardCapitalization.Words,
@@ -156,81 +232,152 @@ fun FriendsSection(
                 Spacer(Modifier.height(8.dp))
                 OutlinedTextField(
                     value = group,
-                    onValueChange = { group = it; message = null },
+                    onValueChange = { typed ->
+                        group = typed
+                        message = null
+                        // Auto-canonicalise when the user types an exact match
+                        // ignoring case (e.g. "itb2" → "ITB2").
+                        val exact = knownGroups.firstOrNull { it.equals(typed.trim(), ignoreCase = true) }
+                        if (exact != null && exact != typed) {
+                            group = exact
+                        }
+                    },
                     modifier = Modifier.fillMaxWidth(),
                     label = { Text("Timetable group") },
-                    placeholder = { Text("e.g. ITB2") },
+                    placeholder = { Text("Type to filter, then tap a group") },
                     singleLine = true,
-                    keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done)
+                    keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
+                    keyboardActions = KeyboardActions(
+                        onDone = { scope.launch { tryAddFriend() } }
+                    ),
+                    supportingText = {
+                        val resolved = resolveFriendGroup(group, knownGroups)
+                        when {
+                            group.isBlank() -> Text("Suggestions update as you type")
+                            resolved != null -> Text("Matched: $resolved")
+                            groupsReady -> Text("Tap a chip below — lowercase alone is not enough")
+                            else -> Text("Refresh the timetable to load section names")
+                        }
+                    }
                 )
-                val suggestions = remember(group, knownGroups.first) {
+                val suggestions = remember(group, knownGroups) {
                     val q = group.trim()
-                    knownGroups.first.filter { it.isNotBlank() && (q.isEmpty() || it.contains(q, ignoreCase = true)) }.take(8)
+                    knownGroups
+                        .filter { q.isEmpty() || it.contains(q, ignoreCase = true) }
+                        .sortedWith(
+                            compareByDescending<String> { it.equals(q, ignoreCase = true) }
+                                .thenByDescending { it.startsWith(q, ignoreCase = true) }
+                                .thenBy { it }
+                        )
+                        .take(8)
                 }
                 if (suggestions.isNotEmpty()) {
                     Spacer(Modifier.height(6.dp))
+                    Text(
+                        "Tap to select",
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
+                        style = MaterialTheme.typography.labelSmall,
+                        fontWeight = FontWeight.SemiBold
+                    )
+                    Spacer(Modifier.height(4.dp))
                     @OptIn(ExperimentalLayoutApi::class)
                     FlowRow(
                         modifier = Modifier.fillMaxWidth(),
                         horizontalArrangement = Arrangement.spacedBy(6.dp),
                         verticalArrangement = Arrangement.spacedBy(6.dp)
                     ) {
-                        suggestions.take(6).forEach { candidate ->
-                            // Capsule chips (not CircleShape + TextButton) so long
-                            // names like "BBA1 Automatic Subgroup" stay readable.
+                        suggestions.forEach { candidate ->
+                            val isSelected = candidate == group
                             androidx.compose.material3.Surface(
-                                onClick = { group = candidate },
-                                color = MaterialTheme.colorScheme.primaryContainer,
-                                contentColor = MaterialTheme.colorScheme.onPrimaryContainer,
+                                onClick = {
+                                    group = candidate
+                                    message = null
+                                },
+                                color = if (isSelected) {
+                                    MaterialTheme.colorScheme.primary
+                                } else {
+                                    MaterialTheme.colorScheme.primaryContainer
+                                },
+                                contentColor = if (isSelected) {
+                                    MaterialTheme.colorScheme.onPrimary
+                                } else {
+                                    MaterialTheme.colorScheme.onPrimaryContainer
+                                },
                                 shape = RoundedCornerShape(50)
                             ) {
-                                Text(
-                                    candidate,
-                                    modifier = Modifier.padding(horizontal = 12.dp, vertical = 6.dp),
-                                    style = MaterialTheme.typography.labelMedium,
-                                    fontWeight = FontWeight.SemiBold,
-                                    maxLines = 1,
-                                    overflow = TextOverflow.Ellipsis
-                                )
+                                Row(
+                                    Modifier.padding(horizontal = 12.dp, vertical = 6.dp),
+                                    verticalAlignment = Alignment.CenterVertically,
+                                    horizontalArrangement = Arrangement.spacedBy(4.dp)
+                                ) {
+                                    if (isSelected) {
+                                        Icon(
+                                            Icons.Default.Check,
+                                            contentDescription = null,
+                                            modifier = Modifier.size(14.dp)
+                                        )
+                                    }
+                                    Text(
+                                        candidate,
+                                        style = MaterialTheme.typography.labelMedium,
+                                        fontWeight = FontWeight.SemiBold,
+                                        maxLines = 1,
+                                        overflow = TextOverflow.Ellipsis
+                                    )
+                                }
                             }
                         }
                     }
                 }
-                if (knownGroups.first.isEmpty() && !knownGroups.second) {
+                if (!groupsReady) {
                     Spacer(Modifier.height(6.dp))
                     Text(
-                        "No timetable has been parsed yet, so groups cannot be suggested. Type the group exactly as it appears in the timetable.",
+                        "No sections found yet. Open Home and refresh the timetable so group names can be suggested.",
                         color = MaterialTheme.colorScheme.onSurfaceVariant,
                         style = MaterialTheme.typography.bodySmall
                     )
                 }
-                Spacer(Modifier.height(4.dp))
+                Spacer(Modifier.height(8.dp))
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     TextButton(
                         enabled = name.isNotBlank() && group.isNotBlank(),
-                        onClick = {
-                            scope.launch {
-                                container.settings.addFriend(Friend(name = name, group = group))
-                                message = "Added ${name.trim()}"
-                                name = ""
-                                group = ""
-                            }
-                        }
+                        onClick = { scope.launch { tryAddFriend() } }
                     ) {
                         Text("Add friend")
                     }
                     message?.let {
                         Spacer(Modifier.width(10.dp))
-                        Text(it, color = MaterialTheme.colorScheme.primary, style = MaterialTheme.typography.bodySmall)
+                        Text(
+                            it,
+                            color = if (messageIsError) {
+                                MaterialTheme.colorScheme.error
+                            } else {
+                                MaterialTheme.colorScheme.primary
+                            },
+                            style = MaterialTheme.typography.bodySmall
+                        )
                     }
                 }
                 Spacer(Modifier.height(2.dp))
                 Text(
-                    "Stored only on this device. Their timetable is read from timetables this app has already downloaded.",
+                    "Stored only on this device. Free periods use timetables already downloaded here.",
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                     style = MaterialTheme.typography.labelSmall
                 )
             }
         }
     }
+}
+
+/**
+ * Maps free-typed group text to a real group from the parsed timetable.
+ * Prefer exact ignore-case match; if exactly one partial match exists, use it.
+ */
+private fun resolveFriendGroup(input: String, knownGroups: List<String>): String? {
+    val q = input.trim()
+    if (q.isEmpty()) return null
+    if (knownGroups.isEmpty()) return null
+    knownGroups.firstOrNull { it.equals(q, ignoreCase = true) }?.let { return it }
+    val partial = knownGroups.filter { it.contains(q, ignoreCase = true) }
+    return partial.singleOrNull()
 }
