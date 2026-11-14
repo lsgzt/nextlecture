@@ -94,15 +94,8 @@ class FacultyTimetableManager(
      * page renders the list synchronously (and keeps its scroll position). */
     @Volatile private var combinedSnapshot: List<FacultyRecord>? = null
 
-    init {
-        // Warm the memory cache from disk without any network access.
-        runCatching {
-            for (root in ROOTS) {
-                val cached = readCache(root)
-                if (cached != null) memory[root] = cached
-            }
-        }
-    }
+    // Disk caches are read on demand from [ensureDoc] on Dispatchers.IO —
+    // warming every department on the main thread froze the faculty list open.
 
     /**
      * Resolves one teacher's schedule. Departments without a published teacher
@@ -136,11 +129,13 @@ class FacultyTimetableManager(
      * safe: call to seed a list's initial state. */
     fun combinedFacultyFast(): List<FacultyRecord>? = combinedSnapshot
 
-    /** Builds (or returns the cached) teacher pool. Off-main-thread only the
-     * first time — afterwards [combinedFacultyFast] serves it synchronously. */
+    /** Builds (or returns the cached) teacher pool. Call from a background
+     * dispatcher the first time — parsing the bundled JSON on the main thread
+     * freezes the UI. Afterwards [combinedFacultyFast] is fine on main. */
     fun combinedFaculty(): List<FacultyRecord> {
         combinedSnapshot?.let { return it }
-        val combined = directory.directory + extraTeachersFromMemory().map { it.record }
+        val extras = extraTeachersFromMemory().map { it.record }
+        val combined = directory.directory + extras
         combinedSnapshot = combined
         return combined
     }
@@ -174,9 +169,16 @@ class FacultyTimetableManager(
     private suspend fun ensureDoc(root: RoomSourceRoot, force: Boolean): ParsedFacultyDoc? {
         val mutex = synchronized(inFlight) { inFlight.getOrPut(root) { Mutex() } }
         return mutex.withLock {
-            val cached = synchronized(this@FacultyTimetableManager) { memory[root] }
+            var cached = synchronized(this@FacultyTimetableManager) { memory[root] }
+            if (cached == null) {
+                cached = withContext(Dispatchers.IO) { readCache(root) }
+                if (cached != null) {
+                    synchronized(this@FacultyTimetableManager) { memory[root] = cached }
+                }
+            }
             val fresh = cached != null && System.currentTimeMillis() - cached!!.fetchedAtMillis < FRESH_WINDOW_MS
             if (!force && fresh) return@withLock cached
+            if (!force && cached != null) return@withLock cached
 
             val fetched = withContext(Dispatchers.IO) {
                 runCatching {
@@ -207,8 +209,12 @@ class FacultyTimetableManager(
             }
         }.awaitAll()
         // Fresh documents can carry teachers the pool has not seen yet —
-        // drop the cached snapshot so the next combinedFaculty() rebuilds it.
-        combinedSnapshot = null
+        // rebuild the snapshot on a worker thread instead of leaving it null
+        // so list screens do not flash empty.
+        withContext(Dispatchers.Default) {
+            val extras = extraTeachersFromMemory().map { it.record }
+            combinedSnapshot = directory.directory + extras
+        }
         docs
     }
 

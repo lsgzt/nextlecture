@@ -84,26 +84,35 @@ fun FacultyMembersScreen(
     // The teacher whose photo the user tapped open in the zoomable viewer.
     var photoViewerFor by remember { mutableStateOf<FacultyRecord?>(null) }
 
-    // Process-wide pool: prefer the in-memory snapshot so returning from a
-    // detail page never flashes the empty "Loading…" card. Build synchronously
-    // from the APK-bundled directory when the snapshot is still cold.
+    // Prefer the process-wide snapshot (instant). Never parse the bundled
+    // directory on the main thread — that froze the UI for hundreds of ms.
     var faculty by remember {
-        mutableStateOf(
-            container.facultyTimetables.combinedFacultyFast()
-                ?: container.facultyTimetables.combinedFaculty()
-        )
+        mutableStateOf(container.facultyTimetables.combinedFacultyFast().orEmpty())
     }
+    var listLoading by remember { mutableStateOf(faculty.isEmpty()) }
     // Survives navigation to a profile and back (this composable is disposed
     // while the detail route is on top of the stack).
     val listState = rememberSaveable(saver = LazyListState.Saver) { LazyListState() }
 
     LaunchedEffect(Unit) {
-        // Cache-first background load of every department's teacher document;
-        // may grow the pool with timetable-only teachers without blanking it.
-        container.facultyTimetables.ensureAllDocs()
-        withContext(Dispatchers.Default) { container.facultyTimetables.combinedFaculty() }
-            .takeIf { it.size > faculty.size }
-            ?.let { faculty = it }
+        // 1) Directory only — enough for a smooth first paint of ~300 teachers.
+        if (faculty.isEmpty()) {
+            val base = withContext(Dispatchers.Default) {
+                container.facultyTimetables.combinedFaculty()
+            }
+            faculty = base
+            listLoading = false
+        }
+        // 2) Optional: warm dept docs in the background to discover timetable-
+        // only teachers. Must not block opening the list.
+        withContext(Dispatchers.IO) {
+            runCatching { container.facultyTimetables.ensureAllDocs() }
+        }
+        val richer = withContext(Dispatchers.Default) {
+            container.facultyTimetables.combinedFaculty()
+        }
+        if (richer.size > faculty.size) faculty = richer
+        listLoading = false
     }
 
     var filterText by rememberSaveable { mutableStateOf("") }
