@@ -160,6 +160,20 @@ fun FacultyMembersScreen(
                     )
                 }
 
+                // Upcoming-faculty-birthday strip — hero + following birthdays in
+                // ascending order. Only on the unfiltered view: it is a highlight,
+                // not a search result, so it steps aside for a filter or a dept chip.
+                if (faculty.isNotEmpty() && filterText.isBlank() && selectedDept == null) {
+                    item(key = "birthdays") {
+                        FacultyBirthdaysSection(
+                            container = container,
+                            faculty = faculty,
+                            onOpenFaculty = onOpenFaculty,
+                            onPhotoClick = { photoViewerFor = it }
+                        )
+                    }
+                }
+
                 if (faculty.isEmpty()) {
                     item(key = "loading") {
                         Card(

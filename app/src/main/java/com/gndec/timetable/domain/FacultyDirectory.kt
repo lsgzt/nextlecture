@@ -37,7 +37,14 @@ data class FacultyRecord(
      * "DR AMANPREET KAUR SODHI" - and without this the app would invent a
      * second, contact-less record for the same person.
      */
-    @SerialName("also_published_as") val alsoPublishedAs: List<String> = emptyList()
+    @SerialName("also_published_as") val alsoPublishedAs: List<String> = emptyList(),
+    /**
+     * ISO date of birth (YYYY-MM-DD) scraped from the official profile page.
+     * Blank for the teachers whose public profile publishes none — roughly a
+     * fifth of the directory — and for timetable-discovered extra teachers.
+     * Read by the faculty birthday section; never shown as text elsewhere.
+     */
+    @SerialName("date_of_birth") val dateOfBirth: String = ""
 ) {
     val contactable: Boolean get() = email.isNotBlank() || phoneOffice.isNotBlank() || phoneMobile.isNotBlank()
 
