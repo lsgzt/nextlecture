@@ -185,26 +185,18 @@ fun SearchScreen(
         when (action) {
             SearchAction.None -> Unit
             is SearchAction.Navigate -> {
-                // Search sits on top of Home, so leaving it is always a back press
-                // followed by the destination.
+                // Tab / top-level destinations leave search: pop it, then go.
                 onBack()
                 onNavigate(action.route)
             }
             is SearchAction.OpenUrl -> runCatching {
                 context.startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(action.url)))
             }
-            is SearchAction.OpenLecture -> {
-                onBack()
-                onOpenLecture(action.lecture, action.date)
-            }
-            is SearchAction.OpenFaculty -> {
-                onBack()
-                onOpenFaculty(action.profileId)
-            }
-            is SearchAction.OpenNotice -> {
-                onBack()
-                onOpenNotice(action.noticeId)
-            }
+            // Detail destinations stack on top of search so Back returns here
+            // with the same query and results (query is rememberSaveable).
+            is SearchAction.OpenLecture -> onOpenLecture(action.lecture, action.date)
+            is SearchAction.OpenFaculty -> onOpenFaculty(action.profileId)
+            is SearchAction.OpenNotice -> onOpenNotice(action.noticeId)
         }
     }
 
