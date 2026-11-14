@@ -90,7 +90,8 @@ class LiveFacultyExtraDiscoveryTest {
             teacherNames = doc.tables.map { it.teacherName },
             teacherCodes = doc.tables.map { it.code },
             teacherLabels = labels,
-            tableAt = { doc.tables[it] }
+            tableAt = { doc.tables[it] },
+            directoryAliases = pool.map { it.alsoPublishedAs }
         )
         val claimed = assignment[FacultyNameMatcher.normName("MANPREET KAUR")]
         assertNotNull("her Applied Science table must be claimed by her record", claimed)
@@ -124,7 +125,8 @@ class LiveFacultyExtraDiscoveryTest {
                 teacherNames = doc.tables.map { it.teacherName },
                 teacherCodes = doc.tables.map { it.code },
                 teacherLabels = labels,
-                tableAt = { doc.tables[it] }
+                tableAt = { doc.tables[it] },
+                directoryAliases = pool.map { it.alsoPublishedAs }
             )
             val claimed = assignment[FacultyNameMatcher.normName(name)]
             assertNotNull("$name must claim a published table", claimed)
@@ -159,7 +161,54 @@ class LiveFacultyExtraDiscoveryTest {
         val keys = merged.map { "${it.record.department}|${FacultyNameMatcher.normName(it.record.name)}" }
         assertEquals("duplicate keys after merge", keys.size, keys.distinct().size)
         assertEquals(merged.map { it.record.name }, merged.map { it.record.name }.sorted())
-        // The live files do carry unlisted teachers (APSC alone has ~30).
-        assertTrue(merged.isNotEmpty())
+    }
+
+    @Test
+    fun everyTeacherTheTimetablesPublishIsInTheDirectory() {
+        // The whole point of the enrichment: no department timetable may name a
+        // teacher the directory does not carry, so the app never has to invent
+        // a contact-less record at run time.
+        val roots = listOf(
+            RoomSourceRoot.APPSC, RoomSourceRoot.CSE, RoomSourceRoot.ECE, RoomSourceRoot.EE,
+            RoomSourceRoot.ME, RoomSourceRoot.CE, RoomSourceRoot.IT
+        )
+        val merged = FacultyExtraDiscovery.mergeExtras(roots.flatMap { extrasFor(it) })
+        assertTrue(
+            "these teachers are still invented by the app: " +
+                merged.joinToString { "${it.record.name} (${it.record.department})" },
+            merged.isEmpty()
+        )
+    }
+
+    @Test
+    fun aPublishedSpellingOfAKnownTeacherResolvesToThatTeacher() {
+        // The Applied Science file writes "DR APK SODHI"; the college's own
+        // list calls him "DR AMANPREET KAUR SODHI". He is one person, and the
+        // directory carries his other published spelling.
+        val sodhi = directory.firstOrNull { it.profileId == "258" }
+        assertNotNull("DR AMANPREET KAUR SODHI must be in the bundled directory", sodhi)
+        assertTrue(
+            "the timetable's spelling must be published as an alias of his record",
+            sodhi!!.alsoPublishedAs.any { FacultyNameMatcher.normName(it) == "apk sodhi" }
+        )
+        val appsc = extrasFor(RoomSourceRoot.APPSC)
+        val synthetic = appsc.firstOrNull {
+            FacultyNameMatcher.normName(it.record.name).contains("sodhi")
+        }
+        assertNull("he must not be re-published as a synthetic extra teacher", synthetic)
+    }
+
+    @Test
+    fun aTeachingAssistantCodeIsNotADepartment() {
+        // "ER. JASHANDEEP KAUR (TA)" is a teaching assistant, not a Workshops
+        // teacher: the college's own list files her under Civil Engineering.
+        val jashandeep = directory.firstOrNull { it.name == "ER. JASHANDEEP KAUR" }
+        assertNotNull("the teaching assistant must be in the bundled directory", jashandeep)
+        assertEquals("Civil Engineering", jashandeep!!.department)
+        assertNull(
+            "a TA code must not be read as the Workshops department",
+            FacultyNameMatcher.deptOfCode("TA")
+        )
+        assertNull(FacultyNameMatcher.deptOfCode("TA1"))
     }
 }

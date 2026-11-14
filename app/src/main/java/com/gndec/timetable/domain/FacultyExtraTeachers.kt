@@ -90,7 +90,8 @@ object FacultyExtraDiscovery {
             teacherNames = doc.tables.map { it.teacherName },
             teacherCodes = doc.tables.map { it.code },
             teacherLabels = labels,
-            tableAt = { doc.tables[it] }
+            tableAt = { doc.tables[it] },
+            directoryAliases = rootPool.map { it.alsoPublishedAs }
         )
         val claimed = assignment.values.toSet()
 
@@ -102,12 +103,13 @@ object FacultyExtraDiscovery {
             } ?: 0
         }
 
-        // A plain label that near-exactly matches the name of exactly ONE
-        // directory teacher anywhere (unique normalised name) is that teacher
-        // visiting another department — no synthetic record. Same-name records
-        // of several departments (three Manpreet Kaurs) stay ambiguous, so a
-        // same-name timetable-only teacher is still discovered.
-        val normNameCounts = directory.groupingBy { FacultyNameMatcher.normName(it.name) }.eachCount()
+        // The college files a few teachers under TWO departments (Harpuneet
+        // Singh in Mechanical and Production Engineering) and keeps one e-mail
+        // address for them, so the directory holds two records of ONE person.
+        // Count people, not records: a visiting teacher who is listed twice is
+        // still one known teacher, while three DIFFERENT Harminder Kaurs stay
+        // ambiguous.
+        val people = groupByPerson(directory)
 
         val out = mutableListOf<ExtraFacultyTeacher>()
         val seen = mutableSetOf<String>()
@@ -119,17 +121,18 @@ object FacultyExtraDiscovery {
 
             val annotatedDepartment = FacultyNameMatcher.deptOfCode(table.code)
             val department = annotatedDepartment ?: rootDepartment
-            val known = if (annotatedDepartment != null) {
+            // A curated published spelling names this teacher outright.
+            val aliasHit = directory.any { FacultyNameMatcher.matchesAlias(published, it.alsoPublishedAs) }
+            val known = aliasHit || if (annotatedDepartment != null) {
                 // The label itself says which department the teacher belongs to;
                 // a similar name in that department attributes the table to them
                 // (their own department's page serves the full week).
                 val knownPool = directory.filter { it.department == annotatedDepartment }
                 knownPool.any { FacultyNameMatcher.nameScore(published, it.name) >= 65 }
             } else {
-                val uniqueGlobalHit = directory.any { record ->
-                    FacultyNameMatcher.nameScore(published, record.name) >= 85 &&
-                        (normNameCounts[FacultyNameMatcher.normName(record.name)] ?: 0) == 1
-                }
+                val uniqueGlobalHit = people.count { person ->
+                    person.any { record -> FacultyNameMatcher.nameScore(published, record.name) >= 85 }
+                } == 1
                 // Plain label: the assignment already claimed every record's
                 // unambiguous best table of THIS department. A candidate that
                 // only FUZZY-matches a record whose own (better) table exists is
@@ -188,6 +191,27 @@ object FacultyExtraDiscovery {
         "pf" to "PF.", "ms" to "MS.", "mrs" to "MRS.", "mr" to "MR.", "miss" to "MISS.",
         "sh" to "SH.", "smt" to "SMT.", "shri" to "SHRI."
     )
+
+    /**
+     * Splits the directory into people: the college files a few teachers under
+     * two departments and keeps one e-mail address for them, so records that
+     * share an address are one person.
+     */
+    private fun groupByPerson(directory: List<FacultyRecord>): List<List<FacultyRecord>> {
+        val groups = mutableListOf<MutableList<FacultyRecord>>()
+        for (record in directory) {
+            val addresses = record.email.split(',', ';').map { it.trim().trimEnd('.').lowercase() }
+                .filter { it.isNotEmpty() }
+            val group = groups.firstOrNull { g ->
+                g.any { other ->
+                    val otherAddresses = other.email.split(',', ';').map { it.trim().trimEnd('.').lowercase() }
+                    addresses.any { it in otherAddresses }
+                }
+            }
+            if (group != null) group += record else groups += mutableListOf(record)
+        }
+        return groups
+    }
 
     /**
      * Acronym-shaped junk ("PDT", "CH", "X", "ME2") — a "name" whose every

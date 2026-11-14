@@ -63,7 +63,25 @@ class FacultyDirectoryDecodeTest {
         assertEquals("", record.phoneOffice)
         assertEquals("", record.phoneMobile)
         assertEquals(0, record.deptId)
+        assertEquals(emptyList<String>(), record.alsoPublishedAs)
         assertTrue(record.contactable) // email alone is contactable
+    }
+
+    @Test
+    fun decodesTheOtherPublishedSpellingsOfATeacher() {
+        // The college spells some teachers differently in the timetables than
+        // in the faculty list; the directory carries both so the app resolves
+        // the timetable's label to the same person.
+        val payload = """
+            [{
+                "name": "DR AMANPREET KAUR SODHI",
+                "profile_id": "258",
+                "department": "Applied Science",
+                "also_published_as": ["DR APK SODHI"]
+            }]
+        """.trimIndent()
+        val record = json.decodeFromString<List<FacultyRecord>>(payload)[0]
+        assertEquals(listOf("DR APK SODHI"), record.alsoPublishedAs)
     }
 
     @Test
