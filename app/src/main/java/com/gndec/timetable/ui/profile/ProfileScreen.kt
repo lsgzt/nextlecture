@@ -1,0 +1,841 @@
+package com.gndec.timetable.ui.profile
+
+import android.content.ClipData
+import android.content.ClipboardManager
+import android.content.Context
+import androidx.compose.animation.AnimatedContent
+import androidx.compose.animation.animateColorAsState
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.togetherWith
+import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.LocalIndication
+import androidx.compose.foundation.interaction.MutableInteractionSource
+import androidx.compose.ui.draw.clip
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.foundation.layout.ime
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowForward
+import androidx.compose.material.icons.filled.Badge
+import androidx.compose.material.icons.filled.CloudDone
+import androidx.compose.material.icons.filled.ContentCopy
+import androidx.compose.material.icons.filled.Person
+import androidx.compose.material.icons.filled.Refresh
+import androidx.compose.material.icons.filled.Search
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedButton
+import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+import androidx.compose.ui.platform.LocalContext
+import com.gndec.timetable.data.prefs.AppSettings
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.gndec.timetable.domain.AppContainer
+import com.gndec.timetable.domain.GroupTimetableManager
+import com.gndec.timetable.domain.RefreshResult
+import com.gndec.timetable.domain.StudentDirectoryManager
+import com.gndec.timetable.domain.StudentDirectoryRecord
+import com.gndec.timetable.domain.StudentDirectoryResult
+import com.gndec.timetable.domain.matchingStudents
+import com.gndec.timetable.domain.studentDisplayName
+import com.gndec.timetable.parse.GroupMatcher
+import com.gndec.timetable.ui.PremiumPageHeader
+import com.gndec.timetable.ui.PremiumScreenBackground
+import com.gndec.timetable.ui.motion.Motion
+import com.gndec.timetable.ui.motion.motionTween
+import com.gndec.timetable.ui.motion.pressFeedback
+import kotlinx.coroutines.launch
+
+@Composable
+fun ProfileScreen(container: AppContainer, onBack: () -> Unit, onOpenAttendance: () -> Unit) {
+    val settings by container.settings.flow.collectAsStateWithLifecycle(initialValue = AppSettings())
+    val scope = rememberCoroutineScope()
+    val context = LocalContext.current
+    val savedBranch = settings.branch.trim().uppercase()
+    val hasSavedProfile = settings.studentName.isNotBlank() || settings.registrationNumber.isNotBlank() || settings.rollNumber.isNotBlank()
+    var branch by remember(savedBranch) { mutableStateOf(savedBranch) }
+    var directory by remember(savedBranch) { mutableStateOf<List<StudentDirectoryRecord>>(emptyList()) }
+    var query by remember { mutableStateOf("") }
+    var loading by remember { mutableStateOf(false) }
+    var error by remember { mutableStateOf<String?>(null) }
+    var lookupOpen by remember(hasSavedProfile) { mutableStateOf(!hasSavedProfile) }
+    var manualMode by remember { mutableStateOf(false) }
+    var manualName by remember(settings.studentName) { mutableStateOf(settings.studentName) }
+    var manualCrn by remember(settings.rollNumber) { mutableStateOf(settings.rollNumber) }
+    var manualRegistration by remember(settings.registrationNumber) { mutableStateOf(settings.registrationNumber) }
+    var manualFather by remember(settings.fatherName) { mutableStateOf(settings.fatherName) }
+    var manualMother by remember(settings.motherName) { mutableStateOf(settings.motherName) }
+    var manualMentor by remember(settings.mentorName) { mutableStateOf(settings.mentorName) }
+    var manualSection by remember(settings.studentSection) { mutableStateOf(settings.studentSection) }
+    var manualSubsection by remember(settings.studentSubsection) { mutableStateOf(settings.studentSubsection) }
+    var savedMessage by remember { mutableStateOf<String?>(null) }
+    // Academic-year editing (2nd/3rd/4th year group re-pick lives here too).
+    var yearEditing by remember { mutableStateOf(false) }
+    var catalogGroups by remember { mutableStateOf<List<String>>(emptyList()) }
+    var catalogFromCache by remember { mutableStateOf(false) }
+    var catalogLoading by remember { mutableStateOf(false) }
+    var pickedSection by remember { mutableStateOf(settings.studentSection) }
+    var pickedGroup by remember(settings.studentSubsection) { mutableStateOf<String?>(settings.studentSubsection.ifBlank { null }) }
+    var yearError by remember { mutableStateOf<String?>(null) }
+
+    fun loadCatalog(year: Int, force: Boolean) {
+        scope.launch {
+            catalogLoading = true
+            yearError = null
+            when (val result = container.groupTimetableManager.load(savedBranch, year, force)) {
+                is GroupTimetableManager.CatalogResult.Ready -> {
+                    catalogGroups = result.groups
+                    catalogFromCache = result.fromCache
+                    catalogLoading = false
+                }
+                is GroupTimetableManager.CatalogResult.Failed -> {
+                    catalogGroups = result.cached
+                    catalogLoading = false
+                    yearError = result.reason
+                }
+            }
+        }
+    }
+
+    /** Year switch for an existing profile: persists the year and, for 2nd–4th
+     *  years, re-links the timetable group chosen from the live document. */
+    fun applyYear(year: Int) {
+        scope.launch {
+            container.settings.setAcademicYear(year)
+            if (year >= 2) {
+                loadCatalog(year, force = false)
+            } else if (settings.academicYear >= 2) {
+                // Downgrading back to 1st year: keep identity, restore appsc flow.
+                savedMessage = "Year set to 1st — reconnect your official record below"
+                lookupOpen = true
+            }
+        }
+    }
+
+    fun saveSeniorGroup(year: Int) {
+        scope.launch {
+            val group = pickedGroup?.trim().orEmpty()
+            if (group.isBlank()) return@launch
+            container.keys.removeAttendanceSession()
+            container.settings.setAcademicYear(year)
+            container.settings.saveStudentProfile(
+                settings.studentName, settings.rollNumber, savedBranch, settings.registrationNumber,
+                settings.fatherName, settings.motherName, settings.mentorName,
+                pickedSection?.trim().orEmpty(), group, "",
+                settings.mentorMobile, settings.mentorVenue,
+                "manual_departmental",
+                settings.classCoordinator
+            )
+            // Validate the newly picked group against the official document —
+            // the SAVED group may still be the old 1st-year one, and validating
+            // it against a departmental document always fails.
+            val refreshed = container.refreshManager.refresh(force = true, expectedGroup = group)
+            // Link the picked group; on a failed refresh this only succeeds when
+            // the group's lectures are already cached from an earlier success.
+            val linked = runCatching { container.refreshManager.changeGroup(group) }.getOrDefault(false)
+            when {
+                linked -> {
+                    savedMessage = "Saved: ${ordinalLabel(year)} year · $group"
+                    yearError = null
+                }
+                refreshed is RefreshResult.Failed ->
+                    yearError = "Saved the year, but the official timetable could not be updated " +
+                        "(${refreshed.reason}) The previous timetable is still shown. Try again once you are online."
+                else ->
+                    yearError = "Group \"$group\" is not present in the downloaded official timetable. " +
+                        "Reload the sections and pick again."
+            }
+        }
+    }
+
+    suspend fun loadBranch(force: Boolean) {
+        if (branch.isBlank()) return
+        loading = true
+        error = null
+        when (val result = container.studentDirectoryManager.load(branch, force)) {
+            is StudentDirectoryResult.Ready -> {
+                directory = result.records
+                loading = false
+            }
+            is StudentDirectoryResult.Failed -> {
+                directory = result.cached
+                loading = false
+                error = result.reason
+            }
+        }
+    }
+
+    LaunchedEffect(branch, lookupOpen) {
+        if (lookupOpen && branch.isNotBlank()) loadBranch(force = false)
+    }
+
+    fun choose(record: StudentDirectoryRecord) {
+        scope.launch {
+            container.keys.removeAttendanceSession()
+            container.settings.saveStudentProfile(
+                record.candidateName,
+                record.crn,
+                record.branch,
+                record.registrationNumber,
+                record.fatherName,
+                record.motherName,
+                record.mentorName,
+                record.section,
+                record.subsection,
+                record.group,
+                record.mentorMobile,
+                record.venue,
+                "gndec_permanent_pdf"
+            )
+            runCatching { container.refreshManager.changeGroup(record.subsection) }
+            savedMessage = "Official details saved on this device"
+            manualMode = false
+            lookupOpen = false
+        }
+    }
+
+    fun saveManual() {
+        scope.launch {
+            container.keys.removeAttendanceSession()
+            container.settings.saveStudentProfile(manualName, manualCrn, branch, manualRegistration, manualFather, manualMother, manualMentor, manualSection, manualSubsection, manualSubsection, "", "", "manual")
+            runCatching { if (manualSubsection.isNotBlank()) container.refreshManager.changeGroup(manualSubsection) }
+            savedMessage = "Manual profile saved on this device"
+            manualMode = false
+            lookupOpen = false
+        }
+    }
+
+    val matches = matchingStudents(directory, query)
+    val displayName = settings.studentName.ifBlank { "Your profile" }
+    val initials = displayName.split(" ").filter { it.isNotBlank() }.take(2).joinToString("") { it.first().uppercase() }.ifBlank { "S" }
+
+    PremiumScreenBackground {
+        LazyColumn(
+            Modifier.fillMaxSize(),
+            contentPadding = PaddingValues(bottom = 30.dp),
+            verticalArrangement = Arrangement.spacedBy(12.dp)
+        ) {
+            item { PremiumPageHeader("Profile", "Student identity", onBack = onBack) }
+            item { ProfileHero(initials, displayName, settings.studentSubsection.ifBlank { settings.branch.ifBlank { "Add your branch" } }, settings.rollNumber.ifBlank { "CRN not added" }) }
+            item { SourceStatus(settings.profileSource, loading, savedMessage) }
+
+            val friends = remember(settings.friendsJson) { container.settings.decodeFriends(settings.friendsJson) }
+            item { FriendsSection(container = container, friends = friends, modifier = Modifier.padding(horizontal = 20.dp)) }
+
+
+            if (hasSavedProfile && !lookupOpen) {
+                item(key = "attendance-action") {
+                    Box(Modifier.animateItem()) { AttendanceProfileAction(onClick = onOpenAttendance) }
+                }
+                item {
+                    SavedProfileCard(
+                        academicYear = settings.academicYear,
+                        name = settings.studentName,
+                        branch = settings.branch,
+                        crn = settings.rollNumber,
+                        registration = settings.registrationNumber,
+                        section = settings.studentSection,
+                        subsection = settings.studentSubsection,
+                        studentGroup = settings.studentGroup,
+                        father = settings.fatherName,
+                        mother = settings.motherName,
+                        mentor = settings.mentorName,
+                        mentorMobile = settings.mentorMobile,
+                        mentorVenue = settings.mentorVenue,
+                        classCoordinator = settings.classCoordinator,
+                        collegeEmail = collegeEmail(settings.studentName, settings.rollNumber),
+                        onCopyCrn = {
+                            if (settings.rollNumber.isNotBlank()) {
+                                val clipboard = context.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
+                                clipboard.setPrimaryClip(ClipData.newPlainText("CRN (Class Roll Number)", settings.rollNumber))
+                                savedMessage = "CRN copied"
+                            }
+                        },
+                        onCopyRegistration = {
+                            if (settings.registrationNumber.isNotBlank()) {
+                                val clipboard = context.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
+                                val label = if (settings.academicYear >= 2) "URN (University Roll Number)" else "Registration number"
+                                clipboard.setPrimaryClip(ClipData.newPlainText(label, settings.registrationNumber))
+                                savedMessage = if (settings.academicYear >= 2) "URN copied" else "Registration number copied"
+                            }
+                        },
+                        onCopyMentorMobile = {
+                            if (settings.mentorMobile.isNotBlank()) {
+                                val clipboard = context.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
+                                clipboard.setPrimaryClip(ClipData.newPlainText("Mentor mobile", settings.mentorMobile))
+                                savedMessage = "Mentor mobile copied"
+                            }
+                        },
+                        onCopyEmail = {
+                            val email = collegeEmail(settings.studentName, settings.rollNumber)
+                            if (email != null) {
+                                val clipboard = context.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
+                                clipboard.setPrimaryClip(ClipData.newPlainText("College email", email))
+                                savedMessage = "College email copied"
+                            }
+                        }
+                    )
+                }
+                item(key = "year-editor") {
+                    AcademicYearCard(
+                        year = settings.academicYear,
+                        expanded = yearEditing,
+                        onToggle = { yearEditing = !yearEditing; yearError = null },
+                        onYear = { applyYear(it) }
+                    )
+                }
+                if (yearEditing && settings.academicYear >= 2) {
+                    item(key = "year-group-picker") {
+                        SeniorGroupEditor(
+                            branch = savedBranch,
+                            year = settings.academicYear,
+                            groups = catalogGroups,
+                            fromCache = catalogFromCache,
+                            loading = catalogLoading,
+                            error = yearError,
+                            pickedSection = pickedSection,
+                            pickedGroup = pickedGroup,
+                            onSection = { section ->
+                                pickedSection = section
+                                val options = GroupMatcher.groupsForSection(catalogGroups, savedBranch, settings.academicYear, section)
+                                pickedGroup = options.singleOrNull()
+                            },
+                            onGroup = { pickedGroup = it },
+                            onReload = { loadCatalog(settings.academicYear, force = true) },
+                            onSave = { saveSeniorGroup(settings.academicYear) }
+                        )
+                    }
+                }
+                if (settings.academicYear <= 1) {
+                    item {
+                        ProfileActionRow(
+                            text = "Want to search your name on the official record again?",
+                            onClick = { lookupOpen = true; query = ""; error = null }
+                        )
+                    }
+                }
+            } else {
+                item(key = "connect-title") {
+                    Box(Modifier.animateItem()) {
+                        SectionTitle("Connect your official record", "Choose your branch, then search the bundled GNDEC 2026 permanent-section PDF.")
+                    }
+                }
+                item(key = "branch-selector") {
+                    Box(Modifier.animateItem()) {
+                        BranchSelector(
+                            branch,
+                            onBranch = { branch = it; directory = emptyList(); query = ""; error = null; manualMode = false },
+                            onRefresh = { scope.launch { loadBranch(force = true) } },
+                            loading = loading
+                        )
+                    }
+                }
+                if (branch.isNotBlank()) {
+                    item {
+                        val configuration = LocalConfiguration.current
+                        val density = LocalDensity.current
+                        val imeVisible = WindowInsets.ime.getBottom(density) > 0
+                        // Short screens / open keyboard: keep matches above the field so they
+                        // are not covered by the soft keyboard.
+                        val resultsAboveInput = configuration.screenHeightDp < 720 || imeVisible
+                        Column(Modifier.fillMaxWidth().padding(horizontal = 20.dp)) {
+                            val showMatches = matches.isNotEmpty() && !manualMode && query.trim().length >= 2
+                            if (resultsAboveInput && showMatches) {
+                                matches.take(12).forEach { record -> CandidateRow(record, matches, onClick = { choose(record) }) }
+                                Spacer(Modifier.height(8.dp))
+                            }
+                            OutlinedTextField(query, { query = it; manualMode = false }, Modifier.fillMaxWidth(), singleLine = true, label = { Text("Search your name") }, leadingIcon = { Icon(Icons.Default.Search, contentDescription = null) }, enabled = !loading)
+                            if (!resultsAboveInput) {
+                                Spacer(Modifier.height(8.dp))
+                                if (showMatches) {
+                                    matches.take(12).forEach { record -> CandidateRow(record, matches, onClick = { choose(record) }) }
+                                } else if (directory.isEmpty() && !loading) {
+                                    Text("Tap refresh to read the bundled permanent student list for $branch.", color = MaterialTheme.colorScheme.onSurfaceVariant, style = MaterialTheme.typography.bodySmall)
+                                }
+                            } else if (!showMatches && directory.isEmpty() && !loading) {
+                                Spacer(Modifier.height(8.dp))
+                                Text("Tap refresh to read the bundled permanent student list for $branch.", color = MaterialTheme.colorScheme.onSurfaceVariant, style = MaterialTheme.typography.bodySmall)
+                            }
+                        }
+                    }
+                }
+                error?.let { message -> item { ErrorCard(message, hasCache = directory.isNotEmpty()) } }
+                item {
+                    ProfileActionRow(text = "Enter your profile manually instead", onClick = { manualMode = true })
+                }
+            }
+
+            if (manualMode) {
+                item(key = "manual-fields") {
+                    Box(Modifier.animateItem()) {
+                        ManualFields(
+                        name = manualName,
+                        crn = manualCrn,
+                        registration = manualRegistration,
+                        father = manualFather,
+                        mother = manualMother,
+                        mentor = manualMentor,
+                        section = manualSection,
+                        subsection = manualSubsection,
+                        onName = { manualName = it },
+                        onCrn = { manualCrn = it },
+                        onRegistration = { manualRegistration = it },
+                        onFather = { manualFather = it },
+                        onMother = { manualMother = it },
+                        onMentor = { manualMentor = it },
+                        onSection = { manualSection = it },
+                        onSubsection = { manualSubsection = it },
+                        onSave = ::saveManual
+                    )
+                }
+            }
+        }
+    }
+}
+}
+
+/**
+ * College email follows the official pattern firstName + CRN + @gndec.ac.in,
+ * entirely lowercase (e.g. "Aaditya Koundal" / 2621001 → aaditya2621001@gndec.ac.in).
+ * Null when the name or CRN is missing — nothing is invented.
+ */
+private fun collegeEmail(studentName: String, crn: String): String? {
+    val first = studentName.trim().split(Regex("\\s+")).firstOrNull()?.trim().orEmpty()
+    val roll = crn.trim()
+    if (first.isEmpty() || roll.isEmpty()) return null
+    return "${first.lowercase()}${roll.lowercase()}@gndec.ac.in"
+}
+
+@Composable
+private fun SavedProfileCard(academicYear: Int, name: String, branch: String, crn: String, registration: String, section: String, subsection: String, studentGroup: String, father: String, mother: String, mentor: String, mentorMobile: String, mentorVenue: String, classCoordinator: String, collegeEmail: String?, onCopyCrn: () -> Unit, onCopyRegistration: () -> Unit, onCopyMentorMobile: () -> Unit, onCopyEmail: () -> Unit) {
+    Card(Modifier.fillMaxWidth().padding(horizontal = 20.dp), colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface), border = BorderStroke(1.dp, MaterialTheme.colorScheme.outlineVariant), shape = RoundedCornerShape(20.dp), elevation = CardDefaults.cardElevation(0.dp)) {
+        Column(Modifier.padding(17.dp), verticalArrangement = Arrangement.spacedBy(9.dp)) {
+            Text("SAVED STUDENT DETAILS", color = MaterialTheme.colorScheme.primary, style = MaterialTheme.typography.labelMedium, fontWeight = FontWeight.Bold, letterSpacing = 1.2.sp)
+            Text(name.ifBlank { "Name not added" }, style = MaterialTheme.typography.titleLarge, fontWeight = FontWeight.Bold)
+            Detail("Academic year", if (academicYear in 1..4) "${ordinalLabel(academicYear)} Year" else "Not set")
+            Detail("Branch", branch.ifBlank { "Not added" })
+            CopyableDetail("CRN (Class Roll Number)", crn.ifBlank { "Not added" }, onCopyCrn)
+            if (registration.isNotBlank()) CopyableDetail(
+                if (academicYear >= 2) "URN (University Roll Number)" else "Registration number",
+                registration,
+                onCopyRegistration
+            )
+            if (!collegeEmail.isNullOrBlank()) CopyableDetail("Mail (college email)", collegeEmail, onCopyEmail)
+            Detail("Permanent section", listOf(section, subsection).filter { it.isNotBlank() }.joinToString("  · ").ifBlank { "Not added" })
+            Detail("Mentoring group", studentGroup.ifBlank { "Not added" })
+            Detail("Father name", father.ifBlank { "Not added" })
+            Detail("Mother name", mother.ifBlank { "Not added" })
+            Detail("Mentor", mentor.ifBlank { "Not added" })
+            if (mentorMobile.isNotBlank()) CopyableDetail("Mentor mobile", mentorMobile, onCopyMentorMobile)
+            if (mentorVenue.isNotBlank()) Detail("Mentor venue", mentorVenue)
+            if (classCoordinator.isNotBlank()) Detail("Class coordinator", classCoordinator)
+        }
+    }
+}
+
+@Composable
+private fun ProfileActionRow(text: String, onClick: () -> Unit) {
+    val pressInteraction = remember { MutableInteractionSource() }
+    Card(
+        onClick = onClick,
+        modifier = Modifier.fillMaxWidth().padding(horizontal = 20.dp).pressFeedback(pressInteraction),
+        interactionSource = pressInteraction,
+        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.primaryContainer),
+        shape = RoundedCornerShape(16.dp),
+        elevation = CardDefaults.cardElevation(0.dp)
+    ) {
+        Row(Modifier.fillMaxWidth().padding(horizontal = 15.dp, vertical = 14.dp), verticalAlignment = Alignment.CenterVertically) {
+            Text(text, Modifier.weight(1f), color = MaterialTheme.colorScheme.onPrimaryContainer, style = MaterialTheme.typography.bodyMedium, fontWeight = FontWeight.Medium)
+            Icon(Icons.Default.ArrowForward, contentDescription = "Open", tint = MaterialTheme.colorScheme.primary, modifier = Modifier.size(20.dp))
+        }
+    }
+}
+
+@Composable
+private fun ProfileHero(initials: String, name: String, group: String, registration: String) {
+    Card(Modifier.fillMaxWidth().padding(horizontal = 20.dp), colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.primaryContainer), shape = RoundedCornerShape(22.dp), elevation = CardDefaults.cardElevation(0.dp)) {
+        Row(Modifier.fillMaxWidth().padding(18.dp), verticalAlignment = Alignment.CenterVertically) {
+            Box(Modifier.size(62.dp).background(MaterialTheme.colorScheme.primary, CircleShape), contentAlignment = Alignment.Center) {
+                Text(initials, color = MaterialTheme.colorScheme.onPrimary, style = MaterialTheme.typography.headlineSmall, fontWeight = FontWeight.Bold)
+            }
+            Spacer(Modifier.width(13.dp))
+            Column(Modifier.weight(1f)) {
+                Text(name, style = MaterialTheme.typography.headlineSmall, fontWeight = FontWeight.Bold, maxLines = 1, overflow = TextOverflow.Ellipsis)
+                Text(group, color = MaterialTheme.colorScheme.onPrimaryContainer, style = MaterialTheme.typography.bodyMedium)
+                Text(registration, color = MaterialTheme.colorScheme.onPrimaryContainer, style = MaterialTheme.typography.bodySmall)
+            }
+        }
+    }
+}
+
+@Composable
+private fun SourceStatus(source: String, loading: Boolean, saved: String?) {
+    Row(Modifier.fillMaxWidth().padding(horizontal = 22.dp), verticalAlignment = Alignment.CenterVertically) {
+        val iconSwapIn = motionTween<Float>(Motion.Fast)
+        val iconSwapOut = motionTween<Float>(Motion.Fast)
+        AnimatedContent(
+            targetState = loading,
+            transitionSpec = { fadeIn(iconSwapIn) togetherWith fadeOut(iconSwapOut) },
+            label = "sourceIcon"
+        ) { isLoading ->
+            if (isLoading) CircularProgressIndicator(Modifier.size(18.dp), strokeWidth = 2.dp)
+            else Icon(Icons.Default.CloudDone, contentDescription = null, tint = MaterialTheme.colorScheme.primary, modifier = Modifier.size(19.dp))
+        }
+        Spacer(Modifier.width(8.dp))
+        val statusText = when {
+            loading -> "Reading the official branch PDF…"
+            saved != null -> saved
+            source == "gndec_permanent_pdf" -> "Linked to GNDEC’s bundled permanent 2026 list"
+            source == "manual_departmental" -> "Manual profile · departmental timetable group"
+            else -> "Manual profile details"
+        }
+        val textSwapIn = motionTween<Float>(Motion.Normal)
+        val textSwapOut = motionTween<Float>(Motion.Fast)
+        AnimatedContent(
+            targetState = statusText,
+            transitionSpec = { fadeIn(textSwapIn) togetherWith fadeOut(textSwapOut) },
+            label = "sourceText"
+        ) { text ->
+            Text(text, color = MaterialTheme.colorScheme.onSurfaceVariant, style = MaterialTheme.typography.bodySmall)
+        }
+    }
+}
+
+@Composable
+private fun SectionTitle(title: String, subtitle: String) {
+    Column(Modifier.fillMaxWidth().padding(horizontal = 20.dp)) {
+        Text(title, style = MaterialTheme.typography.titleLarge, fontWeight = FontWeight.Bold)
+        Text(subtitle, color = MaterialTheme.colorScheme.onSurfaceVariant, style = MaterialTheme.typography.bodySmall)
+    }
+}
+
+@Composable
+private fun BranchSelector(branch: String, onBranch: (String) -> Unit, onRefresh: () -> Unit, loading: Boolean) {
+    Column(Modifier.fillMaxWidth().padding(horizontal = 20.dp)) {
+        Row(horizontalArrangement = Arrangement.spacedBy(7.dp)) {
+            StudentDirectoryManager.BRANCHES.take(4).forEach { value -> BranchChip(value, value == branch, onClick = { onBranch(value) }) }
+        }
+        Spacer(Modifier.height(7.dp))
+        Row(horizontalArrangement = Arrangement.spacedBy(7.dp)) {
+            StudentDirectoryManager.BRANCHES.drop(4).forEach { value -> BranchChip(value, value == branch, onClick = { onBranch(value) }) }
+            OutlinedButton(onClick = onRefresh, enabled = branch.isNotBlank() && !loading, modifier = Modifier.height(38.dp), contentPadding = PaddingValues(horizontal = 10.dp), shape = RoundedCornerShape(12.dp)) {
+                Icon(Icons.Default.Refresh, contentDescription = null, modifier = Modifier.size(16.dp))
+                Spacer(Modifier.width(4.dp))
+                Text("Read list")
+            }
+        }
+    }
+}
+
+@Composable
+private fun BranchChip(text: String, selected: Boolean, onClick: () -> Unit) {
+    SurfaceChip(text, selected, onClick)
+}
+
+@Composable
+private fun SurfaceChip(text: String, selected: Boolean, onClick: () -> Unit) {
+    val chipColor by animateColorAsState(
+        targetValue = if (selected) MaterialTheme.colorScheme.primaryContainer else MaterialTheme.colorScheme.surface,
+        animationSpec = motionTween(Motion.Normal),
+        label = "chipColor"
+    )
+    val textColor by animateColorAsState(
+        targetValue = if (selected) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurface,
+        animationSpec = motionTween(Motion.Normal),
+        label = "chipText"
+    )
+    val pressInteraction = remember { MutableInteractionSource() }
+    Box(
+        Modifier.clip(RoundedCornerShape(12.dp))
+            .background(chipColor)
+            .pressFeedback(pressInteraction, pressedScale = 0.93f)
+            .clickable(interactionSource = pressInteraction, indication = LocalIndication.current, onClick = onClick)
+            .padding(horizontal = 13.dp, vertical = 9.dp)
+    ) {
+        Text(text, color = textColor, fontWeight = if (selected) FontWeight.Bold else FontWeight.Medium)
+    }
+}
+
+@Composable
+private fun CandidateRow(record: StudentDirectoryRecord, matches: List<StudentDirectoryRecord>, onClick: () -> Unit) {
+    val pressInteraction = remember { MutableInteractionSource() }
+    Card(
+        onClick = onClick,
+        Modifier.fillMaxWidth().padding(vertical = 3.dp).pressFeedback(pressInteraction, pressedScale = 0.98f),
+        interactionSource = pressInteraction,
+        shape = RoundedCornerShape(14.dp),
+        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
+        border = BorderStroke(1.dp, MaterialTheme.colorScheme.outlineVariant),
+        elevation = CardDefaults.cardElevation(0.dp)
+    ) {
+        Row(Modifier.fillMaxWidth().padding(12.dp), verticalAlignment = Alignment.CenterVertically) {
+            Icon(Icons.Default.Person, contentDescription = null, tint = MaterialTheme.colorScheme.primary, modifier = Modifier.size(21.dp))
+            Spacer(Modifier.width(9.dp))
+            Column(Modifier.weight(1f)) {
+                Text(studentDisplayName(record, matches), fontWeight = FontWeight.SemiBold, maxLines = 1, overflow = TextOverflow.Ellipsis)
+                Text("${record.subsection}  ·  ${record.group}", color = MaterialTheme.colorScheme.onSurfaceVariant, style = MaterialTheme.typography.bodySmall)
+            }
+        }
+    }
+}
+
+@Composable
+private fun OfficialRecordCard(record: StudentDirectoryRecord) {
+    Card(Modifier.fillMaxWidth().padding(horizontal = 20.dp), colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.secondaryContainer), shape = RoundedCornerShape(20.dp), elevation = CardDefaults.cardElevation(0.dp)) {
+        Column(Modifier.padding(17.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
+            Text("OFFICIAL RECORD", color = MaterialTheme.colorScheme.primary, style = MaterialTheme.typography.labelMedium, fontWeight = FontWeight.Bold, letterSpacing = 1.2.sp)
+            Text(record.candidateName, style = MaterialTheme.typography.titleLarge, fontWeight = FontWeight.Bold)
+            Detail("CRN (Class Roll Number)", record.crn)
+            if (record.registrationNumber.isNotBlank()) Detail("Registration number", record.registrationNumber)
+            Detail("Permanent section", "${record.section}  ·  ${record.subsection}")
+            Detail("Mentoring group", record.group)
+            Detail("Father name", record.fatherName)
+            Detail("Mother name", record.motherName)
+            Detail("Mentor", record.mentorName)
+            if (record.mentorMobile.isNotBlank()) Detail("Mentor mobile", record.mentorMobile)
+            if (record.venue.isNotBlank()) Detail("Mentor venue", record.venue)
+            if (record.classCoordinator.isNotBlank()) Detail("Class coordinator", record.classCoordinator)
+        }
+    }
+}
+
+@Composable
+private fun ErrorCard(message: String, hasCache: Boolean) {
+    Card(Modifier.fillMaxWidth().padding(horizontal = 20.dp), colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.tertiaryContainer), elevation = CardDefaults.cardElevation(0.dp)) {
+        Column(Modifier.padding(14.dp)) {
+            Text(if (hasCache) "Using saved branch list" else "Could not load branch list", fontWeight = FontWeight.Bold)
+            Text(message, color = MaterialTheme.colorScheme.onTertiaryContainer, style = MaterialTheme.typography.bodySmall)
+        }
+    }
+}
+
+@Composable
+private fun ManualFields(name: String, crn: String, registration: String, father: String, mother: String, mentor: String, section: String, subsection: String, onName: (String) -> Unit, onCrn: (String) -> Unit, onRegistration: (String) -> Unit, onFather: (String) -> Unit, onMother: (String) -> Unit, onMentor: (String) -> Unit, onSection: (String) -> Unit, onSubsection: (String) -> Unit, onSave: () -> Unit) {
+    Card(Modifier.fillMaxWidth().padding(horizontal = 20.dp), colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface), border = BorderStroke(1.dp, MaterialTheme.colorScheme.outlineVariant), elevation = CardDefaults.cardElevation(0.dp)) {
+        Column(Modifier.padding(15.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
+            Text("Manual details", style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.Bold)
+            Input("Full name", name, onName)
+            Input("CRN (Class Roll Number)", crn, onCrn)
+            Input("Registration number", registration, onRegistration)
+            Input("Father name", father, onFather)
+            Input("Mother name", mother, onMother)
+            Input("Mentor name", mentor, onMentor)
+            Input("Permanent section", section, onSection)
+        Input("Permanent subsection / timetable group", subsection, onSubsection)
+            Button(onClick = onSave, enabled = name.isNotBlank(), modifier = Modifier.fillMaxWidth().height(50.dp), shape = RoundedCornerShape(14.dp), colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.primary, contentColor = MaterialTheme.colorScheme.onPrimary)) {
+                Icon(Icons.Default.Badge, contentDescription = null, modifier = Modifier.size(18.dp))
+                Spacer(Modifier.width(7.dp))
+                Text("Save manual profile", fontWeight = FontWeight.SemiBold)
+            }
+        }
+    }
+}
+
+@Composable
+private fun Input(label: String, value: String, onValue: (String) -> Unit) {
+    OutlinedTextField(value, onValue, Modifier.fillMaxWidth(), singleLine = true, label = { Text(label) })
+}
+
+@Composable
+private fun Detail(label: String, value: String) {
+    Column {
+        Text(label, color = MaterialTheme.colorScheme.onSurfaceVariant, style = MaterialTheme.typography.labelSmall)
+        Text(value, fontWeight = FontWeight.SemiBold)
+    }
+}
+
+@Composable
+private fun CopyableDetail(label: String, value: String, onCopy: () -> Unit) {
+    Column {
+        Text(label, color = MaterialTheme.colorScheme.onSurfaceVariant, style = MaterialTheme.typography.labelSmall)
+        Row(verticalAlignment = Alignment.CenterVertically) {
+            Text(value, Modifier.weight(1f), fontWeight = FontWeight.SemiBold)
+            if (value != "Not added") {
+                IconButton(onClick = onCopy, modifier = Modifier.size(30.dp)) {
+                    Icon(Icons.Default.ContentCopy, contentDescription = "Copy $label", tint = MaterialTheme.colorScheme.primary, modifier = Modifier.size(17.dp))
+                }
+            }
+        }
+    }
+}
+
+
+@Composable
+private fun AttendanceProfileAction(onClick: () -> Unit) {
+    Card(
+        onClick = onClick,
+        modifier = Modifier.fillMaxWidth().padding(horizontal = 20.dp),
+        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.primaryContainer),
+        shape = RoundedCornerShape(16.dp),
+        elevation = CardDefaults.cardElevation(0.dp)
+    ) {
+        Row(Modifier.fillMaxWidth().padding(horizontal = 15.dp, vertical = 14.dp), verticalAlignment = Alignment.CenterVertically) {
+            Column(Modifier.weight(1f)) {
+                Text("View attendance", color = MaterialTheme.colorScheme.onPrimaryContainer, style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.Bold)
+                Text("Mark lectures and track your percentage", color = MaterialTheme.colorScheme.onPrimaryContainer, style = MaterialTheme.typography.bodySmall)
+            }
+            Icon(Icons.Default.ArrowForward, contentDescription = "Open attendance", tint = MaterialTheme.colorScheme.primary, modifier = Modifier.size(20.dp))
+        }
+    }
+}
+
+internal fun ordinalLabel(year: Int): String = when (year) {
+    1 -> "1st"
+    2 -> "2nd"
+    3 -> "3rd"
+    4 -> "4th"
+    else -> year.toString()
+}
+
+@Composable
+private fun AcademicYearCard(year: Int, expanded: Boolean, onToggle: () -> Unit, onYear: (Int) -> Unit) {
+    Card(Modifier.fillMaxWidth().padding(horizontal = 20.dp), colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface), border = BorderStroke(1.dp, MaterialTheme.colorScheme.outlineVariant), shape = RoundedCornerShape(20.dp), elevation = CardDefaults.cardElevation(0.dp)) {
+        Column(Modifier.padding(17.dp), verticalArrangement = Arrangement.spacedBy(11.dp)) {
+            Row(Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
+                Column(Modifier.weight(1f)) {
+                    Text("ACADEMIC YEAR", color = MaterialTheme.colorScheme.primary, style = MaterialTheme.typography.labelMedium, fontWeight = FontWeight.Bold, letterSpacing = 1.2.sp)
+                    Text(
+                        if (year in 1..4) "${ordinalLabel(year)} Year" else "Not set — pick your year",
+                        style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.SemiBold
+                    )
+                }
+                OutlinedButton(onClick = onToggle, enabled = true, contentPadding = PaddingValues(horizontal = 12.dp), shape = RoundedCornerShape(12.dp)) {
+                    Text(if (expanded) "Close" else "Change")
+                }
+            }
+            if (expanded) {
+                Text(
+                    "1st year keeps the official directory lookup. 2nd–4th years switch to their department's official timetable and re-pick the section.",
+                    color = MaterialTheme.colorScheme.onSurfaceVariant, style = MaterialTheme.typography.bodySmall
+                )
+                Row(horizontalArrangement = Arrangement.spacedBy(7.dp)) {
+                    listOf(1, 2, 3, 4).forEach { value ->
+                        SurfaceChip(ordinalLabel(value), value == year, onClick = { onYear(value) })
+                    }
+                }
+            }
+        }
+    }
+}
+
+@Composable
+private fun SeniorGroupEditor(
+    branch: String,
+    year: Int,
+    groups: List<String>,
+    fromCache: Boolean,
+    loading: Boolean,
+    error: String?,
+    pickedSection: String?,
+    pickedGroup: String?,
+    onSection: (String) -> Unit,
+    onGroup: (String) -> Unit,
+    onReload: () -> Unit,
+    onSave: () -> Unit
+) {
+    Card(Modifier.fillMaxWidth().padding(horizontal = 20.dp), colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface), border = BorderStroke(1.dp, MaterialTheme.colorScheme.outlineVariant), shape = RoundedCornerShape(20.dp), elevation = CardDefaults.cardElevation(0.dp)) {
+        Column(Modifier.padding(17.dp), verticalArrangement = Arrangement.spacedBy(11.dp)) {
+            Text("${ordinalLabel(year)} YEAR · $branch SECTIONS", color = MaterialTheme.colorScheme.primary, style = MaterialTheme.typography.labelMedium, fontWeight = FontWeight.Bold, letterSpacing = 1.2.sp)
+            when {
+                loading -> Row(verticalAlignment = Alignment.CenterVertically) {
+                    CircularProgressIndicator(Modifier.size(18.dp), strokeWidth = 2.dp)
+                    Spacer(Modifier.width(10.dp))
+                    Text("Loading official groups…", color = MaterialTheme.colorScheme.onSurfaceVariant, style = MaterialTheme.typography.bodySmall)
+                }
+                groups.isEmpty() -> {
+                    Text(error ?: "The official timetable could not be loaded. Try again once you are online.", color = MaterialTheme.colorScheme.error, style = MaterialTheme.typography.bodySmall)
+                    OutlinedButton(onClick = onReload, enabled = !loading) {
+                        Icon(Icons.Default.Refresh, contentDescription = null, modifier = Modifier.size(16.dp))
+                        Spacer(Modifier.width(4.dp))
+                        Text("Retry")
+                    }
+                }
+                else -> {
+                    if (fromCache) {
+                        Text("Offline copy — refresh for the latest revision.", color = MaterialTheme.colorScheme.onSurfaceVariant, style = MaterialTheme.typography.bodySmall)
+                    }
+                    val sections = GroupMatcher.sectionsForYear(groups, branch, year)
+                    if (sections.isEmpty()) {
+                        Text("No $branch groups for year $year in the current official timetable yet.", color = MaterialTheme.colorScheme.onSurfaceVariant, style = MaterialTheme.typography.bodySmall)
+                    } else {
+                        Column(verticalArrangement = Arrangement.spacedBy(7.dp)) {
+                            sections.chunked(5).forEach { rowSections ->
+                                Row(horizontalArrangement = Arrangement.spacedBy(7.dp)) {
+                                    rowSections.forEach { section ->
+                                        SurfaceChip(GroupMatcher.sectionLabel(section), section == pickedSection, onClick = { onSection(section) })
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    val sectionGroups = pickedSection?.let { GroupMatcher.groupsForSection(groups, branch, year, it) }.orEmpty()
+                    if (sectionGroups.size > 1) {
+                        Text("Which practical group?", style = MaterialTheme.typography.titleSmall, fontWeight = FontWeight.SemiBold)
+                        Column(verticalArrangement = Arrangement.spacedBy(7.dp)) {
+                            sectionGroups.chunked(3).forEach { rowGroups ->
+                                Row(horizontalArrangement = Arrangement.spacedBy(7.dp)) {
+                                    rowGroups.forEach { group ->
+                                        SurfaceChip(group, group == pickedGroup, onClick = { onGroup(group) })
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    pickedGroup?.let {
+                        Text("Timetable group: $it", fontWeight = FontWeight.SemiBold)
+                    }
+                    error?.let { Text(it, color = MaterialTheme.colorScheme.error, style = MaterialTheme.typography.bodySmall) }
+                    Row(horizontalArrangement = Arrangement.spacedBy(8.dp), verticalAlignment = Alignment.CenterVertically) {
+                        OutlinedButton(onClick = onReload, enabled = !loading) {
+                            Icon(Icons.Default.Refresh, contentDescription = null, modifier = Modifier.size(16.dp))
+                            Spacer(Modifier.width(4.dp))
+                            Text("Refresh")
+                        }
+                        Button(onClick = onSave, enabled = pickedGroup != null) {
+                            Text("Save group")
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

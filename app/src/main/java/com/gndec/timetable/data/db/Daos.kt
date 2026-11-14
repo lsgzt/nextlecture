@@ -1,0 +1,138 @@
+package com.gndec.timetable.data.db
+
+import androidx.room.Dao
+import androidx.room.Insert
+import androidx.room.OnConflictStrategy
+import androidx.room.Query
+import kotlinx.coroutines.flow.Flow
+
+@Dao
+interface LectureDao {
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertAll(items: List<LectureEntity>)
+
+    @Query("DELETE FROM lectures")
+    suspend fun deleteAll()
+
+    @Query("SELECT * FROM lectures WHERE groupName = :g ORDER BY dayOfWeek, startMinutes")
+    fun observeForGroup(g: String): Flow<List<LectureEntity>>
+
+    @Query("SELECT * FROM lectures WHERE groupName = :g ORDER BY dayOfWeek, startMinutes")
+    suspend fun getForGroup(g: String): List<LectureEntity>
+
+    @Query("SELECT * FROM lectures WHERE groupName = :g AND dayOfWeek = :d AND startMinutes = :s LIMIT 1")
+    suspend fun findOne(g: String, d: Int, s: Int): LectureEntity?
+
+    @Query("SELECT COUNT(*) FROM lectures WHERE groupName = :g")
+    suspend fun countForGroup(g: String): Int
+
+    @Query("SELECT COUNT(*) FROM lectures")
+    suspend fun countAll(): Int
+
+    @Query("SELECT DISTINCT groupName FROM lectures ORDER BY groupName")
+    suspend fun distinctGroups(): List<String>
+}
+
+@Dao
+interface TimetableSnapshotDao {
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun putAll(items: List<TimetableSnapshotEntity>)
+
+    @Query("SELECT * FROM timetable_snapshots WHERE groupName = :groupName AND attendanceDate = :date ORDER BY startMinutes, id")
+    suspend fun getForGroupAndDate(groupName: String, date: String): List<TimetableSnapshotEntity>
+
+    @Query("DELETE FROM timetable_snapshots WHERE attendanceDate < :beforeDate")
+    suspend fun deleteBefore(beforeDate: String)
+
+    /**
+     * Purges the whole week [from, to] (inclusive, ISO dates) for ALL groups so a
+     * freshly parsed timetable can never mix with rows saved from an older
+     * document: upsert-by-key alone would keep every old lecture whose slot,
+     * subject or venue no longer matches the new document.
+     */
+    @Query("DELETE FROM timetable_snapshots WHERE attendanceDate BETWEEN :from AND :to")
+    suspend fun deleteForDateRange(from: String, to: String)
+
+    /** Current-week snapshots of groups other than [keep] — dead weight after a group change. */
+    @Query("DELETE FROM timetable_snapshots WHERE groupName != :keep AND attendanceDate BETWEEN :from AND :to")
+    suspend fun deleteCurrentWeekForOtherGroups(keep: String, from: String, to: String)
+
+    @Query("DELETE FROM timetable_snapshots")
+    suspend fun deleteAll()
+}
+
+@Dao
+interface MetaDao {
+    @Query("SELECT * FROM timetable_meta WHERE id = 1")
+    fun observe(): Flow<TimetableMetaEntity?>
+
+    @Query("SELECT * FROM timetable_meta WHERE id = 1")
+    suspend fun get(): TimetableMetaEntity?
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun put(meta: TimetableMetaEntity)
+
+    @Query("DELETE FROM timetable_meta")
+    suspend fun deleteAll()
+}
+
+@Dao
+interface AiCacheDao {
+    @Query("SELECT * FROM ai_cache WHERE rawHash = :h")
+    suspend fun get(h: String): AiCacheEntity?
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun put(e: AiCacheEntity)
+
+    @Query("DELETE FROM ai_cache")
+    suspend fun deleteAll()
+}
+
+@Dao
+interface AlarmDao {
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun putAll(items: List<ScheduledAlarmEntity>)
+
+    @Query("SELECT * FROM scheduled_alarms")
+    suspend fun getAll(): List<ScheduledAlarmEntity>
+
+    @Query("SELECT COUNT(*) FROM scheduled_alarms WHERE epochMillis > :now")
+    suspend fun countFuture(now: Long): Int
+
+    @Query("DELETE FROM scheduled_alarms WHERE requestCode = :code")
+    suspend fun delete(code: Int)
+
+    @Query("DELETE FROM scheduled_alarms")
+    suspend fun clear()
+}
+
+
+@Dao
+interface SyllabusChatDao {
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertSession(session: SyllabusChatSessionEntity)
+
+    @Query("SELECT * FROM syllabus_chat_sessions ORDER BY updatedAt DESC")
+    fun observeSessions(): Flow<List<SyllabusChatSessionEntity>>
+
+    @Query("SELECT * FROM syllabus_chat_sessions WHERE id = :sessionId LIMIT 1")
+    suspend fun getSession(sessionId: String): SyllabusChatSessionEntity?
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertMessage(message: SyllabusChatMessageEntity)
+
+    @Query("SELECT * FROM syllabus_chat_messages WHERE sessionId = :sessionId ORDER BY timestamp ASC, id ASC")
+    fun observeMessages(sessionId: String): Flow<List<SyllabusChatMessageEntity>>
+
+    @Query("SELECT * FROM syllabus_chat_messages WHERE sessionId = :sessionId ORDER BY timestamp ASC, id ASC")
+    suspend fun getMessages(sessionId: String): List<SyllabusChatMessageEntity>
+
+    @Query("UPDATE syllabus_chat_sessions SET title = :title, updatedAt = :updatedAt WHERE id = :sessionId")
+    suspend fun touchSession(sessionId: String, title: String, updatedAt: Long)
+
+    @Query("DELETE FROM syllabus_chat_messages WHERE sessionId = :sessionId")
+    suspend fun deleteMessages(sessionId: String)
+
+    @Query("DELETE FROM syllabus_chat_sessions WHERE id = :sessionId")
+    suspend fun deleteSession(sessionId: String)
+}
