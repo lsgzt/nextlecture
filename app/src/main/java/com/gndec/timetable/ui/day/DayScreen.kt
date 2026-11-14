@@ -66,6 +66,7 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Size
@@ -77,8 +78,11 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.LayoutCoordinates
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.platform.LocalView
+import androidx.compose.ui.text.SpanStyle
+import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -87,6 +91,8 @@ import com.gndec.timetable.data.prefs.AppSettings
 import com.gndec.timetable.domain.AppContainer
 import com.gndec.timetable.domain.Friend
 import com.gndec.timetable.domain.FriendDay
+import com.gndec.timetable.domain.FriendEarlySlot
+import com.gndec.timetable.domain.earlySlotsBefore
 import com.gndec.timetable.domain.freeFriendNames
 import com.gndec.timetable.domain.friendNameList
 import com.gndec.timetable.domain.friendVerb
@@ -238,6 +244,13 @@ fun DayScreen(
                                 }.sortedBy { it.startMinutes }
                                 val modeTimeline = buildTimeline(modeLectures, if (viewMode == DayViewMode.TODAY) nowMinutes else -1)
                                 val modeFreeMinutes = modeTimeline.filterIsInstance<TimelineItem.Free>().sumOf { it.end - it.start }
+                                val modeFriends = if (viewMode == DayViewMode.TODAY) todayFriendDays else tomorrowFriendDays
+                                val myFirstStart = modeLectures.minOfOrNull { it.startMinutes }
+                                val earlyFriendSlots = if (myFirstStart != null) {
+                                    modeFriends.earlySlotsBefore(myFirstStart)
+                                } else {
+                                    emptyList()
+                                }
                                 DaySummary(
                                     lectures = modeLectures.size,
                                     freeMinutes = modeFreeMinutes,
@@ -247,6 +260,13 @@ fun DayScreen(
                                     muted = muted,
                                     cardColor = MaterialTheme.colorScheme.surface
                                 )
+                                if (earlyFriendSlots.isNotEmpty()) {
+                                    FriendsBeforeDayNote(
+                                        slots = earlyFriendSlots,
+                                        accent = accent,
+                                        muted = muted
+                                    )
+                                }
                                 AnimatedContent(
                                     targetState = viewMode,
                                     transitionSpec = {
@@ -898,6 +918,95 @@ private fun TimelineRail(lecture: LectureEntity, state: LectureState, nodeIndex:
         Spacer(Modifier.height(9.dp))
         Text(formatTime(lecture.startMinutes), color = timeColor, style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.Bold)
         Text(formatTime(lecture.endMinutes), color = muted, style = MaterialTheme.typography.bodyLarge)
+    }
+}
+
+/**
+ * Compact note above the student's timeline when friends already have a class
+ * before the student's first lecture of the day.
+ *
+ * Examples:
+ * - "Vishal has a lecture at 8:30 AM"
+ * - "Vishal and Prince have a lecture at 8:30 AM"
+ * - "Vishal has a lecture and Prince has a practical at 8:30 AM"
+ * Names and activity types are bold.
+ */
+@Composable
+private fun FriendsBeforeDayNote(slots: List<FriendEarlySlot>, accent: Color, muted: Color) {
+    if (slots.isEmpty()) return
+    val bold = SpanStyle(fontWeight = FontWeight.Bold, color = accent)
+    val body = SpanStyle(fontWeight = FontWeight.Medium, color = muted)
+    val text = buildAnnotatedString {
+        withStyle(body) {
+            appendFriendsBeforeDay(slots, bold, body)
+        }
+    }
+    Row(
+        Modifier
+            .fillMaxWidth()
+            .padding(horizontal = TimelineHorizontalPadding)
+            .clip(RoundedCornerShape(12.dp))
+            .background(MaterialTheme.colorScheme.surface.copy(alpha = 0.55f))
+            .padding(horizontal = 14.dp, vertical = 11.dp),
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        Icon(
+            Icons.Default.Groups,
+            contentDescription = null,
+            tint = accent.copy(alpha = 0.85f),
+            modifier = Modifier.size(18.dp)
+        )
+        Spacer(Modifier.width(10.dp))
+        Text(text, style = MaterialTheme.typography.bodySmall)
+    }
+}
+
+/**
+ * Builds the spoken clause(s) for [slots], applying [bold] to names and type labels.
+ * Groups by start time so mixed types at the same clock can share one "at …".
+ */
+private fun androidx.compose.ui.text.AnnotatedString.Builder.appendFriendsBeforeDay(
+    slots: List<FriendEarlySlot>,
+    bold: SpanStyle,
+    body: SpanStyle
+) {
+    val byTime = slots.groupBy { it.startMinutes }.toSortedMap()
+    byTime.entries.forEachIndexed { timeIndex, (startMinutes, group) ->
+        if (timeIndex > 0) {
+            withStyle(body) { append(" · ") }
+        }
+        val types = group.map { it.typeLabel }.distinct()
+        if (types.size == 1) {
+            // Same type: "Vishal and Prince have a lecture at 8:30 AM"
+            group.forEachIndexed { i, slot ->
+                if (i > 0) {
+                    withStyle(body) {
+                        append(if (i == group.lastIndex) " and " else ", ")
+                    }
+                }
+                withStyle(bold) { append(slot.name) }
+            }
+            withStyle(body) {
+                append(if (group.size == 1) " has a " else " have a ")
+            }
+            withStyle(bold) { append(types.first()) }
+            withStyle(body) {
+                append(" at ")
+                append(formatTime(startMinutes))
+            }
+        } else {
+            // Mixed types at the same time: "Vishal has a lecture and Prince has a practical at 8:30 AM"
+            group.forEachIndexed { i, slot ->
+                if (i > 0) withStyle(body) { append(" and ") }
+                withStyle(bold) { append(slot.name) }
+                withStyle(body) { append(" has a ") }
+                withStyle(bold) { append(slot.typeLabel) }
+            }
+            withStyle(body) {
+                append(" at ")
+                append(formatTime(startMinutes))
+            }
+        }
     }
 }
 

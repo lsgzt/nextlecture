@@ -57,3 +57,35 @@ fun friendNameList(names: List<String>): String = when (names.size) {
 
 /** Joins a friend list into a clause: "Aarav and Meera are", "Aarav is". */
 fun friendVerb(names: List<String>): String = if (names.size == 1) "is" else "are"
+
+/**
+ * A friend's earliest class that starts before the student's first lecture of the day.
+ * Used on the Today/Tomorrow timeline to surface "Vishal has a lecture at 8:30 AM"
+ * above the student's own rail.
+ */
+data class FriendEarlySlot(
+    val name: String,
+    /** Canonical type label: lecture / tutorial / practical. */
+    val typeLabel: String,
+    val startMinutes: Int
+)
+
+/**
+ * For each friend with timetable data, pick their earliest lecture that starts
+ * strictly before [beforeMinutes]. Sorted by start time, then name.
+ */
+fun List<FriendDay>.earlySlotsBefore(beforeMinutes: Int): List<FriendEarlySlot> =
+    filter { it.hasData }
+        .mapNotNull { day ->
+            val first = day.lectures
+                .filter { it.startMinutes < beforeMinutes }
+                .minByOrNull { it.startMinutes }
+                ?: return@mapNotNull null
+            val typeLabel = when (first.lectureType?.trim()?.uppercase()) {
+                "TUTORIAL" -> "tutorial"
+                "PRACTICAL" -> "practical"
+                else -> "lecture"
+            }
+            FriendEarlySlot(day.friend.name, typeLabel, first.startMinutes)
+        }
+        .sortedWith(compareBy({ it.startMinutes }, { it.name }))
