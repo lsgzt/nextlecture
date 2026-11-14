@@ -53,12 +53,14 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.style.TextOverflow
@@ -73,6 +75,7 @@ import com.gndec.timetable.ui.PremiumBottomBarContentClearance
 import com.gndec.timetable.ui.PremiumScreenBackground
 import com.gndec.timetable.ui.attendance.rememberAttendanceHomeState
 import com.gndec.timetable.ui.attendance.subjectAttendance
+import com.gndec.timetable.ui.motion.hapticTick
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.withContext
 import java.time.Instant
@@ -90,7 +93,9 @@ fun SearchScreen(
 ) {
     val context = LocalContext.current
     val focusManager = LocalFocusManager.current
-    var query by remember { mutableStateOf("") }
+    // Saveable so returning from a teacher's detail page restores the query
+    // AND the results list with its scroll position, instead of a blank search.
+    var query by rememberSaveable { mutableStateOf("") }
 
     // Non-null while a faculty photo is open in the zoomable viewer.
     var photoViewerFor by remember { mutableStateOf<Pair<String, String>?>(null) }
@@ -123,29 +128,41 @@ fun SearchScreen(
     // results and the department picker appear instantly with no network. The
     // list also carries the timetable-only teachers already parsed in this
     // process, so a "Ms. Manpreet Kaur" that exists in the Applied Science
-    // file but not the directory is still searchable.
-    var faculty by remember { mutableStateOf(emptyList<com.gndec.timetable.domain.FacultyRecord>()) }
+    // file but not the directory is still searchable. Seeded synchronously from
+    // the manager's cached pool — returning from a detail page keeps the
+    // results and their scroll position instead of starting over.
+    var faculty by remember {
+        mutableStateOf(
+            container.facultyTimetables.combinedFacultyFast()
+                ?: emptyList<com.gndec.timetable.domain.FacultyRecord>()
+        )
+    }
     LaunchedEffect(Unit) {
         if (faculty.isEmpty()) {
-            faculty = withContext(kotlinx.coroutines.Dispatchers.Default) { loadFacultyPool(container) }
+            faculty = withContext(kotlinx.coroutines.Dispatchers.Default) {
+                container.facultyTimetables.combinedFaculty()
+            }
         }
     }
     // The first real query also loads every department's teacher document in
     // the background (cache-first, offline-friendly): teachers who appear only
     // in the timetables then join the results as soon as they are parsed.
-    var timetableTeachersLoaded by remember { mutableStateOf(false) }
+    var timetableTeachersLoaded by rememberSaveable { mutableStateOf(false) }
     LaunchedEffect(trimmed) {
         if (!timetableTeachersLoaded && trimmed.isNotEmpty()) {
             timetableTeachersLoaded = true
             container.facultyTimetables.ensureAllDocs()
-            faculty = withContext(kotlinx.coroutines.Dispatchers.Default) { loadFacultyPool(container) }
+            val grown = withContext(kotlinx.coroutines.Dispatchers.Default) {
+                container.facultyTimetables.combinedFaculty()
+            }
+            if (grown.size > faculty.size) faculty = grown
         }
     }
 
     // Department picker inside the suggestions — null means "All departments".
     // With a query it filters the FACULTY results; with an empty query picking a
     // department browses that department's teachers right here in search.
-    var deptFilter by remember { mutableStateOf<String?>(null) }
+    var deptFilter by rememberSaveable { mutableStateOf<String?>(null) }
 
     val today = remember { LocalDate.now() }
     val nowMinutes = remember {
@@ -425,9 +442,11 @@ private fun NoResults(query: String) {
     }
 }
 
-/** One department filter chip of the suggestions picker. */
+/** One department filter chip of the suggestions picker — ticks with the
+ * app-wide haptic on pick, like the other segmented controls. */
 @Composable
 private fun DeptChip(label: String, selected: Boolean, onClick: () -> Unit) {
+    val view = LocalView.current
     Surface(
         shape = RoundedCornerShape(14.dp),
         color = if (selected) MaterialTheme.colorScheme.primary.copy(alpha = 0.14f) else MaterialTheme.colorScheme.surface,
@@ -435,7 +454,7 @@ private fun DeptChip(label: String, selected: Boolean, onClick: () -> Unit) {
             1.dp,
             if (selected) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.outlineVariant
         ),
-        modifier = Modifier.clickable(onClick = onClick)
+        modifier = Modifier.clickable(onClick = { view.hapticTick(); onClick() })
     ) {
         Text(
             label,
@@ -458,15 +477,4 @@ private fun iconFor(group: SearchGroup): ImageVector = when (group) {
     SearchGroup.NOTICE -> Icons.Default.Campaign
     SearchGroup.HOLIDAY -> Icons.Default.EventAvailable
     SearchGroup.ATTENDANCE -> Icons.Default.FactCheck
-}
-
-/**
- * The searchable teacher pool: the bundled directory plus every teacher the
- * parsed department timetables list but the directory does not carry (their
- * synthetic records carry blank contact fields and a "tt-…" profile id).
- */
-private fun loadFacultyPool(container: com.gndec.timetable.domain.AppContainer): List<com.gndec.timetable.domain.FacultyRecord> {
-    val extras = runCatching { container.facultyTimetables.extraTeachersFromMemory() }.getOrDefault(emptyList())
-        .map { it.record }
-    return container.facultyDirectory.directory + extras
 }

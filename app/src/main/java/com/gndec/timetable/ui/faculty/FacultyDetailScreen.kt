@@ -28,6 +28,8 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AccessTime
+import androidx.compose.material.icons.filled.Check
+import androidx.compose.material.icons.filled.ContentCopy
 import androidx.compose.material.icons.filled.Email
 import androidx.compose.material.icons.filled.EventAvailable
 import androidx.compose.material.icons.filled.Groups
@@ -57,8 +59,10 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.platform.LocalClipboardManager
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalView
+import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
@@ -87,6 +91,7 @@ import com.gndec.timetable.ui.motion.pressFeedback
 import com.gndec.timetable.ui.theme.GndecMuted
 import com.gndec.timetable.util.Formatters
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.withContext
 import java.time.LocalDate
 import java.time.LocalTime
@@ -136,8 +141,12 @@ fun FacultyDetailScreen(
     // URL paired with their display name.
     var photoViewerFor by remember(profileId) { mutableStateOf<Pair<String, String>?>(null) }
 
-    var result by remember(profileId) { mutableStateOf<FacultyTimetableResult?>(null) }
-    var loading by remember(profileId) { mutableStateOf(true) }
+    var result by remember(profileId) {
+        mutableStateOf<FacultyTimetableResult?>(container.facultyTimetables.cachedResult(profileId))
+    }
+    // A revisit within this process starts with the cached Ready schedule, so
+    // the page renders fully-formed on the first frame — no loading flash.
+    var loading by remember(profileId) { mutableStateOf(result == null) }
     var refreshTick by remember(profileId) { mutableStateOf(0) }
     var tabName by rememberSaveable(profileId) { mutableStateOf(ScheduleTab.TODAY.name) }
     val tab = ScheduleTab.valueOf(tabName)
@@ -478,22 +487,22 @@ private fun ContactCard(faculty: FacultyRecord) {
     ) {
         Column(Modifier.padding(horizontal = 18.dp, vertical = 10.dp)) {
             if (faculty.email.isNotBlank()) {
-                ContactRow(Icons.Default.Email, faculty.email, "Email") {
+                ContactRow(Icons.Default.Email, faculty.email, "Email", copyValue = faculty.email) {
                     runCatching { context.startActivity(Intent(Intent.ACTION_SENDTO, Uri.parse("mailto:${faculty.email}"))) }
                 }
             }
             if (faculty.phoneOffice.isNotBlank()) {
-                ContactRow(Icons.Default.Phone, faculty.phoneOffice, "Office phone") {
+                ContactRow(Icons.Default.Phone, faculty.phoneOffice, "Office phone", copyValue = faculty.phoneOffice) {
                     runCatching { context.startActivity(Intent(Intent.ACTION_DIAL, Uri.parse("tel:${faculty.phoneOffice.filter { it.isDigit() || it == '+' }}"))) }
                 }
             }
             if (faculty.phoneMobile.isNotBlank()) {
-                ContactRow(Icons.Default.Phone, faculty.phoneMobile, "Mobile") {
+                ContactRow(Icons.Default.Phone, faculty.phoneMobile, "Mobile", copyValue = faculty.phoneMobile) {
                     runCatching { context.startActivity(Intent(Intent.ACTION_DIAL, Uri.parse("tel:${faculty.phoneMobile.filter { it.isDigit() || it == '+' }}"))) }
                 }
             }
             if (faculty.profileUrl.isNotBlank()) {
-                ContactRow(Icons.Default.School, "Faculty profile", "College website") {
+                ContactRow(Icons.Default.School, "Faculty profile", "College website", copyValue = faculty.profileUrl) {
                     runCatching { context.startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(faculty.profileUrl))) }
                 }
             }
@@ -501,8 +510,28 @@ private fun ContactCard(faculty: FacultyRecord) {
     }
 }
 
+/**
+ * One contact line. The row itself opens the natural action (mail / dial /
+ * browse); a dedicated copy button beside the value copies the raw text with
+ * the app's haptic tick and flips to a check mark for ~1.2s as feedback.
+ */
 @Composable
-private fun ContactRow(icon: ImageVector, text: String, label: String, onClick: () -> Unit) {
+private fun ContactRow(
+    icon: ImageVector,
+    text: String,
+    label: String,
+    copyValue: String? = null,
+    onClick: () -> Unit
+) {
+    val view = LocalView.current
+    val clipboard = LocalClipboardManager.current
+    var copied by remember { mutableStateOf(false) }
+    LaunchedEffect(copied) {
+        if (copied) {
+            delay(1200)
+            copied = false
+        }
+    }
     Column(
         Modifier.fillMaxWidth().clickable(onClick = onClick)
     ) {
@@ -515,6 +544,24 @@ private fun ContactRow(icon: ImageVector, text: String, label: String, onClick: 
             Column(Modifier.weight(1f)) {
                 Text(label, style = MaterialTheme.typography.labelMedium, color = GndecMuted)
                 Text(text, style = MaterialTheme.typography.bodyLarge, fontWeight = FontWeight.Medium)
+            }
+            if (copyValue != null) {
+                Icon(
+                    if (copied) Icons.Default.Check else Icons.Default.ContentCopy,
+                    contentDescription = if (copied) "Copied" else "Copy $label",
+                    tint = if (copied) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurfaceVariant,
+                    modifier = Modifier
+                        .size(38.dp)
+                        .clickable(
+                            interactionSource = remember { MutableInteractionSource() },
+                            indication = null
+                        ) {
+                            view.hapticTick()
+                            clipboard.setText(AnnotatedString(copyValue))
+                            copied = true
+                        }
+                        .padding(7.dp)
+                )
             }
         }
         HorizontalDivider(color = MaterialTheme.colorScheme.outlineVariant, modifier = Modifier.padding(start = 56.dp))

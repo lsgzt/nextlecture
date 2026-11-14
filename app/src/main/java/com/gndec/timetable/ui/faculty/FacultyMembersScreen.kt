@@ -43,6 +43,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.style.TextOverflow
@@ -55,6 +56,7 @@ import com.gndec.timetable.domain.FacultyRecord
 import com.gndec.timetable.ui.Header
 import com.gndec.timetable.ui.PremiumBottomBarContentClearance
 import com.gndec.timetable.ui.PremiumScreenBackground
+import com.gndec.timetable.ui.motion.hapticTick
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
@@ -84,16 +86,24 @@ fun FacultyMembersScreen(
     // The list grows with the timetable-only teachers: the department files
     // list some teachers (visiting faculty, new joiners) the official
     // directory does not carry, and this browser is exactly where they belong.
-    var faculty by remember { mutableStateOf(emptyList<FacultyRecord>()) }
+    // Seeded SYNCHRONOUSLY from the manager's cached pool when one exists, so
+    // returning from a detail page renders the list instantly with its scroll
+    // position intact (an empty first frame would clamp the restored scroll
+    // back to the top).
+    var faculty by remember {
+        mutableStateOf(container.facultyTimetables.combinedFacultyFast() ?: emptyList<FacultyRecord>())
+    }
     LaunchedEffect(Unit) {
-        faculty = withContext(Dispatchers.Default) {
-            container.facultyDirectory.directory + container.facultyTimetables.extraTeachersFromMemory().map { it.record }
-        }
-        // Cache-first background load of every department's teacher document;
-        // fresh ones are not refetched, and a failed root is skipped quietly.
-        container.facultyTimetables.ensureAllDocs()
-        faculty = withContext(Dispatchers.Default) {
-            container.facultyDirectory.directory + container.facultyTimetables.extraTeachersFromMemory().map { it.record }
+        if (faculty.isEmpty()) {
+            faculty = withContext(Dispatchers.Default) { container.facultyTimetables.combinedFaculty() }
+            // Cache-first background load of every department's teacher document;
+            // fresh ones are not refetched, and a failed root is skipped quietly.
+            container.facultyTimetables.ensureAllDocs()
+            // The pool may have grown with timetable-only teachers — update in
+            // place; a non-empty list is never blanked, so the scroll survives.
+            withContext(Dispatchers.Default) { container.facultyTimetables.combinedFaculty() }
+                .takeIf { it.size > faculty.size }
+                ?.let { faculty = it }
         }
     }
 
@@ -361,9 +371,11 @@ private fun FacultyRow(
     }
 }
 
-/** One department chip of the picker, with its teacher count. */
+/** One department chip of the picker, with its teacher count. Ticks with
+ * the app-wide haptic so picking a department feels like the other controls. */
 @Composable
 private fun DeptChip(label: String, count: Int, selected: Boolean, onClick: () -> Unit) {
+    val view = LocalView.current
     Surface(
         shape = RoundedCornerShape(14.dp),
         color = if (selected) MaterialTheme.colorScheme.primary.copy(alpha = 0.14f) else MaterialTheme.colorScheme.surface,
@@ -371,7 +383,7 @@ private fun DeptChip(label: String, count: Int, selected: Boolean, onClick: () -
             1.dp,
             if (selected) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.outlineVariant
         ),
-        modifier = Modifier.clickable(onClick = onClick)
+        modifier = Modifier.clickable(onClick = { view.hapticTick(); onClick() })
     ) {
         Row(
             Modifier.padding(horizontal = 13.dp, vertical = 8.dp),

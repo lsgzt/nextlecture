@@ -121,10 +121,15 @@ fun facultyInitials(name: String): String {
  * Fullscreen, pinch-zoomable faculty photo.
  *
  * Pinch scales between 1× and 8×; one finger pans while zoomed; double-tap
- * toggles between 1× and 2.5×; tapping the dark scrim outside the photo (or
- * the Close button) dismisses. While the full-resolution decode streams in, a
- * spinner shows; a photo that cannot be loaded gets an honest "Photo not
- * available".
+ * toggles between 1× and 2.5×; a single tap on the photo (only while at 1×,
+ * so inspecting a zoomed photo is never dismissed by accident), a tap on the
+ * dark scrim, or the Close button dismisses. While the full-resolution decode
+ * streams in, a spinner shows; a photo that cannot be loaded gets an honest
+ * "Photo not available".
+ *
+ * Layering note: the gesture area is composed FIRST so the name and the Close
+ * button draw (and receive taps) ON TOP of it — a fullscreen gesture box
+ * composed last would swallow every tap and kill the button.
  */
 @Composable
 fun FacultyPhotoViewer(
@@ -162,26 +167,7 @@ fun FacultyPhotoViewer(
                     onClick = onDismiss
                 )
         ) {
-            // Teacher name stays legible above the gesture area.
-            Text(
-                name,
-                color = Color.White.copy(alpha = 0.85f),
-                style = MaterialTheme.typography.titleMedium,
-                fontWeight = FontWeight.SemiBold,
-                maxLines = 1,
-                textAlign = TextAlign.Center,
-                modifier = Modifier
-                    .align(Alignment.TopCenter)
-                    .fillMaxWidth()
-                    .padding(top = 46.dp, start = 64.dp, end = 64.dp)
-            )
-            TextButton(
-                onClick = onDismiss,
-                modifier = Modifier.align(Alignment.TopEnd).padding(top = 28.dp, end = 14.dp)
-            ) {
-                Text("Close", color = Color.White, fontWeight = FontWeight.Bold)
-            }
-
+            // Gesture + photo area FIRST — underneath the header controls.
             val photo = bitmap
             when {
                 photo != null -> Box(
@@ -195,6 +181,9 @@ fun FacultyPhotoViewer(
                         }
                         .pointerInput(Unit) {
                             detectTapGestures(
+                                // At 1× a single tap closes the viewer; zoomed
+                                // in, a stray tap must not throw the photo away.
+                                onTap = { if (scale <= 1.01f) onDismiss() },
                                 onDoubleTap = {
                                     if (scale > 1.05f) {
                                         scale = 1f
@@ -238,6 +227,27 @@ fun FacultyPhotoViewer(
                     color = Color.White,
                     modifier = Modifier.align(Alignment.Center).size(34.dp)
                 )
+            }
+
+            // Header controls LAST — they draw (and take taps) above the
+            // fullscreen gesture area, so Close actually works.
+            Text(
+                name,
+                color = Color.White.copy(alpha = 0.85f),
+                style = MaterialTheme.typography.titleMedium,
+                fontWeight = FontWeight.SemiBold,
+                maxLines = 1,
+                textAlign = TextAlign.Center,
+                modifier = Modifier
+                    .align(Alignment.TopCenter)
+                    .fillMaxWidth()
+                    .padding(top = 46.dp, start = 64.dp, end = 64.dp)
+            )
+            TextButton(
+                onClick = onDismiss,
+                modifier = Modifier.align(Alignment.TopEnd).padding(top = 28.dp, end = 14.dp)
+            ) {
+                Text("Close", color = Color.White, fontWeight = FontWeight.Bold)
             }
         }
     }

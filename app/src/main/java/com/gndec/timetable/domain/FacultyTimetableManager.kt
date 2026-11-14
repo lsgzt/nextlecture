@@ -85,6 +85,15 @@ class FacultyTimetableManager(
     private val memory = mutableMapOf<RoomSourceRoot, ParsedFacultyDoc?>()
     private val inFlight = mutableMapOf<RoomSourceRoot, Mutex>()
 
+    /** Ready schedules this process already built, keyed by profile id, so
+     * re-opening a teacher's detail page is instant (no loading flash). */
+    private val resultMemory = mutableMapOf<String, FacultyTimetableResult.Ready>()
+
+    /** The directory + timetable-only-extras teacher pool, as search and the
+     * browser show it — built once per process so returning from a detail
+     * page renders the list synchronously (and keeps its scroll position). */
+    @Volatile private var combinedSnapshot: List<FacultyRecord>? = null
+
     init {
         // Warm the memory cache from disk without any network access.
         runCatching {
@@ -106,6 +115,37 @@ class FacultyTimetableManager(
      * discovery that produced their record.
      */
     suspend fun load(faculty: FacultyRecord, forceRefresh: Boolean = false): FacultyTimetableResult {
+        if (!forceRefresh) {
+            synchronized(resultMemory) { resultMemory[faculty.profileId] }?.let { return it }
+        }
+        val result = loadFresh(faculty, forceRefresh)
+        if (result is FacultyTimetableResult.Ready) {
+            synchronized(resultMemory) { resultMemory[faculty.profileId] = result }
+        }
+        return result
+    }
+
+    /** A Ready schedule this process already resolved for [profileId], or null
+     * — the detail screen seeds its state from this so a revisit shows the
+     * timetable on the first frame instead of the loading card. */
+    fun cachedResult(profileId: String): FacultyTimetableResult.Ready? =
+        synchronized(resultMemory) { resultMemory[profileId] }
+
+    /** The teacher pool (bundled directory + timetable-only extras) already in
+     * memory, or null when it has not been built yet. Synchronous, main-thread
+     * safe: call to seed a list's initial state. */
+    fun combinedFacultyFast(): List<FacultyRecord>? = combinedSnapshot
+
+    /** Builds (or returns the cached) teacher pool. Off-main-thread only the
+     * first time — afterwards [combinedFacultyFast] serves it synchronously. */
+    fun combinedFaculty(): List<FacultyRecord> {
+        combinedSnapshot?.let { return it }
+        val combined = directory.directory + extraTeachersFromMemory().map { it.record }
+        combinedSnapshot = combined
+        return combined
+    }
+
+    private suspend fun loadFresh(faculty: FacultyRecord, forceRefresh: Boolean): FacultyTimetableResult {
         if (faculty.profileId.startsWith(ExtraTeacherIdPrefix)) {
             return loadExtraTeacher(faculty.profileId, forceRefresh)
         }
@@ -161,11 +201,15 @@ class FacultyTimetableManager(
      * discovered. Safe to call repeatedly: fresh documents are not refetched.
      */
     suspend fun ensureAllDocs(forceRefresh: Boolean = false): List<ParsedFacultyDoc?> = coroutineScope {
-        ROOTS.map { root ->
+        val docs = ROOTS.map { root ->
             async(Dispatchers.IO) {
                 runCatching { ensureDoc(root, forceRefresh) }.getOrNull()
             }
         }.awaitAll()
+        // Fresh documents can carry teachers the pool has not seen yet —
+        // drop the cached snapshot so the next combinedFaculty() rebuilds it.
+        combinedSnapshot = null
+        docs
     }
 
     /**
