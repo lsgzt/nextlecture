@@ -421,7 +421,9 @@
     "dept_id": 1,
     "profile_url": "https://gndec.ac.in/faculty/?id=470",
     "date_of_birth": "2000-07-13",
-    "date_of_birth_raw": "13 JULY 2000"
+    "date_of_birth_raw": "13 JULY 2000",
+    "phone_mobile": "8264711515",
+    "phone_source": "User-provided"
   },
   {
     "name": "SHREYA",
@@ -457,7 +459,9 @@
     "dept_id": 1,
     "profile_url": "https://gndec.ac.in/faculty/?id=466",
     "date_of_birth": "2004-10-18",
-    "date_of_birth_raw": "18/10/2004"
+    "date_of_birth_raw": "18/10/2004",
+    "phone_mobile": "8360468366",
+    "phone_source": "User-provided"
   },
   {
     "name": "SUNIL KUMAR",
