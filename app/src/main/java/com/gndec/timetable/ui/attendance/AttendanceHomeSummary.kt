@@ -136,14 +136,20 @@ data class SubjectAttendance(
             percentage >= target + COMFORT_MARGIN
 
     /**
-     * True when the student is already at/above target, or when the arithmetic
-     * says at least one more absence still leaves them at or above target.
-     * Being above goal is enough — the hero should not scare someone whose
-     * percentage already clears the bar they set.
+     * True only when the arithmetic says at least one more absence still leaves
+     * the subject at or above [target]. Merely being slightly above target is
+     * not enough — missing the next class can still break the bar.
      */
     val canAffordToMiss: Boolean
-        get() = (percentage != null && percentage >= target) ||
-            (affordableMisses != null && affordableMisses >= 1)
+        get() = affordableMisses != null && affordableMisses >= 1
+
+    /**
+     * Attendance % if this next class is marked absent (present unchanged,
+     * marked total + 1). Null when there is no marked history to project from.
+     */
+    val percentageIfMissed: Double?
+        get() = if (markedTotal <= 0 && present <= 0) null
+            else present.toDouble() * 100.0 / (markedTotal + 1).toDouble()
 }
 
 /** Percentage points clear of the target before the tone turns congratulatory. */

@@ -312,14 +312,15 @@ fun PremiumNextLectureCard(
 /**
  * Verdict on the lecture the hero is pointing at, judged on this subject alone.
  *
- * "Can afford to miss" is true when the student is already at or above their
- * target, or when `affordableMisses` is 1 or more (the arithmetic the
- * Attendance screen uses for how many further lectures may be skipped before
- * the target breaks). Being above the goal is enough — no scare banner.
+ * "Safely miss" only when [SubjectAttendance.canAffordToMiss] (at least one more
+ * absence still stays at/above target). If missing this class would fall below
+ * the target — even from a percentage that is currently above it — the strip
+ * states the projected percentage after the miss.
  */
 @Composable
 private fun SubjectAttendanceStrip(attendance: SubjectAttendance, lectureType: String?) {
     val percent = attendance.percentage?.let { "${"%.1f".format(it)}%" } ?: "—"
+    val projected = attendance.percentageIfMissed?.let { "${"%.1f".format(it)}%" }
     val noun = when (AttendanceManager.normalizeLectureType(lectureType)) {
         "practical" -> "practical"
         "tutorial" -> "tutorial"
@@ -330,6 +331,8 @@ private fun SubjectAttendanceStrip(attendance: SubjectAttendance, lectureType: S
             "Good job! You have $percent attendance in ${attendance.subject}."
         attendance.canAffordToMiss ->
             "You can safely miss this $noun — $percent in ${attendance.subject}."
+        projected != null ->
+            "Missing this $noun would drop your attendance to $projected in ${attendance.subject}."
         else ->
             "You can't afford to miss this $noun — $percent in ${attendance.subject}."
     }
