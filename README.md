@@ -9,7 +9,7 @@ Around that core the app has grown into a full student companion: attendance wit
 leaderboard, a syllabus assistant, previous-year papers with RAG-powered Q&A, ERP notices,
 holidays, live vacant-room availability, and a broadcast announcement feed.
 
-**Current version:** `versionName 2.4.37` (`versionCode 73`) · `RELEASE_MARKER "2.4.37"`
+**Current version:** `versionName 2.4.38` (`versionCode 74`) · `RELEASE_MARKER "2.4.38"`
 
 ## Features
 
@@ -334,6 +334,6 @@ This feed is intentionally separate from lecture reminders. Lecture reminders re
 
 The app checks the latest stable GitHub release from `https://api.github.com/repos/lsgzt/nextlecture-android/releases/latest` on startup when the cached result is older than six hours, and during the 12-hour background refresh. Settings also provides **Check for updates**.
 
-Android `versionName` is currently `2.4.37`, and `BuildConfig.RELEASE_MARKER` is `2.4.37`. The two are compared by their numeric components (a leading `v` is ignored, non-numeric runs split the marker), so `2.4.38` is treated as newer and `2.4.37` as the same version. The installed marker is the greater of the two. Update both values in `app/build.gradle.kts` whenever publishing a new release, and keep them in sync.
+Android `versionName` is currently `2.4.38`, and `BuildConfig.RELEASE_MARKER` is `2.4.38`. The two are compared by their numeric components (a leading `v` is ignored, non-numeric runs split the marker), so `2.4.39` is treated as newer and `2.4.38` as the same version. The installed marker is the greater of the two. Update both values in `app/build.gradle.kts` whenever publishing a new release, and keep them in sync.
 
 When a newer stable release is found, Home and Settings show an update card and the app may send one update notification per release marker. **Download update** opens `https://nextlecture.vercel.app/download`. Android still requires the user to confirm the APK installation.
