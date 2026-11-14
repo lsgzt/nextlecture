@@ -326,6 +326,8 @@ fun DayScreen(
                                             muted = muted,
                                             lectureDate = shownDate,
                                             friends = if (mode == DayViewMode.TODAY) todayFriendDays else tomorrowFriendDays,
+                                            mentorName = settings.mentorName,
+                                            mentorVenue = settings.mentorVenue,
                                             onOpenLecture = onOpenLecture
                                         )
                                     }
@@ -637,6 +639,8 @@ private fun TimelineSection(
     muted: Color,
     lectureDate: java.time.LocalDate,
     friends: List<FriendDay>,
+    mentorName: String,
+    mentorVenue: String,
     onOpenLecture: (LectureEntity, java.time.LocalDate) -> Unit
 ) {
     var sectionCoords by remember { mutableStateOf<LayoutCoordinates?>(null) }
@@ -854,8 +858,8 @@ private fun TimelineSection(
                         muted = muted,
                         freeFriends = friends.friendsFreeWithin(item.lecture.startMinutes, item.lecture.endMinutes),
                         onClick = { onOpenLecture(item.lecture, lectureDate) },
-                        mentorName = settings.mentorName,
-                        mentorVenue = settings.mentorVenue
+                        mentorName = mentorName,
+                        mentorVenue = mentorVenue
                     )
                     is TimelineItem.Free -> FreePeriod(
                         start = item.start,

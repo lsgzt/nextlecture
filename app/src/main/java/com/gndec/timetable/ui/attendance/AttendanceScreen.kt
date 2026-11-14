@@ -63,6 +63,7 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import com.gndec.timetable.data.db.LectureEntity
 import com.gndec.timetable.data.db.TimetableSnapshotEntity
+import com.gndec.timetable.data.prefs.AppSettings
 import com.gndec.timetable.domain.AppContainer
 import com.gndec.timetable.domain.AttendanceManager
 import com.gndec.timetable.net.AttendanceRecord
@@ -85,6 +86,7 @@ import java.time.YearMonth
 import java.time.format.DateTimeFormatter
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 
 private val attendanceDateFormatter = DateTimeFormatter.ofPattern("EEE, d MMM")
 private val attendanceShortFormatter = DateTimeFormatter.ofPattern("d MMM")
@@ -95,6 +97,7 @@ fun AttendanceScreen(
     onBack: () -> Unit
 ) {
     val scope = rememberCoroutineScope()
+    val settings by container.settings.flow.collectAsStateWithLifecycle(initialValue = AppSettings())
     val today = LocalDate.now()
     var selectedDate by remember { mutableStateOf(today) }
     var calendarMonth by remember { mutableStateOf(YearMonth.from(today)) }
