@@ -3,11 +3,12 @@ package com.gndec.timetable.ui.notice
 import android.content.Intent
 import android.net.Uri
 import androidx.compose.animation.AnimatedContent
-import androidx.compose.animation.core.snap
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
+import androidx.compose.animation.slideInHorizontally
+import androidx.compose.animation.slideOutHorizontally
 import androidx.compose.animation.togetherWith
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
@@ -177,10 +178,17 @@ fun NoticeScreen(
                         targetState = tab,
                         transitionSpec = {
                             if (reduced) {
-                                fadeIn(snap()) togetherWith fadeOut(snap())
+                                fadeIn(tween(Motion.Normal, easing = Motion.EasingStandard)) togetherWith
+                                    fadeOut(tween(Motion.Fast, easing = Motion.EasingStandard))
                             } else {
-                                fadeIn(tween(Motion.Emphasized, easing = Motion.EasingStandard)) togetherWith
-                                    fadeOut(tween(Motion.Normal, easing = Motion.EasingStandard))
+                                // Segmented-control motion — same as the Today screen's
+                                // today/tomorrow switch: content slides toward the
+                                // direction of the newly selected tab.
+                                val dir = if (targetState.ordinal >= initialState.ordinal) 1 else -1
+                                (slideInHorizontally(tween(Motion.Emphasized, easing = Motion.EasingEnter)) { dir * it / 12 } +
+                                    fadeIn(tween(Motion.Emphasized, easing = Motion.EasingEnter))) togetherWith
+                                    (slideOutHorizontally(tween(Motion.Normal, easing = Motion.EasingExit)) { -dir * it / 14 } +
+                                        fadeOut(tween(Motion.Normal, easing = Motion.EasingExit)))
                             }
                         },
                         label = "noticeTabContent"
