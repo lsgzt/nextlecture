@@ -89,6 +89,7 @@ fun HomeScreen(
     onOpenToday: () -> Unit,
     onOpenAlerts: () -> Unit,
     onOpenNotice: () -> Unit,
+    onOpenNoticeDetail: (com.gndec.timetable.domain.ErpNotice) -> Unit,
     onOpenSettings: () -> Unit,
     onOpenProfile: () -> Unit,
     onOpenSearch: () -> Unit,
@@ -188,11 +189,20 @@ fun HomeScreen(
                         PremiumHomeBannerCarousel(
                             items = homeBanners,
                             onOpen = { item ->
-                                val url = item.url
-                                if (!url.isNullOrBlank()) {
-                                    context.startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(url)))
-                                } else if (item.isHoliday) {
+                                if (item.isHoliday) {
                                     onOpenNotice()
+                                } else {
+                                    val noticeId = item.noticeId
+                                    val notice = if (noticeId != null) {
+                                        erpNotices.firstOrNull { it.id == noticeId }
+                                    } else null
+                                    if (notice != null) {
+                                        onOpenNoticeDetail(notice)
+                                    } else if (!item.url.isNullOrBlank()) {
+                                        context.startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(item.url)))
+                                    } else {
+                                        onOpenNotice()
+                                    }
                                 }
                             },
                             modifier = androidx.compose.ui.Modifier.itemEntrance(1).padding(horizontal = 20.dp).animateItem()

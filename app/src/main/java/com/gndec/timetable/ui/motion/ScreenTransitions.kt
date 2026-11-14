@@ -27,6 +27,7 @@ fun routeRank(route: String?): Int = when {
     route == "home" -> 0
     route == "today" -> 1
     route == "notice" -> 2
+    route == "notice_detail" -> 9
     route == "syllabus" -> 3
     route == "faculty_members" -> 10
     // Deeper than the members browser so list → profile gets a forward slide

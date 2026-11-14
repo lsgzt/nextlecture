@@ -41,6 +41,8 @@ import com.gndec.timetable.ui.motion.screenEnter
 import com.gndec.timetable.ui.motion.screenExit
 import com.gndec.timetable.ui.onboarding.NotificationPermissionOnboardingScreen
 import com.gndec.timetable.ui.onboarding.OnboardingScreen
+import com.gndec.timetable.domain.ErpNotice
+import com.gndec.timetable.ui.notice.NoticeDetailScreen
 import com.gndec.timetable.ui.notice.NoticeScreen
 import com.gndec.timetable.ui.profile.ProfileScreen
 import com.gndec.timetable.ui.search.SearchScreen
@@ -97,6 +99,7 @@ class MainActivity : ComponentActivity() {
                 val settingsFlow = remember(container.settings) { container.settings.flow.map { value: AppSettings -> value as AppSettings? } }
                 val settings by settingsFlow.collectAsState(initial = null)
                 var selectedLecture by remember { mutableStateOf<LectureEntity?>(null) }
+                var selectedNotice by remember { mutableStateOf<ErpNotice?>(null) }
                 var selectedLectureDate by remember { mutableStateOf(LocalDate.now()) }
 
                 if (settings == null) {
@@ -170,6 +173,10 @@ class MainActivity : ComponentActivity() {
                                             onOpenToday = { navigate("today") },
                                             onOpenAlerts = { navigate("syllabus") },
                                             onOpenNotice = { navigate("notice") },
+                                            onOpenNoticeDetail = { notice ->
+                                                selectedNotice = notice
+                                                navigate("notice_detail")
+                                            },
                                             onOpenSettings = { navigate("settings") },
                                             onOpenProfile = { navigate("profile") },
                                             onOpenSearch = { navigate("search") },
@@ -231,8 +238,21 @@ class MainActivity : ComponentActivity() {
                                             onOpenHome = { navigate("home") },
                                             onOpenToday = { navigate("today") },
                                             onOpenAlerts = { navigate("syllabus") },
-                                            onOpenSettings = { navigate("settings") }
+                                            onOpenSettings = { navigate("settings") },
+                                            onOpenNoticeDetail = { notice ->
+                                                selectedNotice = notice
+                                                navigate("notice_detail")
+                                            }
                                         )
+                                    }
+                                    composable("notice_detail") {
+                                        selectedNotice?.let { notice ->
+                                            NoticeDetailScreen(
+                                                notice = notice,
+                                                onBack = { nav.popBackStack() },
+                                                onOpenSettings = { navigate("settings") }
+                                            )
+                                        }
                                     }
                                     composable("detail") {
                                         selectedLecture?.let { lecture ->
@@ -263,7 +283,17 @@ class MainActivity : ComponentActivity() {
                                                 selectedLectureDate = date
                                                 navigate("detail")
                                             },
-                                            onOpenFaculty = { profileId -> navigate("faculty/$profileId") }
+                                            onOpenFaculty = { profileId -> navigate("faculty/$profileId") },
+                                            onOpenNotice = { noticeId ->
+                                                val notice = container.erpNoticeManager.notices.value
+                                                    .firstOrNull { it.id == noticeId }
+                                                if (notice != null) {
+                                                    selectedNotice = notice
+                                                    navigate("notice_detail")
+                                                } else {
+                                                    navigate("notice")
+                                                }
+                                            }
                                         )
                                     }
                                     composable("faculty/{facultyId}") { entry ->

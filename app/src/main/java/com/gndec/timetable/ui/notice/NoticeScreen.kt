@@ -140,7 +140,8 @@ fun NoticeScreen(
     onOpenHome: () -> Unit,
     onOpenToday: () -> Unit,
     onOpenAlerts: () -> Unit,
-    onOpenSettings: () -> Unit
+    onOpenSettings: () -> Unit,
+    onOpenNoticeDetail: (ErpNotice) -> Unit
 ) {
     val notices by container.erpNoticeManager.notices.collectAsStateWithLifecycle()
     val refreshing by container.erpNoticeManager.refreshing.collectAsStateWithLifecycle()
@@ -199,7 +200,7 @@ fun NoticeScreen(
                                 refreshing = refreshing,
                                 lastError = lastError,
                                 onRefresh = { container.appScope.launch { container.erpNoticeManager.refresh(forceRefresh = true) } },
-                                onOpenNotice = { open(it) },
+                                onOpenNotice = onOpenNoticeDetail,
                                 onViewAll = { open(ErpNoticeManager.NOTICE_URL) }
                             )
                             NoticeTab.HOLIDAYS -> HolidaysTab(
@@ -222,7 +223,7 @@ private fun NoticesTab(
     refreshing: Boolean,
     lastError: String?,
     onRefresh: () -> Unit,
-    onOpenNotice: (String) -> Unit,
+    onOpenNotice: (ErpNotice) -> Unit,
     onViewAll: () -> Unit
 ) {
     Column(
@@ -271,7 +272,7 @@ private fun NoticesTab(
             }
         } else {
             notices.forEach { notice ->
-                NoticeCard(notice = notice, onClick = { onOpenNotice(notice.url) })
+                NoticeCard(notice = notice, onClick = { onOpenNotice(notice) })
             }
         }
         TealOutlineButton(

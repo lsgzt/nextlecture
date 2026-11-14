@@ -668,6 +668,8 @@ data class HomeBannerItem(
     val subtitle: String,
     val url: String? = null,
     val isHoliday: Boolean = false,
+    /** ErpNotice.id when this banner is a notice (null for holidays). */
+    val noticeId: String? = null,
 )
 
 /**
@@ -709,9 +711,10 @@ fun ErpNotice.toHomeBannerItem(): HomeBannerItem = HomeBannerItem(
     // Name the feed this came from, so a carousel spanning several sources says so.
     eyebrow = "NEW · ${source.removePrefix("GNDEC ").ifBlank { "NOTICE" }.uppercase()}",
     title = title,
-    subtitle = author.ifBlank { "Tap to open official notice" },
+    subtitle = author.ifBlank { "Tap to read full notice" },
     url = url.takeIf { it.isNotBlank() },
-    isHoliday = false
+    isHoliday = false,
+    noticeId = id
 )
 
 /** Today / tomorrow holiday and half-day cards for the homepage banner carousel. */

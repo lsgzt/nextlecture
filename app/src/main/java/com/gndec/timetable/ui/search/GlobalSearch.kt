@@ -34,6 +34,7 @@ sealed interface SearchAction {
     data class OpenUrl(val url: String) : SearchAction
     data class OpenLecture(val lecture: LectureEntity, val date: LocalDate) : SearchAction
     data class OpenFaculty(val profileId: String) : SearchAction
+    data class OpenNotice(val noticeId: String) : SearchAction
 }
 
 data class SearchResult(
@@ -612,7 +613,7 @@ private fun formatSlot(minutes: Int): String {
 }
 
 private fun ErpNotice.actionOrNavigate(): SearchAction =
-    if (url.startsWith("http")) SearchAction.OpenUrl(url) else SearchAction.Navigate("notice")
+    SearchAction.OpenNotice(id)
 
 // --- faculty ---------------------------------------------------------------
 

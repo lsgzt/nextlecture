@@ -88,7 +88,8 @@ fun SearchScreen(
     onNavigate: (String) -> Unit,
     onOpenSettings: () -> Unit,
     onOpenLecture: (LectureEntity, LocalDate) -> Unit,
-    onOpenFaculty: (String) -> Unit = {}
+    onOpenFaculty: (String) -> Unit = {},
+    onOpenNotice: (String) -> Unit = {}
 ) {
     val context = LocalContext.current
     val focusManager = LocalFocusManager.current
@@ -199,6 +200,10 @@ fun SearchScreen(
             is SearchAction.OpenFaculty -> {
                 onBack()
                 onOpenFaculty(action.profileId)
+            }
+            is SearchAction.OpenNotice -> {
+                onBack()
+                onOpenNotice(action.noticeId)
             }
         }
     }
