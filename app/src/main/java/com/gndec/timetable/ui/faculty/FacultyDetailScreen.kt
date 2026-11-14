@@ -2,7 +2,17 @@ package com.gndec.timetable.ui.faculty
 
 import android.content.Intent
 import android.net.Uri
+import androidx.compose.animation.AnimatedContent
+import androidx.compose.animation.animateColorAsState
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.slideInHorizontally
+import androidx.compose.animation.slideOutHorizontally
+import androidx.compose.animation.togetherWith
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -40,6 +50,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -47,6 +58,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
@@ -66,10 +78,18 @@ import com.gndec.timetable.ui.PremiumScreenBackground
 import com.gndec.timetable.ui.ScreenSurface
 import com.gndec.timetable.ui.StatusPill
 import com.gndec.timetable.ui.TealOutlineButton
+import com.gndec.timetable.ui.motion.LocalReducedMotion
+import com.gndec.timetable.ui.motion.Motion
+import com.gndec.timetable.ui.motion.hapticTick
+import com.gndec.timetable.ui.motion.motionTween
+import com.gndec.timetable.ui.motion.pressFeedback
 import com.gndec.timetable.ui.theme.GndecMuted
 import com.gndec.timetable.util.Formatters
 import java.time.LocalDate
 import java.time.LocalTime
+
+/** Which half of the schedule the detail page shows. Order matters: it drives the slide direction. */
+private enum class ScheduleTab(val title: String) { TODAY("Today"), WEEK("Full week") }
 
 /**
  * Faculty profile + live weekly schedule.
@@ -79,7 +99,9 @@ import java.time.LocalTime
  * department publishes no timetable — those get the honest "This teacher's
  * timetable is not available in our database" note instead of a wrong schedule.
  * The timetable itself is discovered live from the department website (never
- * hardcoded), so weekly revisions appear without an app update.
+ * hardcoded), so weekly revisions appear without an app update. The schedule
+ * area is a Today / Full week segmented control that slides directionally —
+ * the same motion as the Today screen's tab switches.
  */
 @Composable
 fun FacultyDetailScreen(
@@ -94,6 +116,9 @@ fun FacultyDetailScreen(
     var result by remember(profileId) { mutableStateOf<FacultyTimetableResult?>(null) }
     var loading by remember(profileId) { mutableStateOf(true) }
     var refreshTick by remember(profileId) { mutableStateOf(0) }
+    var tabName by rememberSaveable(profileId) { mutableStateOf(ScheduleTab.TODAY.name) }
+    val tab = ScheduleTab.valueOf(tabName)
+    val reduced = LocalReducedMotion.current
 
     LaunchedEffect(profileId, refreshTick) {
         val teacher = faculty ?: return@LaunchedEffect
@@ -215,77 +240,97 @@ fun FacultyDetailScreen(
                     }
                 }
 
-                // Today's classes
+                // Today's classes / full week behind one segmented control.
                 if (schedule != null && !loading) {
                     val todayDow = today.dayOfWeek.value - 1
-                    val todaySlots = schedule.slotsForDay(todayDow)
-                    item {
-                        Text(
-                            "TODAY · ${Formatters.dayName(today.dayOfWeek.value).uppercase()}",
-                            modifier = Modifier.padding(start = 24.dp, top = 4.dp),
-                            color = MaterialTheme.colorScheme.primary,
-                            style = MaterialTheme.typography.labelMedium,
-                            fontWeight = FontWeight.Bold,
-                            letterSpacing = 1.2.sp
-                        )
+                    item(key = "schedule-tab-selector") {
+                        ScheduleTabSelector(tab) { tabName = it.name }
                     }
-                    if (todaySlots.isEmpty()) {
-                        item {
-                            Card(
-                                modifier = Modifier.fillMaxWidth().padding(horizontal = 20.dp),
-                                shape = RoundedCornerShape(16.dp),
-                                colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
-                                elevation = CardDefaults.cardElevation(defaultElevation = 0.dp)
-                            ) {
-                                Text(
-                                    "No classes listed for today",
-                                    modifier = Modifier.padding(16.dp),
-                                    color = GndecMuted
-                                )
+                    item(key = "schedule-tab-content") {
+                        AnimatedContent(
+                            targetState = tab,
+                            transitionSpec = {
+                                if (reduced) {
+                                    fadeIn(tween(Motion.Normal, easing = Motion.EasingStandard)) togetherWith
+                                        fadeOut(tween(Motion.Fast, easing = Motion.EasingStandard))
+                                } else {
+                                    // Segmented-control motion — same as the Today screen's
+                                    // today/tomorrow switch: content slides toward the
+                                    // direction of the newly selected tab.
+                                    val dir = if (targetState.ordinal >= initialState.ordinal) 1 else -1
+                                    (slideInHorizontally(tween(Motion.Emphasized, easing = Motion.EasingEnter)) { dir * it / 12 } +
+                                        fadeIn(tween(Motion.Emphasized, easing = Motion.EasingEnter))) togetherWith
+                                        (slideOutHorizontally(tween(Motion.Normal, easing = Motion.EasingExit)) { -dir * it / 14 } +
+                                            fadeOut(tween(Motion.Normal, easing = Motion.EasingExit)))
+                                }
+                            },
+                            label = "scheduleTabContent"
+                        ) { current ->
+                            Column(verticalArrangement = Arrangement.spacedBy(14.dp)) {
+                                when (current) {
+                                    ScheduleTab.TODAY -> {
+                                        Text(
+                                            "TODAY · ${Formatters.dayName(today.dayOfWeek.value).uppercase()}",
+                                            modifier = Modifier.padding(start = 24.dp),
+                                            color = MaterialTheme.colorScheme.primary,
+                                            style = MaterialTheme.typography.labelMedium,
+                                            fontWeight = FontWeight.Bold,
+                                            letterSpacing = 1.2.sp
+                                        )
+                                        val todaySlots = schedule.slotsForDay(todayDow)
+                                        if (todaySlots.isEmpty()) {
+                                            Card(
+                                                modifier = Modifier.fillMaxWidth().padding(horizontal = 20.dp),
+                                                shape = RoundedCornerShape(16.dp),
+                                                colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
+                                                elevation = CardDefaults.cardElevation(defaultElevation = 0.dp)
+                                            ) {
+                                                Text(
+                                                    "No classes listed for today",
+                                                    modifier = Modifier.padding(16.dp),
+                                                    color = GndecMuted
+                                                )
+                                            }
+                                        } else {
+                                            val liveKey = (status as? FacultyStatus.Busy)?.slot?.let { "${it.day}-${it.startMinutes}" }
+                                            todaySlots.forEach { slot ->
+                                                SlotCard(
+                                                    slot = slot,
+                                                    live = liveKey == "${slot.day}-${slot.startMinutes}"
+                                                )
+                                            }
+                                        }
+                                    }
+                                    ScheduleTab.WEEK -> {
+                                        Text(
+                                            "FULL WEEK",
+                                            modifier = Modifier.padding(start = 24.dp),
+                                            color = MaterialTheme.colorScheme.primary,
+                                            style = MaterialTheme.typography.labelMedium,
+                                            fontWeight = FontWeight.Bold,
+                                            letterSpacing = 1.2.sp
+                                        )
+                                        val weekDays = (0..6).filter { d -> schedule.slotsForDay(d).isNotEmpty() }
+                                        if (weekDays.isEmpty()) {
+                                            Card(
+                                                modifier = Modifier.fillMaxWidth().padding(horizontal = 20.dp),
+                                                shape = RoundedCornerShape(16.dp),
+                                                colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
+                                                elevation = CardDefaults.cardElevation(defaultElevation = 0.dp)
+                                            ) {
+                                                Text(
+                                                    "No classes listed in this teacher's week",
+                                                    modifier = Modifier.padding(16.dp),
+                                                    color = GndecMuted
+                                                )
+                                            }
+                                        }
+                                        weekDays.forEach { day ->
+                                            WeekDayCard(day, schedule.slotsForDay(day), todayDow)
+                                        }
+                                    }
+                                }
                             }
-                        }
-                    } else {
-                        val liveKey = (status as? FacultyStatus.Busy)?.slot?.let { "${it.day}-${it.startMinutes}" }
-                        todaySlots.forEach { slot ->
-                            item(key = "today-${slot.day}-${slot.startMinutes}") {
-                                SlotCard(
-                                    slot = slot,
-                                    live = liveKey == "${slot.day}-${slot.startMinutes}"
-                                )
-                            }
-                        }
-                    }
-
-                    // Full week
-                    item {
-                        Text(
-                            "FULL WEEK",
-                            modifier = Modifier.padding(start = 24.dp, top = 12.dp),
-                            color = MaterialTheme.colorScheme.primary,
-                            style = MaterialTheme.typography.labelMedium,
-                            fontWeight = FontWeight.Bold,
-                            letterSpacing = 1.2.sp
-                        )
-                    }
-                    val weekDays = (0..6).filter { d -> schedule.slotsForDay(d).isNotEmpty() }
-                    if (weekDays.isEmpty()) {
-                        item {
-                            Card(
-                                modifier = Modifier.fillMaxWidth().padding(horizontal = 20.dp),
-                                shape = RoundedCornerShape(16.dp),
-                                colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface)
-                            ) {
-                                Text(
-                                    "No classes listed in this teacher's week",
-                                    modifier = Modifier.padding(16.dp),
-                                    color = GndecMuted
-                                )
-                            }
-                        }
-                    }
-                    weekDays.forEach { day ->
-                        item(key = "week-day-$day") {
-                            WeekDayCard(day, schedule.slotsForDay(day), todayDow)
                         }
                     }
                 }
@@ -297,6 +342,60 @@ fun FacultyDetailScreen(
 // ---------------------------------------------------------------------------
 // Cards
 // ---------------------------------------------------------------------------
+
+/**
+ * Two-option segmented control for the schedule area, styled like the Today
+ * screen's mode selector. Selecting the active tab again does nothing; the
+ * content switch itself animates in the [FacultyDetailScreen] body.
+ */
+@Composable
+private fun ScheduleTabSelector(tab: ScheduleTab, onSelect: (ScheduleTab) -> Unit) {
+    val view = LocalView.current
+    Row(
+        Modifier.fillMaxWidth().padding(horizontal = 20.dp),
+        horizontalArrangement = Arrangement.spacedBy(7.dp)
+    ) {
+        ScheduleTab.entries.forEach { item ->
+            val active = item == tab
+            val containerColor by animateColorAsState(
+                targetValue = if (active) MaterialTheme.colorScheme.primaryContainer else MaterialTheme.colorScheme.surface,
+                animationSpec = motionTween(Motion.Normal),
+                label = "scheduleTabContainer"
+            )
+            val borderColor by animateColorAsState(
+                targetValue = if (active) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.outlineVariant,
+                animationSpec = motionTween(Motion.Normal),
+                label = "scheduleTabBorder"
+            )
+            val textColor by animateColorAsState(
+                targetValue = if (active) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurface,
+                animationSpec = motionTween(Motion.Normal),
+                label = "scheduleTabText"
+            )
+            val pressInteraction = remember { MutableInteractionSource() }
+            Card(
+                onClick = { view.hapticTick(); onSelect(item) },
+                modifier = Modifier.weight(1f).pressFeedback(pressInteraction, pressedScale = 0.96f),
+                interactionSource = pressInteraction,
+                shape = RoundedCornerShape(14.dp),
+                colors = CardDefaults.cardColors(containerColor = containerColor),
+                border = BorderStroke(1.dp, borderColor),
+                elevation = CardDefaults.cardElevation(0.dp)
+            ) {
+                Text(
+                    item.title,
+                    modifier = Modifier.fillMaxWidth().padding(horizontal = 5.dp, vertical = 11.dp),
+                    color = textColor,
+                    style = MaterialTheme.typography.labelMedium,
+                    fontWeight = if (active) FontWeight.Bold else FontWeight.Medium,
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis,
+                    textAlign = androidx.compose.ui.text.style.TextAlign.Center
+                )
+            }
+        }
+    }
+}
 
 @Composable
 private fun ContactCard(faculty: FacultyRecord) {

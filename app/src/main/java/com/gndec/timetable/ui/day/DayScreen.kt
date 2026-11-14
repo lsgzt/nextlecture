@@ -93,8 +93,9 @@ import com.gndec.timetable.domain.Friend
 import com.gndec.timetable.domain.FriendDay
 import com.gndec.timetable.domain.FriendEarlySlot
 import com.gndec.timetable.domain.earlySlotsBefore
-import com.gndec.timetable.domain.freeFriendNames
+import com.gndec.timetable.domain.FriendFreeWindow
 import com.gndec.timetable.domain.friendNameList
+import com.gndec.timetable.domain.friendsFreeWithin
 import com.gndec.timetable.domain.friendVerb
 import com.gndec.timetable.ui.PremiumBottomBarContentClearance
 import com.gndec.timetable.ui.PremiumPageHeader
@@ -713,7 +714,7 @@ private fun TimelineSection(
                         accent = accent,
                         primaryText = primaryText,
                         muted = muted,
-                        freeFriends = friends.freeFriendNames(item.lecture.startMinutes, item.lecture.endMinutes),
+                        freeFriends = friends.friendsFreeWithin(item.lecture.startMinutes, item.lecture.endMinutes),
                         onClick = { onOpenLecture(item.lecture, lectureDate) }
                     )
                     is TimelineItem.Free -> FreePeriod(
@@ -724,7 +725,7 @@ private fun TimelineSection(
                         registerNode = { i, coords -> nodeCoords[i] = coords },
                         muted = muted,
                         accent = accent,
-                        freeFriends = friends.freeFriendNames(item.start, item.end)
+                        freeFriends = friends.friendsFreeWithin(item.start, item.end)
                     )
                 }
             }
@@ -733,7 +734,7 @@ private fun TimelineSection(
 }
 
 @Composable
-private fun TimelineLectureCard(lecture: LectureEntity, state: LectureState, nowMinutes: Int, nodeIndex: Int, sectionCoords: () -> LayoutCoordinates?, registerNode: (Int, LayoutCoordinates) -> Unit, accent: Color, primaryText: Color, muted: Color, freeFriends: List<String>, onClick: () -> Unit) {
+private fun TimelineLectureCard(lecture: LectureEntity, state: LectureState, nowMinutes: Int, nodeIndex: Int, sectionCoords: () -> LayoutCoordinates?, registerNode: (Int, LayoutCoordinates) -> Unit, accent: Color, primaryText: Color, muted: Color, freeFriends: List<FriendFreeWindow>, onClick: () -> Unit) {
     val live = state == LectureState.HAPPENING
     // Teal for lectures, amber for tutorials, blue for practicals; the live card is
     // the brighter step of whichever tint it is, not a fixed aqua.
@@ -870,7 +871,7 @@ private fun TimelineLectureCard(lecture: LectureEntity, state: LectureState, now
                 if (freeFriends.isNotEmpty()) {
                     Spacer(Modifier.height(12.dp))
                     FriendAvailabilityNote(
-                        names = freeFriends,
+                        windows = freeFriends,
                         startMinutes = lecture.startMinutes,
                         endMinutes = lecture.endMinutes
                     )
@@ -1002,11 +1003,48 @@ private fun androidx.compose.ui.text.AnnotatedString.Builder.appendFriendsBefore
 }
 
 /**
+ * Builds the sentence(s) for the friend note under a lecture card.
+ *
+ * Friends free for the whole class keep the grouped sentence; friends free for
+ * only PART of it (free 12:30-1:30 while the class runs 12:30-2:30) now get
+ * their actual window spelled out, because that used to be silently hidden.
+ * Multiple separate stretches list all of them, comma-separated.
+ */
+private fun friendAvailabilitySentences(
+    windows: List<FriendFreeWindow>,
+    startMinutes: Int,
+    endMinutes: Int
+): List<String> {
+    val fullNames = windows
+        .filter { it.startMinutes <= startMinutes && it.endMinutes >= endMinutes }
+        .map { it.name }
+        .distinct()
+    val sentences = mutableListOf<String>()
+    if (fullNames.isNotEmpty()) {
+        sentences += "${friendNameList(fullNames)} ${friendVerb(fullNames)} free at this time slot " +
+            "${formatTime(startMinutes)} - ${formatTime(endMinutes)}"
+    }
+    windows.filter { it.name !in fullNames }
+        .groupBy { it.name }
+        .forEach { (name, stretches) ->
+            val spans = stretches.joinToString(", ") {
+                "${formatTime(it.startMinutes)} - ${formatTime(it.endMinutes)}"
+            }
+            sentences += "$name is free $spans"
+        }
+    return sentences
+}
+
+/**
  * "Aarav and Meera are free at this time slot 9:30 AM - 10:30 AM", shown under
- * the lecture card when a friend happens to be free while the student is in class.
+ * the lecture card when a friend happens to be free while the student is in
+ * class — now also for friends free for only part of it: "Vishal is free
+ * 12:30 PM - 1:30 PM".
  */
 @Composable
-private fun FriendAvailabilityNote(names: List<String>, startMinutes: Int, endMinutes: Int) {
+private fun FriendAvailabilityNote(windows: List<FriendFreeWindow>, startMinutes: Int, endMinutes: Int) {
+    val sentences = friendAvailabilitySentences(windows, startMinutes, endMinutes)
+    if (sentences.isEmpty()) return
     Row(
         Modifier
             .fillMaxWidth()
@@ -1018,8 +1056,7 @@ private fun FriendAvailabilityNote(names: List<String>, startMinutes: Int, endMi
         Icon(Icons.Default.Groups, contentDescription = null, tint = MaterialTheme.colorScheme.onSecondaryContainer, modifier = Modifier.size(17.dp))
         Spacer(Modifier.width(8.dp))
         Text(
-            "${friendNameList(names)} ${friendVerb(names)} free at this time slot " +
-                "${formatTime(startMinutes)} - ${formatTime(endMinutes)}",
+            sentences.joinToString(" · "),
             color = MaterialTheme.colorScheme.onSecondaryContainer,
             style = MaterialTheme.typography.bodySmall,
             fontWeight = FontWeight.Medium
@@ -1037,7 +1074,7 @@ private fun TimelineMetaRow(icon: ImageVector, text: String, primaryText: Color,
 }
 
 @Composable
-private fun FreePeriod(start: Int, end: Int, nodeIndex: Int, sectionCoords: () -> LayoutCoordinates?, registerNode: (Int, LayoutCoordinates) -> Unit, muted: Color, accent: Color, freeFriends: List<String>) {
+private fun FreePeriod(start: Int, end: Int, nodeIndex: Int, sectionCoords: () -> LayoutCoordinates?, registerNode: (Int, LayoutCoordinates) -> Unit, muted: Color, accent: Color, freeFriends: List<FriendFreeWindow>) {
     Row(Modifier.fillMaxWidth().padding(horizontal = TimelineHorizontalPadding), verticalAlignment = Alignment.CenterVertically) {
         Column(Modifier.width(RailColumnWidth), horizontalAlignment = Alignment.CenterHorizontally) {
             Box(
@@ -1057,7 +1094,7 @@ private fun FreePeriod(start: Int, end: Int, nodeIndex: Int, sectionCoords: () -
             if (freeFriends.isNotEmpty()) {
                 Spacer(Modifier.height(4.dp))
                 Text(
-                    "Also free · ${friendNameList(freeFriends)}",
+                    "Also free · ${friendFreeLine(freeFriends, start, end)}",
                     color = accent,
                     style = MaterialTheme.typography.bodySmall,
                     fontWeight = FontWeight.Medium
@@ -1066,6 +1103,22 @@ private fun FreePeriod(start: Int, end: Int, nodeIndex: Int, sectionCoords: () -
         }
     }
 }
+
+/**
+ * Names for the "Also free · …" line under a free period. Friends free the
+ * whole period stay plain; friends free for only part of it now show their
+ * actual stretch — "Aarav (until 1:30 PM)", "Meera (from 1:30 PM)" — so a
+ * partially-matching friend is listed instead of silently dropped.
+ */
+private fun friendFreeLine(windows: List<FriendFreeWindow>, periodStart: Int, periodEnd: Int): String =
+    windows.joinToString(", ") { window ->
+        when {
+            window.startMinutes <= periodStart && window.endMinutes >= periodEnd -> window.name
+            window.startMinutes <= periodStart -> "${window.name} (until ${formatTime(window.endMinutes)})"
+            window.endMinutes >= periodEnd -> "${window.name} (from ${formatTime(window.startMinutes)})"
+            else -> "${window.name} (${formatTime(window.startMinutes)} - ${formatTime(window.endMinutes)})"
+        }
+    }
 
 private fun formatTime(minutes: Int): String {
     val hour = (minutes / 60) % 24

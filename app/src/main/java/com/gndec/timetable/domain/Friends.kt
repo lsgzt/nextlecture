@@ -45,6 +45,60 @@ fun List<FriendDay>.freeFriendNames(startMinutes: Int, endMinutes: Int): List<St
         .map { it.friend.name }
 
 /**
+ * A stretch of time a friend is actually free, clamped to the period that was
+ * asked about. [startMinutes]..[endMinutes] never extends past the queried
+ * window, so a "(12:30 PM - 1:30 PM)" label under a 12:30-2:30 class is honest.
+ */
+data class FriendFreeWindow(
+    val name: String,
+    val startMinutes: Int,
+    val endMinutes: Int
+)
+
+/**
+ * Free slivers shorter than this are not worth reporting — they come from odd
+ * timetable seams (a 5-minute gap between two lectures), not from real free
+ * time a friend could spend with you.
+ */
+const val MinUsefulFreeMinutes = 10
+
+/**
+ * Every friend's actual free time inside [startMinutes]..[endMinutes], as one
+ * entry per maximal free stretch.
+ *
+ * The whole-window form of this check ([freeFriendNames]) only reports friends
+ * free for the ENTIRE period, which hides the common case: a 2-hour period
+ * where the friend is free for the first hour only. This walk subtracts the
+ * friend's lectures from the window, so partial overlap shows up as its own
+ * window — "Aarav is free 12:30 PM - 1:30 PM" — and a friend free the whole
+ * period reports exactly that window. Friends without timetable data are
+ * skipped, same as everywhere else.
+ */
+fun List<FriendDay>.friendsFreeWithin(startMinutes: Int, endMinutes: Int): List<FriendFreeWindow> {
+    if (endMinutes <= startMinutes) return emptyList()
+    val windows = mutableListOf<FriendFreeWindow>()
+    for (day in this) {
+        if (!day.hasData) continue
+        var cursor = startMinutes
+        for (lecture in day.lectures.sortedBy { it.startMinutes }) {
+            if (cursor >= endMinutes) break
+            // Clip this lecture to the window; lectures entirely outside it do not move the cursor.
+            val busyStart = maxOf(lecture.startMinutes, startMinutes)
+            val busyEnd = minOf(lecture.endMinutes, endMinutes)
+            if (busyEnd <= busyStart) continue
+            if (busyStart - cursor >= MinUsefulFreeMinutes) {
+                windows += FriendFreeWindow(day.friend.name, cursor, busyStart)
+            }
+            cursor = maxOf(cursor, busyEnd)
+        }
+        if (endMinutes - cursor >= MinUsefulFreeMinutes) {
+            windows += FriendFreeWindow(day.friend.name, cursor, endMinutes)
+        }
+    }
+    return windows
+}
+
+/**
  * "Aarav and Meera" / "Aarav, Meera and Karan" / "Aarav". Oxford-comma style so
  * a long list of friends still reads as a sentence.
  */
