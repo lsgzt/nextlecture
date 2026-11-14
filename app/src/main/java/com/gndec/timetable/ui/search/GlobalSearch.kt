@@ -236,30 +236,68 @@ private data class IdentityField(
     val icon: SearchGroup
 )
 
+/**
+ * College email is derived the same way as Profile: firstName + CRN + @gndec.ac.in.
+ * Not stored separately — always computed from the saved profile.
+ */
+private fun collegeEmailOf(settings: AppSettings): String {
+    val first = settings.studentName.trim().split(Regex("\\s+")).firstOrNull { it.isNotBlank() }
+        ?: return ""
+    val crn = settings.rollNumber.trim()
+    if (crn.isBlank()) return ""
+    return "${first.lowercase()}${crn.lowercase()}@gndec.ac.in"
+}
+
+/**
+ * Profile fields exposed to search. CRN (class roll) and registration number are
+ * separate values — never label one as the other.
+ *
+ * - [AppSettings.rollNumber] = CRN / class roll from the student directory
+ * - [AppSettings.registrationNumber] = university registration number
+ */
 private val IdentityFields = listOf(
     IdentityField(
-        "Registration number (CRN)",
-        listOf("crn", "registration", "registrationno", "regno", "reg", "classroll", "classrollno", "classrollnumber", "enrollment", "enrollmentno", "enrolment", "enrolmentno"),
-        { it.registrationNumber }, SearchGroup.YOU
-    ),
-    IdentityField(
-        "Class roll number",
-        listOf("roll", "rollno", "rollnumber", "classno", "rno", "myroll"),
+        "CRN (class roll number)",
+        listOf(
+            "crn", "classroll", "classrollno", "classrollnumber", "classrollnum",
+            "roll", "rollno", "rollnumber", "myroll", "mycrn", "classno", "rno"
+        ),
         { it.rollNumber }, SearchGroup.YOU
     ),
     IdentityField(
+        "Registration number",
+        listOf(
+            "registration", "registrationno", "registrationnumber", "regno", "reg",
+            "enrollment", "enrollmentno", "enrolment", "enrolmentno", "myregistration"
+        ),
+        { it.registrationNumber }, SearchGroup.YOU
+    ),
+    IdentityField(
         "Name",
-        listOf("name", "myname", "fullname", "studentname", "nameofstudent"),
+        listOf("name", "myname", "fullname", "studentname", "nameofstudent", "stuname"),
         { it.studentName }, SearchGroup.YOU
     ),
     IdentityField(
+        "College email",
+        listOf(
+            "email", "mail", "collegeemail", "collegemail", "gndecmail", "gndecemail",
+            "studentemail", "studentmail", "myemail", "mymail", "uniemail", "universityemail"
+        ),
+        { collegeEmailOf(it) }, SearchGroup.YOU
+    ),
+    IdentityField(
         "Branch",
-        listOf("branch", "mybranch", "department", "dept"),
+        listOf("branch", "mybranch", "department", "dept", "stream"),
         { it.branch }, SearchGroup.YOU
     ),
     IdentityField(
+        "Academic year",
+        listOf("year", "academicyear", "myyear", "studyyear", "currentyear"),
+        { if (it.academicYear in 1..4) "${it.academicYear}" else "" }, SearchGroup.YOU
+    ),
+    IdentityField(
         "Section",
-        listOf("section", "mysection", "class", "classsection"),
+        listOf("section", "mysection", "classsection"),
         { it.studentSection }, SearchGroup.YOU
     ),
     IdentityField(
@@ -274,17 +312,20 @@ private val IdentityFields = listOf(
     ),
     IdentityField(
         "Father's name",
-        listOf("father", "fathersname", "fathername", "dad", "guardiansname"),
+        listOf("father", "fathersname", "fathername", "dad", "papa"),
         { it.fatherName }, SearchGroup.YOU
     ),
     IdentityField(
         "Mother's name",
-        listOf("mother", "mothersname", "mothername", "mom"),
+        listOf("mother", "mothersname", "mothername", "mom", "mummy"),
         { it.motherName }, SearchGroup.YOU
     ),
     IdentityField(
         "Mentor",
-        listOf("mentor", "mentorname", "facult advisor", "facultyadvisor", "guide", "guidemame", "guardian", "tutor"),
+        listOf(
+            "mentor", "mentorname", "mymentor", "facultyadvisor", "facultymentor",
+            "guide", "tutor", "proctor"
+        ),
         { it.mentorName }, SearchGroup.YOU
     ),
     IdentityField(
@@ -293,8 +334,16 @@ private val IdentityFields = listOf(
         { it.mentorMobile }, SearchGroup.YOU
     ),
     IdentityField(
+        "Mentor venue",
+        listOf("mentorvenue", "mentorroom", "mentoroffice", "mentorcabin", "guidevenue"),
+        { it.mentorVenue }, SearchGroup.YOU
+    ),
+    IdentityField(
         "Class coordinator",
-        listOf("coordinator", "classcoordinator", "classcoordinatorname"),
+        listOf(
+            "coordinator", "classcoordinator", "classcoordinatorname", "mycoordinator",
+            "cc", "classincharge", "incharge"
+        ),
         { it.classCoordinator }, SearchGroup.YOU
     )
 )
@@ -398,13 +447,33 @@ private fun suggestions(snapshot: SearchSnapshot): List<SearchResult> {
             action = SearchAction.Navigate(action.route)
         )
     }
-    snapshot.settings.registrationNumber.takeIf { it.isNotBlank() }?.let {
+    snapshot.settings.rollNumber.takeIf { it.isNotBlank() }?.let {
         out += SearchResult(
             id = "you-crn",
             group = SearchGroup.YOU,
             title = "Your CRN",
             subtitle = it,
             score = SCORE_PREFIX,
+            action = SearchAction.Navigate("profile")
+        )
+    }
+    snapshot.settings.registrationNumber.takeIf { it.isNotBlank() }?.let {
+        out += SearchResult(
+            id = "you-registration",
+            group = SearchGroup.YOU,
+            title = "Your registration number",
+            subtitle = it,
+            score = SCORE_PREFIX - 1,
+            action = SearchAction.Navigate("profile")
+        )
+    }
+    snapshot.settings.studentName.takeIf { it.isNotBlank() }?.let {
+        out += SearchResult(
+            id = "you-name",
+            group = SearchGroup.YOU,
+            title = "Your name",
+            subtitle = it,
+            score = SCORE_PREFIX - 2,
             action = SearchAction.Navigate("profile")
         )
     }
@@ -421,8 +490,8 @@ private fun identityResults(query: String, snapshot: SearchSnapshot): List<Searc
     IdentityFields.forEach { field ->
         val value = field.value(snapshot.settings).trim()
         if (value.isBlank()) return@forEach
-        // Asked for by name, e.g. "crn" or "class roll number".
-        if (field.aliases.any { it == k }) {
+        // Asked for by field name, e.g. "crn", "college mail", "class coordinator".
+        if (identityAliasHit(k, field.aliases)) {
             out += SearchResult(
                 id = "you-${field.label}",
                 group = SearchGroup.YOU,
@@ -438,7 +507,9 @@ private fun identityResults(query: String, snapshot: SearchSnapshot): List<Searc
     // Not a known alias — maybe the student typed a value they are looking for.
     IdentityFields.forEach { field ->
         val value = field.value(snapshot.settings).trim()
-        if (value.isBlank() || value.length < 3) return@forEach
+        if (value.isBlank()) return@forEach
+        // CRNs can be short; allow value lookup from length 3 upward.
+        if (value.length < 3 && key(value).length < 3) return@forEach
         val hit = score(k, value)
         if (hit >= SCORE_PREFIX) {
             out += SearchResult(
@@ -452,6 +523,20 @@ private fun identityResults(query: String, snapshot: SearchSnapshot): List<Searc
         }
     }
     return out
+}
+
+/** True when the normalised query names this profile field. */
+private fun identityAliasHit(queryKey: String, aliases: List<String>): Boolean {
+    if (queryKey.isBlank()) return false
+    aliases.forEach { alias ->
+        val a = key(alias)
+        if (a.isBlank()) return@forEach
+        if (queryKey == a) return true
+        // "class coordinator", "college mail", "student name", "reg no"…
+        if (queryKey.length >= 3 && (a.startsWith(queryKey) || queryKey.startsWith(a))) return true
+        if (queryKey.length >= 4 && a.contains(queryKey)) return true
+    }
+    return false
 }
 
 // --- dates ----------------------------------------------------------------
