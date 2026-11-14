@@ -13,67 +13,52 @@ import okhttp3.OkHttpClient
 import okhttp3.Request
 import java.io.File
 import java.io.FileOutputStream
+import java.net.URLEncoder
+import java.nio.charset.StandardCharsets
 import java.security.MessageDigest
 
 /**
- * Loads faculty profile photos from the college website with durable local cache.
+ * Faculty profile photos with a strict split between list thumbs and fullscreen.
  *
- * Strategy (data-saving):
- * - List / avatar rows request [THUMB_MAX_DIM]: a small JPEG is kept under
- *   [filesDir] (survives cache clears) and is what scrolling lists always use.
- * - Fullscreen viewer requests [MAX_DETAIL_DIM]: the original bytes are kept
- *   under [filesDir] as well and only downloaded when the user opens the photo
- *   (or when a missing thumb forces a one-time fetch that also seeds the thumb).
- * - Network is used at most once per URL for the original; after that list and
- *   viewer both hit disk. No bulk prefetch of every teacher on open.
+ * Network policy:
+ * - [load] with [THUMB_MAX_DIM] downloads a **small resized JPEG** (~few KB) via
+ *   an image resize endpoint, then keeps only that under [filesDir]. The college
+ *   site only publishes full-size portraits; without a resize step every list
+ *   scroll would pull ~100–400 KB originals.
+ * - [load] with [MAX_DETAIL_DIM] downloads the **original** college URL and only
+ *   when the user opens the zoomable viewer.
  *
- * Legacy files under cacheDir/faculty_photos are still read once and migrated
- * into the permanent dirs so existing installs do not re-download everything.
+ * Disk:
+ * - Thumbs: `filesDir/faculty_photo_thumbs` (permanent, no short TTL)
+ * - Full: `filesDir/faculty_photo_full` (only after a fullscreen open)
+ * - Legacy `cacheDir/faculty_photos` is read once to rebuild thumbs offline
  */
 class FacultyPhotoStore(
     context: Context,
     private val client: OkHttpClient = Net.client
 ) {
     companion object {
-        /** Row thumbnails never need more than this on the longest side. */
-        const val THUMB_MAX_DIM = 256
+        /** List / avatar longest side — small enough for a circle icon. */
+        const val THUMB_MAX_DIM = 128
 
-        /** The fullscreen zoomable viewer's decode budget (longest side). */
+        /** Fullscreen zoom decode budget. */
         const val MAX_DETAIL_DIM = 2048
 
-        /** JPEG quality for permanent list thumbs (~5–20 KB typical). */
-        private const val THUMB_JPEG_QUALITY = 80
+        private const val THUMB_JPEG_QUALITY = 70
 
-        /**
-         * Full originals stay valid this long before a quiet re-fetch is allowed.
-         * Thumbs have no expiry — they are cheap and stable enough for icons.
-         */
-        private const val FULL_TTL_MS = 180L * 24 * 60 * 60 * 1000 // 180 days
     }
 
-    /** Permanent small avatars — not under cacheDir so the OS will not wipe them. */
     private val thumbDir = File(context.filesDir, "faculty_photo_thumbs").apply { mkdirs() }
-
-    /** Permanent full originals for the zoom viewer. */
     private val fullDir = File(context.filesDir, "faculty_photo_full").apply { mkdirs() }
-
-    /** Pre-v2 cache location; read-only migration source. */
     private val legacyDir = File(context.cacheDir, "faculty_photos")
 
-    /** Keyed by "url|thumb" or "url|full" so both sizes coexist in memory. */
-    private val memory = object : LruCache<String, Bitmap>(48) {
+    private val memory = object : LruCache<String, Bitmap>(64) {
         override fun sizeOf(key: String, value: Bitmap): Int = 1
     }
 
-    /** One in-flight load per key: rows in a scrolling list share the request. */
     private val inFlight = mutableMapOf<String, Mutex>()
     private val inFlightGuard = Mutex()
 
-    /**
-     * Photo bitmap for [url] at up to [maxDim] on the longest side, or null.
-     * Callers pass [THUMB_MAX_DIM] for list avatars and [MAX_DETAIL_DIM] for
-     * the fullscreen viewer.
-     */
     suspend fun load(url: String, maxDim: Int = THUMB_MAX_DIM): Bitmap? {
         if (url.isBlank()) return null
         return if (maxDim <= THUMB_MAX_DIM) loadThumb(url) else loadFull(url, maxDim)
@@ -90,8 +75,7 @@ class FacultyPhotoStore(
                 return@withInFlight bmp
             }
 
-            // Prefer a durable/legacy full file so we never hit the network
-            // just to rebuild a missing thumb after a cache clear.
+            // Rebuild from a full original already on disk (no network).
             val fullBytes = readFullBytes(url)
             if (fullBytes != null) {
                 val thumb = withContext(Dispatchers.Default) { decode(fullBytes, THUMB_MAX_DIM) }
@@ -101,11 +85,20 @@ class FacultyPhotoStore(
                 return@withInFlight thumb
             }
 
-            val bytes = download(url) ?: return@withInFlight null
-            withContext(Dispatchers.IO) {
-                writeFullBytes(url, bytes)
+            // Network: request a *resized* image, never the full portrait.
+            val smallBytes = download(resizedThumbUrl(url))
+            if (smallBytes != null) {
+                val thumb = withContext(Dispatchers.Default) { decode(smallBytes, THUMB_MAX_DIM) }
+                    ?: return@withInFlight null
+                withContext(Dispatchers.IO) { writeThumbFile(url, thumb) }
+                memory.put(key, thumb)
+                return@withInFlight thumb
             }
-            val thumb = withContext(Dispatchers.Default) { decode(bytes, THUMB_MAX_DIM) }
+
+            // Resize proxy unreachable — last resort only: one full download,
+            // store a tiny thumb, discard the original bytes (do not write full).
+            val original = download(url) ?: return@withInFlight null
+            val thumb = withContext(Dispatchers.Default) { decode(original, THUMB_MAX_DIM) }
                 ?: return@withInFlight null
             withContext(Dispatchers.IO) { writeThumbFile(url, thumb) }
             memory.put(key, thumb)
@@ -123,12 +116,12 @@ class FacultyPhotoStore(
             if (cachedBytes != null) {
                 val bmp = withContext(Dispatchers.Default) { decode(cachedBytes, maxDim) }
                     ?: return@withInFlight null
-                // Ensure a list thumb exists so later scrolls stay offline.
                 ensureThumbFromBytes(url, cachedBytes)
                 memory.put(key, bmp)
                 return@withInFlight bmp
             }
 
+            // Fullscreen only: original college URL.
             val bytes = download(url) ?: return@withInFlight null
             withContext(Dispatchers.IO) { writeFullBytes(url, bytes) }
             val bmp = withContext(Dispatchers.Default) { decode(bytes, maxDim) }
@@ -146,6 +139,15 @@ class FacultyPhotoStore(
         memory.put("$url|thumb", thumb)
     }
 
+    /**
+     * Public image CDN that returns a downscaled JPEG of [sourceUrl].
+     * This is what makes list scrolling cheap when the origin has no thumb variant.
+     */
+    private fun resizedThumbUrl(sourceUrl: String): String {
+        val encoded = URLEncoder.encode(sourceUrl, StandardCharsets.UTF_8.name())
+        return "https://wsrv.nl/?url=$encoded&w=$THUMB_MAX_DIM&h=$THUMB_MAX_DIM&fit=cover&q=55&output=jpg"
+    }
+
     private suspend fun <T> withInFlight(key: String, block: suspend () -> T): T {
         val mutex = inFlightGuard.withLock {
             inFlight.getOrPut(key) { Mutex() }
@@ -161,7 +163,12 @@ class FacultyPhotoStore(
 
     private suspend fun download(url: String): ByteArray? = withContext(Dispatchers.IO) {
         runCatching {
-            client.newCall(Request.Builder().url(url).build()).execute().use { response ->
+            client.newCall(
+                Request.Builder()
+                    .url(url)
+                    .header("Accept", "image/*,*/*")
+                    .build()
+            ).execute().use { response ->
                 if (response.isSuccessful) response.body?.bytes() else null
             }
         }.getOrNull()
@@ -194,19 +201,11 @@ class FacultyPhotoStore(
     private fun readFullBytes(url: String): ByteArray? {
         val primary = fullFile(url)
         if (primary.isFile) {
-            if (System.currentTimeMillis() - primary.lastModified() > FULL_TTL_MS) {
-                // Soft expiry: still serve the file, but mark for refresh by
-                // touching is skipped — next successful download overwrites.
-                // Returning bytes keeps the UI offline; a background refresh
-                // is intentionally not forced here to avoid surprise data use.
-            }
             return runCatching { primary.readBytes() }.getOrNull()
         }
         val legacy = legacyFile(url)
         if (legacy.isFile) {
             val bytes = runCatching { legacy.readBytes() }.getOrNull() ?: return null
-            // Migrate off disposable cacheDir so the next OS clean does not
-            // force a re-download.
             runCatching { writeFullBytes(url, bytes) }
             return bytes
         }
@@ -225,7 +224,6 @@ class FacultyPhotoStore(
         }
     }
 
-    /** Bounds-first decode with power-of-two sampling down to [maxDim]. */
     private fun decode(bytes: ByteArray, maxDim: Int): Bitmap? {
         if (bytes.isEmpty()) return null
         val bounds = BitmapFactory.Options().apply { inJustDecodeBounds = true }
