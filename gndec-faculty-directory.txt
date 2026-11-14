@@ -4,12 +4,12 @@ GNDEC, LUDHIANA - FACULTY DIRECTORY WITH PUBLISHED CONTACT DETAILS
 Primary source : https://gndec.ac.in/faculty/  (official faculty directory)
 Phone sources  : Information Brochure 2026 (IB26.pdf p.7), Statutory Committees.pdf,
                  Examination staff list (sde26.pdf) - all hosted on gndec.ac.in
-Compiled       : 2026-09-28
-Coverage       : 271 faculty listings / 14 departments
+Compiled       : 2026-09-28, refreshed 2026-10-18
+Coverage       : 280 faculty listings / 14 departments
 
 HOW MUCH IS ACTUALLY PUBLISHED
-  Name, designation, department and email are published for all 271 faculty.
-  Phone numbers exist ONLY for 37 of them - the heads of departments, the
+  Name, designation, department and email are published for all 280 faculty.
+  Phone numbers exist ONLY for 40 of them - the heads of departments, the
   academic/administrative officers, and a handful of academic-council members.
   The college does not publish per-faculty phone numbers on the web directory,
   the profile pages, or the department sites. There is no further public source.
@@ -23,6 +23,67 @@ CONFIDENCE
   'Medium'  - Academic Council / examination rosters (2023-26 tenure). These are
                older; the holder may have changed role or left. Marked in the entry.
   Where the two disagree, both numbers are shown rather than one being chosen.
+
+==================================================================================================
+ADDED 2026-10-18 - THE TEACHERS THE LIST WAS MISSING
+==================================================================================================
+The college's own list carries 289 rows, but the directory compiled on 2026-09-28
+held only 271 of them. Nine teachers were missing and have been added:
+
+  MANPREET KAUR           Applied Science           profile 472  (added by the college 2026-10-06)
+  KIRAN KUMARI            Applied Science           profile 511  (added by the college 2026-10-01)
+  HARMINDER KAUR          Computer Science & Engg.  profile 512
+  DR PREETI PANNU         Electronics & Comm. Engg. profile 267
+  NAVJOT SINGH            Electronics & Comm. Engg. profile 468
+  SUKHMANJIT SINGH        School of Architecture     profile 484
+  HARBHAG SINGH           Computer Center           profile 221
+  SANPREET SINGH          Electrical Engineering    profile 433
+  SARABMEET SINGH MASSON  Information Technology    profile 457
+
+  Three more of the college's rows are NOT in the list, and correctly so:
+    - profile 421 HARMINDER KAUR - the SAME teacher as profile 512 (identical
+      email and identical photo), filed by the college under a stray duplicate
+      Information Technology department.
+    - profile 222 HARBHAG SINGH - a duplicate row of profile 221.
+    - profile 326 "JAKD NDJDJD" - a junk record (no profile page, no roster
+      entry anywhere, placeholder address).
+
+  The department of a teacher the college files under an unnamed leftover
+  department (its website keeps 11 such rows with no department and no profile
+  page) was settled from the college's own documents:
+    - HARBHAG SINGH     - "Assistant Professor (Computer Programmer / Computer
+                          Practices)" is the Computer Center's designation.
+    - SANPREET SINGH    - the GNDEC Telephone Directory gives extension 4560,
+                          the Electrical Engineering extension.
+    - SARABMEET SINGH MASSON - his own INFLIBNET profile and IB26 both place
+                          him in Information Technology.
+
+REPAIRED ADDRESSES
+  The college's list renders five addresses without the '@' or without the
+  domain - a data-entry slip on its side. They are repaired here from the
+  college's own first-party documents, never guessed:
+
+    profile 472  MANPREET KAUR
+        published as 'As_manpreetagndec.in' ('@' typed as 'a', domain cut)
+        -> as_manpreet@gndec.ac.in   (GNDEC's own form for an Applied Science
+           teacher, as_amarjot@gndec.ac.in; gndec.in has no MX record, gndec.ac.in does)
+
+    profile 267  DR PREETI PANNU
+        published as 'preetipannu'
+        -> preetipannu@gndec.ac.in    (GNDEC Telephone Directory, ext 4726)
+
+    profile 468  NAVJOT SINGH
+        published as 'dr.navjotsingh'
+        -> dr.navjotsingh@gndec.ac.in (local part as published; GNDEC's only
+           mail-accepting domain. Mobile 9501724761 from the official EC
+           Permanent Section list of 15_09_2026, where he is the EC mentor)
+
+    profile 484  SUKHMANJIT SINGH
+        published as 'ar.sukhman'
+        -> aulakh.sukhman@gmail.com  (GNDEC Telephone Directory, ext 4802)
+
+    profile 322  SHIVMANMEET SINGH - a duplicate of profile 323, which is
+        already listed with ece.shivmanmeet@gndec.ac.in. No new entry.
 
 ==================================================================================================
 
@@ -95,17 +156,20 @@ ADMINISTRATIVE OFFICERS (Information Brochure 2026)
   (administrative posts, so not part of the teaching-faculty listing):
     Dr. Daljit Singh               Assistant Registrar                        0161-5064756    98555-78987
     Er. Gurpreet Singh Baath       Assistant Controller (Examination)         0161-5064551    98772-64307
-    Dr. Preeti Pannu               Assistant Public Relation Officer          0161-5064501    98189-47360
     Mr. Ramandeep Singh            Assistant Registrar                        0161-5064501    98554-00448
-    Dr. Gurdeep Kaur               HRM                                                        
-    Er. Jasvir Singh Grewal        Office Incharge NSS                                        
+    Dr. Gurdeep Kaur               HRM
+    Er. Jasvir Singh Grewal        Office Incharge NSS
+
+  (Dr. Preeti Pannu was on this list too; the college's own faculty list
+   carries her as of the 2026-10-18 refresh - she is Electronics &
+   Communication Engineering, profile 267.)                                        
 
 ==================================================================================================
 FULL FACULTY LISTING BY DEPARTMENT
 ==================================================================================================
 
 
-### APPLIED SCIENCE   (36 listings, 3 with a published phone)
+### APPLIED SCIENCE   (38 listings, 3 with a published phone)
 --------------------------------------------------------------------------------------------------
 
     1. DR. HARPREET KAUR GREWAL
@@ -225,83 +289,92 @@ FULL FACULTY LISTING BY DEPARTMENT
        Email       : kbhalla88@gmail.com   (personal address, as published)
        Profile     : https://gndec.ac.in/faculty/?id=273
 
-   22. KOMALPREET KAUR
+   22. KIRAN KUMARI
+       Designation : Assistant Professor
+       Email       : as_kiran10464@gndec.ac.in
+       Profile     : https://gndec.ac.in/faculty/?id=511
+
+   23. KOMALPREET KAUR
        Designation : Assistant Professor
        Email       : as_komalpreet10410@gndec.ac.in
        Profile     : https://gndec.ac.in/faculty/?id=509
 
-   23. MANDEEP KAUR
+   24. MANDEEP KAUR
        Designation : Assistant Professor
        Email       : mandykaur549@gmail.com   (personal address, as published)
        Profile     : https://gndec.ac.in/faculty/?id=319
 
-   24. MANJOT KAUR
+   25. MANJOT KAUR
        Designation : Assistant Professor
        Email       : manjotkaur4016@gmail.com   (personal address, as published)
        Profile     : https://gndec.ac.in/faculty/?id=381
 
-   25. NEERAJ KUMAR
+   26. MANPREET KAUR
+       Designation : Assistant Professor
+       Email       : as_manpreet@gndec.ac.in
+       Profile     : https://gndec.ac.in/faculty/?id=472
+
+   27. NEERAJ KUMAR
        Designation : Assistant Professor
        Email       : neerajkumar735561@gmail.com   (personal address, as published)
        Profile     : https://gndec.ac.in/faculty/?id=402
 
-   26. NISHA MASSON
+   28. NISHA MASSON
        Designation : Assistant Professor
        Email       : nishamasson93@gmail.com   (personal address, as published)
        Profile     : https://gndec.ac.in/faculty/?id=377
 
-   27. PARAMJIT KAUR
+   29. PARAMJIT KAUR
        Designation : Assistant Professor
        Email       : as_paramjit10470@gndec.ac.in
        Profile     : https://gndec.ac.in/faculty/?id=508
 
-   28. PARNEET KAUR
+   30. PARNEET KAUR
        Designation : Assistant Professor
        Email       : parneet3438@gmail.com   (personal address, as published)
        Profile     : https://gndec.ac.in/faculty/?id=473
 
-   29. PRAGYA GOYAL
+   31. PRAGYA GOYAL
        Designation : Assistant Professor
        Email       : pragya@gndec.ac.in
        Profile     : https://gndec.ac.in/faculty/?id=78
 
-   30. SAHIL
+   32. SAHIL
        Designation : Assistant Professor
        Email       : as_sahil10466@gndec.ac.in
        Profile     : https://gndec.ac.in/faculty/?id=510
 
-   31. SANJAM KAUR SIDHU
+   33. SANJAM KAUR SIDHU
        Designation : Assistant Professor
        Email       : aol.sanjam@gmail.com   (personal address, as published)
        Profile     : https://gndec.ac.in/faculty/?id=470
 
-   32. SHREYA
+   34. SHREYA
        Designation : Assistant Professor
        Email       : as_shreya10433@gndec.ac.in
        Profile     : https://gndec.ac.in/faculty/?id=467
 
-   33. SUKHMINDER SINGH
+   35. SUKHMINDER SINGH
        Designation : Assistant Professor
        Email       : sukhmindersingh3@gmail.com   (personal address, as published)
        Profile     : https://gndec.ac.in/faculty/?id=29
 
-   34. SUMANPREET KAUR
+   36. SUMANPREET KAUR
        Designation : Assistant Professor
        Email       : as_sumanpreet10432@gndec.ac.in
        Profile     : https://gndec.ac.in/faculty/?id=466
 
-   35. SUNIL KUMAR
+   37. SUNIL KUMAR
        Designation : Assistant Professor
        Email       : as_sunil10430@gndec.ac.in
        Profile     : https://gndec.ac.in/faculty/?id=471
 
-   36. UPKARJEET KAUR
+   38. UPKARJEET KAUR
        Designation : Assistant Professor
        Email       : as_upkarjeet50451@gndec.ac.in
        Profile     : https://gndec.ac.in/faculty/?id=498
 
-
-### COMPUTER CENTER   (5 listings, 1 with a published phone)
+### COMPUTER CENTER   (6 listings, 1 with a published phone)
 --------------------------------------------------------------------------------------------------
 
     1. DR, JASBIR SINGH SAINI
@@ -323,16 +396,20 @@ FULL FACULTY LISTING BY DEPARTMENT
        Email       : satinder@gndec.ac.in
        Profile     : https://gndec.ac.in/faculty/?id=229
 
-    4. AMANDEEP SINGH BHATHAL
+    4. HARBHAG SINGH
+       Designation : Assistant Professor (Computer Programmer / Computer Practices)
+       Email       : harbhag@gndec.ac.in
+       Profile     : https://gndec.ac.in/faculty/?id=221
+
+    5. AMANDEEP SINGH BHATHAL
        Designation : Lab. Supdt.
        Email       : aman79@gndec.ac.in
        Profile     : https://gndec.ac.in/faculty/?id=54
 
-    5. GURMUKH SINGH KHURAL
+    6. GURMUKH SINGH KHURAL
        Designation : Lab. Supdt.
        Email       : gurmukhsingh@gndec.ac.in
        Profile     : https://gndec.ac.in/faculty/?id=103
-
 
 ### WORKSHOPS   (13 listings, 1 with a published phone)
 --------------------------------------------------------------------------------------------------
@@ -406,7 +483,6 @@ FULL FACULTY LISTING BY DEPARTMENT
        Email       : varindersingh@gndec.ac.in
        Profile     : https://gndec.ac.in/faculty/?id=92
 
-
 ### SPORTS   (2 listings, 0 with a published phone)
 --------------------------------------------------------------------------------------------------
 
@@ -419,7 +495,6 @@ FULL FACULTY LISTING BY DEPARTMENT
        Designation : DPE
        Email       : dhiman.0044@yahoo.com   (personal address, as published)
        Profile     : https://gndec.ac.in/faculty/?id=255
-
 
 ### CIVIL ENGINEERING   (25 listings, 2 with a published phone)
 --------------------------------------------------------------------------------------------------
@@ -557,8 +632,7 @@ FULL FACULTY LISTING BY DEPARTMENT
        Email       : yuvraj_singh@gndec.ac.in
        Profile     : https://gndec.ac.in/faculty/?id=244
 
-
-### COMPUTER SCIENCE & ENGG.   (39 listings, 3 with a published phone)
+### COMPUTER SCIENCE & ENGG.   (40 listings, 3 with a published phone)
 --------------------------------------------------------------------------------------------------
 
     1. DR. KIRAN JYOTI
@@ -753,23 +827,27 @@ FULL FACULTY LISTING BY DEPARTMENT
        Email       : it_gagneet10362@gndec.c.in   (personal address, as published)
        Profile     : https://gndec.ac.in/faculty/?id=504
 
-   37. HONEY RAWAT
+   37. HARMINDER KAUR
+       Designation : Assistant Professor
+       Email       : it_harminder10383@gndec.ac.in
+       Profile     : https://gndec.ac.in/faculty/?id=512
+
+   38. HONEY RAWAT
        Designation : Assistant Professor
        Email       : cse_honey10463@gndec.ac.in
        Profile     : https://gndec.ac.in/faculty/?id=499
 
-   38. JAGDEEP KAUR
+   39. JAGDEEP KAUR
        Designation : Assistant Professor
        Email       : cse_jagdeep10413@gndec.ac.in
        Profile     : https://gndec.ac.in/faculty/?id=446
 
-   39. JASJIT KAUR
+   40. JASJIT KAUR
        Designation : Assistant Professor
        Email       : cse_jasjit10465@gndec.ac.in
        Profile     : https://gndec.ac.in/faculty/?id=505
 
-
-### ELECTRICAL ENGINEERING   (19 listings, 4 with a published phone)
+### ELECTRICAL ENGINEERING   (20 listings, 5 with a published phone)
 --------------------------------------------------------------------------------------------------
 
     1. KANWARDEEP SINGH
@@ -873,18 +951,24 @@ FULL FACULTY LISTING BY DEPARTMENT
        Email       : samreetgosal@gnedc.ac.in   (personal address, as published)
        Profile     : https://gndec.ac.in/faculty/?id=152
 
-   18. SUKHPAL SINGH
+   18. SANPREET SINGH
+       Designation : Assistant Professor
+       Email       : er.sanpreetsingh@gmail.com   (personal address, as published)
+       Mobile      : 7986013685
+       Confidence  : Medium  (GNDEC Telephone Directory)
+       Profile     : https://gndec.ac.in/faculty/?id=433
+
+   19. SUKHPAL SINGH
        Designation : Assistant Professor
        Email       : ee_sukhpal@gndec.ac.in
        Profile     : https://gndec.ac.in/faculty/?id=365
 
-   19. SWAPANDEEP KAUR
+   20. SWAPANDEEP KAUR
        Designation : Assistant Professor
        Email       : ee_swapandeep@gndec.ac.in
        Profile     : https://gndec.ac.in/faculty/?id=356
 
-
-### ELECTRONICS & COMMUNICATION ENGINEERING   (18 listings, 3 with a published phone)
+### ELECTRONICS & COMMUNICATION ENGINEERING   (20 listings, 5 with a published phone)
 --------------------------------------------------------------------------------------------------
 
     1. NARWANT SINGH GREWAL
@@ -984,13 +1068,28 @@ FULL FACULTY LISTING BY DEPARTMENT
        Email       : ece_kunwarpartapsingh@gndec.ac.in
        Profile     : https://gndec.ac.in/faculty/?id=368
 
-   18. SIMRANJIT KAUR
+   18. NAVJOT SINGH
+       Designation : Assistant Professor
+       Email       : dr.navjotsingh@gndec.ac.in
+       Mobile      : 9501724761
+       Confidence  : High  (Section List 2026)
+       Profile     : https://gndec.ac.in/faculty/?id=468
+
+   19. DR PREETI PANNU
+       Designation : Assistant Professor
+       Email       : preetipannu@gndec.ac.in
+       Office      : 0161-5064501
+       Mobile      : 98189-47360
+       Role(s)     : Assistant Public Relation Officer
+       Confidence  : High  (Information Brochure 2026)
+       Profile     : https://gndec.ac.in/faculty/?id=267
+
+   20. SIMRANJIT KAUR
        Designation : Assistant Professor
        Email       : simranjitkaur@gndec.ac.in
        Profile     : https://gndec.ac.in/faculty/?id=37
 
-
-### INFORMATION TECHNOLOGY   (24 listings, 3 with a published phone)
+### INFORMATION TECHNOLOGY   (25 listings, 3 with a published phone)
 --------------------------------------------------------------------------------------------------
 
     1. DR. KULVINDER SINGH MANN
@@ -1124,7 +1223,10 @@ FULL FACULTY LISTING BY DEPARTMENT
        Designation : Assistant Professor
        Email       : ranjodh_kaur@gndec.ac.in
        Profile     : https://gndec.ac.in/faculty/?id=79
-
+   25. SARABMEET SINGH MASSON
+       Designation : Assistant Professor
+       Email       : it_sarabmeet10427@gndec.ac.in
+       Profile     : https://gndec.ac.in/faculty/?id=457
 
 ### BUSINESS ADMINISTRATION   (15 listings, 1 with a published phone)
 --------------------------------------------------------------------------------------------------
@@ -1207,7 +1309,6 @@ FULL FACULTY LISTING BY DEPARTMENT
        Designation : Assistant Professor
        Email       : ba_simranpreet10459@gndec.ac.in
        Profile     : https://gndec.ac.in/faculty/?id=496
-
 
 ### COMPUTER APPLICATIONS   (19 listings, 1 with a published phone)
 --------------------------------------------------------------------------------------------------
@@ -1310,7 +1411,6 @@ FULL FACULTY LISTING BY DEPARTMENT
        Designation : Assistant Professor
        Email       : ca_sonia10390@gndec.ac.in
        Profile     : https://gndec.ac.in/faculty/?id=434
-
 
 ### MECHANICAL ENGINEERING   (39 listings, 11 with a published phone)
 --------------------------------------------------------------------------------------------------
@@ -1554,7 +1654,6 @@ FULL FACULTY LISTING BY DEPARTMENT
        Email       : jasvirgrewal@gndec.ac.in
        Profile     : https://gndec.ac.in/faculty/?id=186
 
-
 ### PRODUCTION ENGINEERING   (9 listings, 2 with a published phone)
 --------------------------------------------------------------------------------------------------
 
@@ -1611,8 +1710,7 @@ FULL FACULTY LISTING BY DEPARTMENT
        Email       : msbedi@gndec.ac.in, ermanjotbedi@gmail.com   (personal address, as published)
        Profile     : https://gndec.ac.in/faculty/?id=294
 
-
-### SCHOOL OF ARCHITECTURE   (8 listings, 1 with a published phone)
+### SCHOOL OF ARCHITECTURE   (9 listings, 2 with a published phone)
 --------------------------------------------------------------------------------------------------
 
     1. AR.AKANKSHA SHARMA
@@ -1629,36 +1727,44 @@ FULL FACULTY LISTING BY DEPARTMENT
        Email       : vivek_arch@gndec.ac.in
        Profile     : https://gndec.ac.in/faculty/?id=491
 
-    3. AR. DHARINI MIDDHA
+    3. SUKHMANJIT SINGH
+       Designation : Associate Professor
+       Email       : aulakh.sukhman@gmail.com   (personal address, as published)
+       Mobile      : 9779595124
+       Confidence  : Medium  (GNDEC Telephone Directory)
+       Profile     : https://gndec.ac.in/faculty/?id=484
+
+    4. AR. DHARINI MIDDHA
        Designation : Assistant Professor
        Email       : ar.dharinimiddha@gmail.com   (personal address, as published)
        Profile     : https://gndec.ac.in/faculty/?id=506
 
-    4. AR. HARSIMRANJEET KAUR
+    5. AR. HARSIMRANJEET KAUR
        Designation : Assistant Professor
        Email       : simrannk1897@gmail.com   (personal address, as published)
        Profile     : https://gndec.ac.in/faculty/?id=488
 
-    5. AR. MOKSHA BHATIA
+    6. AR. MOKSHA BHATIA
        Designation : Assistant Professor
        Email       : moksha.bhatia14@gmail.com   (personal address, as published)
        Profile     : https://gndec.ac.in/faculty/?id=487
 
-    6. BALJEET SINGH
+    7. BALJEET SINGH
        Designation : Assistant Professor
        Email       : Ar.Baljeets@gndec.ac.in
        Profile     : https://gndec.ac.in/faculty/?id=483
 
-    7. NAVJOT KAUR SARAO
+    8. NAVJOT KAUR SARAO
        Designation : Assistant Professor
        Email       : arnavjotgndec@gmail.com   (personal address, as published)
        Profile     : https://gndec.ac.in/faculty/?id=490
 
-    8. RAMANPREET KAUR
+    9. RAMANPREET KAUR
        Designation : Assistant Professor
        Email       : gneramanpreet@gmail.com   (personal address, as published)
        Profile     : https://gndec.ac.in/faculty/?id=486
 
 ==================================================================================================
-END - 271 listings, 14 departments, 36 with a published phone
+END - 280 listings, 14 departments, 40 with a published phone
 ==================================================================================================
+
