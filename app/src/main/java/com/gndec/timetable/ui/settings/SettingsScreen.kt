@@ -31,6 +31,10 @@ import androidx.compose.material.icons.filled.Palette
 import androidx.compose.material.icons.filled.Refresh
 import androidx.compose.material.icons.filled.Security
 import androidx.compose.material.icons.filled.Tune
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.Icon
+import androidx.compose.material.icons.filled.Search
+import androidx.compose.material.icons.filled.Close
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
@@ -127,10 +131,52 @@ fun SettingsScreen(container: AppContainer, onBack: () -> Unit, onOpenAlerts: ()
                         onReload = { vm.loadSeniorCatalog(force = true) }
                     )
                 } else {
-                    LazyColumn(Modifier.heightIn(max = 360.dp)) {
-                        items(groups) { group ->
-                            TextButton(onClick = { vm.changeGroup(group); groupDialog = false }, modifier = Modifier.fillMaxWidth()) {
-                                Text(group, fontWeight = if (group == settings.group) FontWeight.Bold else FontWeight.Normal)
+                    var groupFilter by remember { mutableStateOf("") }
+                    val filteredGroups = remember(groups, groupFilter) {
+                        val needle = groupFilter.trim()
+                        if (needle.isEmpty()) groups
+                        else groups.filter { it.contains(needle, ignoreCase = true) }
+                    }
+                    Column(Modifier.heightIn(max = 400.dp)) {
+                        OutlinedTextField(
+                            value = groupFilter,
+                            onValueChange = { groupFilter = it },
+                            modifier = Modifier.fillMaxWidth(),
+                            placeholder = { Text("Search section…") },
+                            leadingIcon = { Icon(Icons.Default.Search, contentDescription = null) },
+                            trailingIcon = {
+                                if (groupFilter.isNotEmpty()) {
+                                    IconButton(onClick = { groupFilter = "" }) {
+                                        Icon(Icons.Default.Close, contentDescription = "Clear")
+                                    }
+                                }
+                            },
+                            singleLine = true
+                        )
+                        Spacer(Modifier.height(8.dp))
+                        LazyColumn(Modifier.heightIn(max = 320.dp)) {
+                            if (filteredGroups.isEmpty()) {
+                                item {
+                                    Text(
+                                        if (groups.isEmpty()) "No sections in the saved timetable yet."
+                                        else "No sections match “$groupFilter”.",
+                                        color = MaterialTheme.colorScheme.onSurfaceVariant,
+                                        style = MaterialTheme.typography.bodyMedium,
+                                        modifier = Modifier.padding(vertical = 8.dp)
+                                    )
+                                }
+                            } else {
+                                items(filteredGroups) { group ->
+                                    TextButton(
+                                        onClick = { vm.changeGroup(group); groupDialog = false },
+                                        modifier = Modifier.fillMaxWidth()
+                                    ) {
+                                        Text(
+                                            group,
+                                            fontWeight = if (group == settings.group) FontWeight.Bold else FontWeight.Normal
+                                        )
+                                    }
+                                }
                             }
                         }
                     }
@@ -403,7 +449,8 @@ private fun SeniorSectionPicker(
     onPick: (String) -> Unit,
     onReload: () -> Unit
 ) {
-    Column(Modifier.heightIn(max = 430.dp), verticalArrangement = Arrangement.spacedBy(6.dp)) {
+    var groupFilter by remember { mutableStateOf("") }
+    Column(Modifier.heightIn(max = 460.dp), verticalArrangement = Arrangement.spacedBy(6.dp)) {
         if (catalog.loading) {
             Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(10.dp)) {
                 CircularProgressIndicator(Modifier.size(18.dp), strokeWidth = 2.dp)
@@ -428,26 +475,57 @@ private fun SeniorSectionPicker(
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
             }
+            OutlinedTextField(
+                value = groupFilter,
+                onValueChange = { groupFilter = it },
+                modifier = Modifier.fillMaxWidth(),
+                placeholder = { Text("Search section…") },
+                leadingIcon = { Icon(Icons.Default.Search, contentDescription = null) },
+                trailingIcon = {
+                    if (groupFilter.isNotEmpty()) {
+                        IconButton(onClick = { groupFilter = "" }) {
+                            Icon(Icons.Default.Close, contentDescription = "Clear")
+                        }
+                    }
+                },
+                singleLine = true
+            )
             val dept = branch.trim().uppercase()
-            val byYear = remember(groups, dept) {
+            val needle = groupFilter.trim()
+            val byYear = remember(groups, dept, needle) {
                 (2..4).mapNotNull { year ->
                     val sections = sectionsForYear(groups, dept, year)
+                        .let { list ->
+                            if (needle.isEmpty()) list
+                            else list.filter { it.contains(needle, ignoreCase = true) }
+                        }
                     if (sections.isEmpty()) null else year to sections
                 }
             }
-            LazyColumn(Modifier.heightIn(max = 320.dp)) {
-                byYear.forEach { (year, sections) ->
-                    item(key = "header-$year") {
+            LazyColumn(Modifier.heightIn(max = 280.dp)) {
+                if (byYear.isEmpty()) {
+                    item {
                         Text(
-                            "${ordinalLabel(year)} year · ${sections.size} section${if (sections.size == 1) "" else "s"}",
-                            fontWeight = FontWeight.SemiBold,
-                            color = MaterialTheme.colorScheme.primary,
-                            modifier = Modifier.padding(top = 6.dp)
+                            "No sections match “$groupFilter”.",
+                            color = MaterialTheme.colorScheme.onSurfaceVariant,
+                            style = MaterialTheme.typography.bodyMedium,
+                            modifier = Modifier.padding(vertical = 8.dp)
                         )
                     }
-                    items(sections) { group ->
-                        TextButton(onClick = { onPick(group) }, modifier = Modifier.fillMaxWidth()) {
-                            Text(group, fontWeight = if (group == currentGroup) FontWeight.Bold else FontWeight.Normal)
+                } else {
+                    byYear.forEach { (year, sections) ->
+                        item(key = "header-$year") {
+                            Text(
+                                "${ordinalLabel(year)} year · ${sections.size} section${if (sections.size == 1) "" else "s"}",
+                                fontWeight = FontWeight.SemiBold,
+                                color = MaterialTheme.colorScheme.primary,
+                                modifier = Modifier.padding(top = 6.dp)
+                            )
+                        }
+                        items(sections) { group ->
+                            TextButton(onClick = { onPick(group) }, modifier = Modifier.fillMaxWidth()) {
+                                Text(group, fontWeight = if (group == currentGroup) FontWeight.Bold else FontWeight.Normal)
+                            }
                         }
                     }
                 }
