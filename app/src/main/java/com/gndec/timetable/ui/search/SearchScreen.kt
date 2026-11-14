@@ -113,12 +113,16 @@ fun SearchScreen(
 
     val attendanceState = rememberAttendanceHomeState(container)
 
-    // Rooms are only downloaded when a query actually looks like a room, so
-    // opening search never triggers the fetch on its own.
+    // Rooms are only downloaded when a query actually looks like a room — or
+    // carries the snowflake, which asks for the AC rooms — so opening search
+    // never triggers the fetch on its own.
     val trimmed = query.trim()
-    val looksLikeRoom = trimmed.isNotEmpty() && trimmed.split(Regex("\\s+")).any {
-        com.gndec.timetable.parse.RoomNameNormalizer.isRoomLike(it.filter { c -> c.isLetterOrDigit() }.lowercase())
-    }
+    val looksLikeRoom = trimmed.isNotEmpty() && (
+        com.gndec.timetable.parse.AcRooms.hasSnowflake(trimmed) ||
+            trimmed.split(Regex("\\s+")).any {
+                com.gndec.timetable.parse.RoomNameNormalizer.isRoomLike(it.filter { c -> c.isLetterOrDigit() }.lowercase())
+            }
+        )
     LaunchedEffect(looksLikeRoom) {
         if (looksLikeRoom) container.vacantRoomsManager.ensureLoaded()
     }

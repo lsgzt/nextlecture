@@ -7,6 +7,7 @@ import com.gndec.timetable.domain.FacultyDirectoryManager
 import com.gndec.timetable.domain.FacultyRecord
 import com.gndec.timetable.domain.Holiday
 import com.gndec.timetable.domain.VacantRoomsManager
+import com.gndec.timetable.parse.AcRooms
 import com.gndec.timetable.parse.GlobalRoomData
 import com.gndec.timetable.parse.RoomNameNormalizer
 import com.gndec.timetable.ui.attendance.SubjectAttendance
@@ -745,12 +746,14 @@ private fun fuzzyNameScore(query: String, name: String?): Int {
  * Answers "is this room free right now" inline. The day and slot are chosen the
  * same way the vacant-rooms screen chooses its opening chips, so the two can
  * never disagree, and a `null` cell is reported as "no class listed" rather than
- * as free — a room no department publishes must not read as vacant.
+ * as free — a room no department publishes must not read as vacant. AC rooms
+ * carry the snowflake badge on their title, and a snowflake query lists them all.
  */
 private fun roomResults(query: String, snapshot: SearchSnapshot): List<SearchResult> {
     val rooms = snapshot.rooms
     if (rooms == null) {
-        val looksRoomy = RoomNameNormalizer.isRoomLike(key(query)) ||
+        val looksRoomy = AcRooms.hasSnowflake(query) ||
+            RoomNameNormalizer.isRoomLike(key(query)) ||
             query.trim().split(Regex("\\s+")).any { RoomNameNormalizer.isRoomLike(key(it)) }
         if (!looksRoomy) return emptyList()
         return listOf(
@@ -771,6 +774,10 @@ private fun roomResults(query: String, snapshot: SearchSnapshot): List<SearchRes
     val slotIsNow = nowOnThisDay &&
         VacantRoomsManager.isCurrentSlot(rooms.slotStarts.getOrElse(slot) { 0 }, snapshot.nowMinutes)
 
+    // A bare snowflake asks for the AC rooms as a list — all of them, not the
+    // usual top-8 cut, so every air-conditioned room is shown.
+    val acOnly = AcRooms.isSnowflakeOnly(query)
+
     return rooms.rooms
         .mapNotNull { room ->
             val hit = roomNameScore(query, room.name)
@@ -785,14 +792,14 @@ private fun roomResults(query: String, snapshot: SearchSnapshot): List<SearchRes
             SearchResult(
                 id = "room-${room.key}",
                 group = SearchGroup.ROOM,
-                title = room.name,
+                title = AcRooms.badge(room.name, room.key),
                 subtitle = status,
                 score = hit,
                 action = SearchAction.Navigate("vacant_rooms")
             )
         }
         .sortedByDescending { it.score }
-        .take(8)
+        .let { results -> if (acOnly) results else results.take(8) }
 }
 
 /**
