@@ -63,8 +63,8 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
 /**
- * Faculty directory browser — opened from the "Faculty members" card on the
- * home screen. Lists EVERY teacher in the bundled college directory (including
+ * Faculty directory browser — opened from the "Faculty members" card in the
+ * More tab. Lists EVERY teacher in the bundled college directory (including
  * departments that publish no teacher timetable — their detail page answers
  * with contact details plus the honest "timetable not available" note).
  *
@@ -158,20 +158,6 @@ fun FacultyMembersScreen(
                         onBack = onBack,
                         onSettings = onOpenSettings
                     )
-                }
-
-                // Upcoming-faculty-birthday strip — hero + following birthdays in
-                // ascending order. Only on the unfiltered view: it is a highlight,
-                // not a search result, so it steps aside for a filter or a dept chip.
-                if (faculty.isNotEmpty() && filterText.isBlank() && selectedDept == null) {
-                    item(key = "birthdays") {
-                        FacultyBirthdaysSection(
-                            container = container,
-                            faculty = faculty,
-                            onOpenFaculty = onOpenFaculty,
-                            onPhotoClick = { photoViewerFor = it }
-                        )
-                    }
                 }
 
                 if (faculty.isEmpty()) {

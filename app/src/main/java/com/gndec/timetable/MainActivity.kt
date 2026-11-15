@@ -32,6 +32,7 @@ import com.gndec.timetable.ui.attendance.AttendanceScreen
 import com.gndec.timetable.ui.day.DayScreen
 import com.gndec.timetable.ui.details.LectureDetailScreen
 import com.gndec.timetable.ui.downloads.DownloadsScreen
+import com.gndec.timetable.ui.faculty.FacultyBirthdaysScreen
 import com.gndec.timetable.ui.faculty.FacultyDetailScreen
 import com.gndec.timetable.ui.faculty.FacultyMembersScreen
 import com.gndec.timetable.ui.home.HomeScreen
@@ -189,8 +190,6 @@ class MainActivity : ComponentActivity() {
                                             onOpenSettings = { navigate("settings") },
                                             onOpenProfile = { navigate("profile") },
                                             onOpenSearch = { navigate("search") },
-                                            onOpenVacantRooms = { navigate("vacant_rooms") },
-                                            onOpenFacultyMembers = { navigate("faculty_members") },
                                             onOpenAttendance = { navigate("attendance") },
                                             onOpenLecture = { selectedLecture = it; selectedLectureDate = LocalDate.now(); navigate("detail") }
                                         )
@@ -346,10 +345,19 @@ class MainActivity : ComponentActivity() {
                                             onOpenSettings = { navigate("settings") }
                                         )
                                     }
+                                    composable("faculty_birthdays") {
+                                        FacultyBirthdaysScreen(
+                                            container = container,
+                                            onBack = { nav.popBackStack() },
+                                            onOpenFaculty = { profileId -> navigate("faculty/$profileId") },
+                                            onOpenSettings = { navigate("settings") }
+                                        )
+                                    }
                                     composable("more") {
                                         MoreScreen(
                                             onOpenDownloads = { navigate("downloads") },
                                             onOpenLostFound = { navigate("lost_found") },
+                                            onOpenFacultyBirthdays = { navigate("faculty_birthdays") },
                                             onOpenVacantRooms = { navigate("vacant_rooms") },
                                             onOpenFacultyMembers = { navigate("faculty_members") },
                                             onOpenSettings = { navigate("settings") }

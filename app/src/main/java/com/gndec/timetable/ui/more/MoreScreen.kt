@@ -19,6 +19,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Cake
 import androidx.compose.material.icons.filled.ChevronRight
 import androidx.compose.material.icons.filled.FileDownload
 import androidx.compose.material.icons.filled.Groups
@@ -51,13 +52,15 @@ import androidx.compose.foundation.interaction.MutableInteractionSource
 
 /**
  * "More" tab: the app's overflow home for features that don't belong on the
- * main bar. Each card opens one feature — Downloads (college forms) and
- * Lost & Found (campus noticeboard) lead; handy existing screens follow.
+ * main bar. Each card opens one feature — Downloads (college forms), Lost &
+ * Found (campus noticeboard) and Faculty Birthday lead; handy existing
+ * screens follow.
  */
 @Composable
 fun MoreScreen(
     onOpenDownloads: () -> Unit,
     onOpenLostFound: () -> Unit,
+    onOpenFacultyBirthdays: () -> Unit,
     onOpenVacantRooms: () -> Unit,
     onOpenFacultyMembers: () -> Unit,
     onOpenSettings: () -> Unit
@@ -98,25 +101,35 @@ fun MoreScreen(
                 modifier = Modifier.padding(horizontal = 20.dp).itemEntrance(2)
             )
         }
+        item(key = "faculty-birthdays") {
+            FeatureCard(
+                title = "Faculty Birthday",
+                subtitle = "Whose special day is next? Every teacher's birthday, sorted by date — go wish them well.",
+                icon = Icons.Default.Cake,
+                badge = "WISH THEM WELL",
+                onClick = { view.hapticTick(); onOpenFacultyBirthdays() },
+                modifier = Modifier.padding(horizontal = 20.dp).itemEntrance(3)
+            )
+        }
         item(key = "label-also") {
             MoreSectionLabel("ALSO IN THE APP")
         }
         item(key = "vacant") {
             CompactCard(
-                title = "Vacant rooms",
+                title = "Find vacant rooms",
                 subtitle = "Free rooms right now, live from department timetables",
                 icon = Icons.Default.MeetingRoom,
                 onClick = { view.hapticTick(); onOpenVacantRooms() },
-                modifier = Modifier.padding(horizontal = 20.dp).itemEntrance(3)
+                modifier = Modifier.padding(horizontal = 20.dp).itemEntrance(4)
             )
         }
         item(key = "faculty") {
             CompactCard(
-                title = "Faculty directory",
+                title = "Faculty members",
                 subtitle = "Every teacher, department and timetable",
                 icon = Icons.Default.Groups,
                 onClick = { view.hapticTick(); onOpenFacultyMembers() },
-                modifier = Modifier.padding(horizontal = 20.dp).itemEntrance(4)
+                modifier = Modifier.padding(horizontal = 20.dp).itemEntrance(5)
             )
         }
         item(key = "settings") {
@@ -125,7 +138,7 @@ fun MoreScreen(
                 subtitle = "Profile, theme, reminders and more",
                 icon = Icons.Default.Settings,
                 onClick = { view.hapticTick(); onOpenSettings() },
-                modifier = Modifier.padding(horizontal = 20.dp).itemEntrance(5)
+                modifier = Modifier.padding(horizontal = 20.dp).itemEntrance(6)
             )
         }
     }
