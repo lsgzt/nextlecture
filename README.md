@@ -141,7 +141,7 @@ every user. Debug builds, unit tests and lint work with no keystore configured.
 
 ## GitHub Releases
 
-Published APKs are distributed through the repository’s GitHub Releases page. The app’s **Download update** action opens `https://nextlecture.vercel.app/download`.
+Published APKs are distributed through the repository’s GitHub Releases page. The app’s **Download update** action opens `https://nextlecture-app.vercel.app/download`.
 
 ## Security
 
@@ -336,4 +336,4 @@ The app checks the latest stable GitHub release from `https://api.github.com/rep
 
 Android `versionName` is currently `1.0`, and `BuildConfig.RELEASE_MARKER` is `1.0`. The two are compared by their numeric components (a leading `v` is ignored, non-numeric runs split the marker), so `1.1` is treated as newer and `1.0` as the same version. The installed marker is the greater of the two. Update both values in `app/build.gradle.kts` whenever publishing a new release, and keep them in sync.
 
-When a newer stable release is found, Home and Settings show an update card and the app may send one update notification per release marker. **Download update** opens `https://nextlecture.vercel.app/download`. Android still requires the user to confirm the APK installation.
+When a newer stable release is found, Home and Settings show an update card and the app may send one update notification per release marker. **Download update** opens `https://nextlecture-app.vercel.app/download`. Android still requires the user to confirm the APK installation.

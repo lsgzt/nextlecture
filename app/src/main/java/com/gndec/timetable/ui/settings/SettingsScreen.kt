@@ -82,7 +82,7 @@ import com.gndec.timetable.parse.GroupMatcher
 import com.gndec.timetable.util.Formatters
 
 private val TestDelayOptions = listOf(1, 5, 10, 15)
-private const val SOURCE_CODE_URL = "https://github.com/lsgzt/nextlecture-android"
+private const val SOURCE_CODE_URL = "https://github.com/lsgzt/nextlecture"
 private const val MAINTAINER_URL = "https://lsgz.vercel.app"
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -272,7 +272,7 @@ fun SettingsScreen(container: AppContainer, onBack: () -> Unit, onOpenAlerts: ()
                             TextButton(onClick = vm::checkAnnouncements, enabled = !busy) { Text("Check announcements") }
                         }
                         TextButton(onClick = {
-                            context.startActivity(Intent(Intent.ACTION_VIEW, Uri.parse("https://github.com/lsgzt/nextlecture-android/edit/main/announcements.json")))
+                            context.startActivity(Intent(Intent.ACTION_VIEW, Uri.parse("https://github.com/lsgzt/nextlecture/edit/main/announcements.json")))
                         }) { Text("Manage announcements on GitHub") }
                     }
                 }
@@ -393,7 +393,7 @@ fun SettingsScreen(container: AppContainer, onBack: () -> Unit, onOpenAlerts: ()
                         modifier = Modifier.fillMaxWidth()
                     ) {
                         Text(
-                            "Built and maintained by LSGZ",
+                            "Built and Maintained by Team <MYLV> Matrix at Hacknauts 2.0",
                             style = MaterialTheme.typography.bodySmall,
                             color = MaterialTheme.colorScheme.onSurfaceVariant,
                             fontWeight = FontWeight.Medium
