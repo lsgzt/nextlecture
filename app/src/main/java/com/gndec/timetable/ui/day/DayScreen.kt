@@ -1268,10 +1268,10 @@ private fun androidx.compose.ui.text.AnnotatedString.Builder.appendFriendsAfterD
 }
 
 /**
- * "Aarav and Meera are free at this time slot 9:30 AM - 10:30 AM", shown under
- * the lecture card when a friend happens to be free while the student is in
- * class — now also for friends free for only part of it: friends sharing the
- * same stretch are joined with "and" ("Raman and Prince are free at
+ * "Aarav and Meera are free at this time slot", shown under the lecture card
+ * when a friend happens to be free for the whole class — no time range, the
+ * card above already carries the slot. Friends free for only part of it do
+ * show their actual stretch ("Raman and Prince are free at
  * 12:30 PM - 1:30 PM"); the clauses come from [friendAvailabilitySentences].
  */
 @Composable

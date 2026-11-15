@@ -10,6 +10,9 @@ import org.junit.Test
  * for only part of a 2-hour class used to be listed one clause per friend even
  * when they shared the exact same free hour — "Raman is free at 11:30-12:30 ·
  * Prince is free at 11:30-12:30". They now share one clause joined with "and".
+ * Friends free for the WHOLE class say "free at this time slot" without the
+ * time range — the lecture card above already carries the slot, so repeating
+ * it is noise; only partial free windows keep their own shorter time range.
  */
 class FriendAvailabilitySentencesTest {
 
@@ -70,7 +73,7 @@ class FriendAvailabilitySentencesTest {
             FriendFreeWindow("Meera", ClassStart, ClassEnd)
         )
         val sentences = friendAvailabilitySentences(windows, ClassStart, ClassEnd, label)
-        assertEquals(listOf("Aarav and Meera are free at this time slot 11:30 AM - 1:30 PM"), sentences)
+        assertEquals(listOf("Aarav and Meera are free at this time slot"), sentences)
     }
 
     @Test
@@ -83,7 +86,7 @@ class FriendAvailabilitySentencesTest {
         val sentences = friendAvailabilitySentences(windows, ClassStart, ClassEnd, label)
         assertEquals(
             listOf(
-                "Aarav is free at this time slot 11:30 AM - 1:30 PM",
+                "Aarav is free at this time slot",
                 "Raman and Prince are free at 11:30 AM - 12:30 PM"
             ),
             sentences

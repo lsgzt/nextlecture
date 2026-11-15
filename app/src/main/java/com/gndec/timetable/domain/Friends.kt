@@ -115,10 +115,15 @@ fun friendVerb(names: List<String>): String = if (names.size == 1) "is" else "ar
 /**
  * Sentence(s) for the friend note under one of the student's own classes.
  *
- * Friends free for the WHOLE class keep the grouped sentence. Friends free for
- * only part of it are grouped by the exact free window they share, so two
- * friends free over the same stretch read as one clause with "and" —
- * "Raman and Prince are free at 11:30 AM - 12:30 PM" — instead of one clause
+ * Friends free for the WHOLE class keep the grouped sentence WITHOUT a time
+ * range — the lecture card right above the note already says the slot, so
+ * “free at this time slot 1:30 PM - 2:30 PM” would just parrot it. Friends
+ * free for only PART of the class do get the time, because their free
+ * stretch is a different, shorter window inside the class (a friend free
+ * for one hour of a two-hour lecture needs “free at 11:30 AM - 12:30 PM” to
+ * be actionable) — they are grouped by the exact free window they share, so
+ * two friends free over the same stretch read as one clause with “and” —
+ * “Raman and Prince are free at 11:30 AM - 12:30 PM” — instead of one clause
  * per friend. Different windows still get their own clause, in time order.
  *
  * [timeLabel] renders minutes-since-midnight for display.
@@ -135,8 +140,7 @@ fun friendAvailabilitySentences(
         .distinct()
     val sentences = mutableListOf<String>()
     if (fullNames.isNotEmpty()) {
-        sentences += "${friendNameList(fullNames)} ${friendVerb(fullNames)} free at this time slot " +
-            "${timeLabel(startMinutes)} - ${timeLabel(endMinutes)}"
+        sentences += "${friendNameList(fullNames)} ${friendVerb(fullNames)} free at this time slot"
     }
     windows.filter { it.name !in fullNames }
         .groupBy { it.startMinutes to it.endMinutes }
