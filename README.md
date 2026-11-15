@@ -329,11 +329,3 @@ Inline links stay independently tappable even when the card has a top-level `lin
 ### Delivery notes
 
 This feed is intentionally separate from lecture reminders. Lecture reminders remain local and offline-capable; announcement delivery depends on Android allowing the periodic check and on the device having connectivity at check time. The full eligible list is also cached on-device (including `type`, `link`, and `for`) so the Home cards can still render offline after the first successful fetch, and the cache is cleared as soon as a fetch returns nothing to show.
-
-## GitHub release updates
-
-The app checks the latest stable GitHub release from `https://api.github.com/repos/lsgzt/nextlecture-android/releases/latest` on startup when the cached result is older than six hours, and during the 12-hour background refresh. Settings also provides **Check for updates**.
-
-Android `versionName` is currently `1.0`, and `BuildConfig.RELEASE_MARKER` is `1.0`. The two are compared by their numeric components (a leading `v` is ignored, non-numeric runs split the marker), so `1.1` is treated as newer and `1.0` as the same version. The installed marker is the greater of the two. Update both values in `app/build.gradle.kts` whenever publishing a new release, and keep them in sync.
-
-When a newer stable release is found, Home and Settings show an update card and the app may send one update notification per release marker. **Download update** opens `https://nextlecture-app.vercel.app/download`. Android still requires the user to confirm the APK installation.
