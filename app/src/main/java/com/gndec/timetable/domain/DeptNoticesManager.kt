@@ -1,6 +1,7 @@
 package com.gndec.timetable.domain
 
 import android.content.Context
+import com.gndec.timetable.data.prefs.SettingsManager
 import com.gndec.timetable.net.Net
 import com.gndec.timetable.parse.DeptNotice
 import com.gndec.timetable.parse.DeptNoticesParser
