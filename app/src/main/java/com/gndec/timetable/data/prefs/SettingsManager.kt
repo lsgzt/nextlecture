@@ -105,10 +105,10 @@ data class AppSettings(
     val provider: AiProvider get() = AiProvider.fromId(aiProvider)
 
     companion object {
-        const val DEFAULT_PYQ_RAG_BACKEND_URL = "https://nextlecture-app.vercel.app"
+        const val DEFAULT_PYQ_RAG_BACKEND_URL = "https://nextlecture-android.vercel.app"
         /** A fresh install follows the OS light/dark setting until the user picks one. */
         const val DEFAULT_THEME_MODE = "system"
-        const val DEFAULT_HOLIDAY_BACKEND_URL = "https://nextlecture-app.vercel.app"
+        const val DEFAULT_HOLIDAY_BACKEND_URL = "https://nextlecture-android.vercel.app"
         const val DEFAULT_SOURCE_URL =
             "https://appsc.gndec.ac.in/sites/default/files/2026-09/06_09_2026%20ON%20WEBSITE_subgroups_days_horizontal.html"
     }

@@ -142,9 +142,16 @@ class MainActivity : ComponentActivity() {
                             // at the appsc document. Route through onboarding once so
                             // the student picks their section from the official
                             // departmental timetable instead of silently keeping the
-                            // wrong source.
+                            // wrong source. A senior whose onboarding SAVE could not
+                            // link a group (the departmental download failed, or the
+                            // app was killed right after the profile was written) is
+                            // also incomplete: letting them in would land on an empty
+                            // "Select group" timetable that only Settings → Change
+                            // group can repair. Onboarding resumes straight at the
+                            // section picker, so nothing is asked twice.
                             val seniorSetupIncomplete = settings!!.academicYear >= 2 &&
-                                settings!!.profileSource != "manual_departmental"
+                                (settings!!.profileSource != "manual_departmental" ||
+                                    settings!!.group.isNullOrBlank())
                             val setupComplete = (settings!!.onboardingDone || hasIdentity) && !seniorSetupIncomplete
                             val permissionPromptNeeded = setupComplete &&
                                 !settings!!.notificationPermissionPrompted &&

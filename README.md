@@ -141,7 +141,7 @@ every user. Debug builds, unit tests and lint work with no keystore configured.
 
 ## GitHub Releases
 
-Published APKs are distributed through the repository’s GitHub Releases page. The app’s **Download update** action opens `https://nextlecture-app.vercel.app/download`.
+Published APKs are distributed through the repository’s GitHub Releases page. The app’s **Download update** action opens `https://github.com/lsgzt/nextlecture/releases/latest`.
 
 ## Security
 
