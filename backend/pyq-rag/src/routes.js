@@ -126,7 +126,8 @@ export function buildRouter() {
   });
 
   router.post('/admin/seed', requireAdmin, async (req, res) => {
-    const parsed = z.object({ limit: z.number().int().min(1).max(1628).default(1628), offset: z.number().int().min(0).max(1627).default(0) }).safeParse(req.body || {});
+    // Cap tracks the paper catalog size (1628 Drive + 5017 Knimbus records).
+    const parsed = z.object({ limit: z.number().int().min(1).max(6645).default(6645), offset: z.number().int().min(0).max(6644).default(0) }).safeParse(req.body || {});
     if (!parsed.success) return validationError(res, parsed);
     try {
       const catalog = await readCatalog();
