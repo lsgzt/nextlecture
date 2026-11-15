@@ -80,7 +80,7 @@ class FriendsLateSlotsTest {
         val slots = days.lateSlotsAfter(MyDayEnds)
         assertEquals(
             listOf(
-                FriendLateSlot("Simran", "practical", 17 * 60 + 30),
+                FriendLateSlot("Simran", "lab", 17 * 60 + 30),
                 FriendLateSlot("Raman", "tutorial", 18 * 60)
             ),
             slots

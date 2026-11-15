@@ -161,7 +161,7 @@ fun friendAvailabilitySentences(
  */
 data class FriendEarlySlot(
     val name: String,
-    /** Canonical type label: lecture / tutorial / practical. */
+    /** Canonical type label: lecture / tutorial / lab. */
     val typeLabel: String,
     val startMinutes: Int
 )
@@ -179,7 +179,7 @@ fun List<FriendDay>.earlySlotsBefore(beforeMinutes: Int): List<FriendEarlySlot> 
                 ?: return@mapNotNull null
             val typeLabel = when (first.lectureType?.trim()?.uppercase()) {
                 "TUTORIAL" -> "tutorial"
-                "PRACTICAL" -> "practical"
+                "PRACTICAL" -> "lab"
                 else -> "lecture"
             }
             FriendEarlySlot(day.friend.name, typeLabel, first.startMinutes)
@@ -194,7 +194,7 @@ fun List<FriendDay>.earlySlotsBefore(beforeMinutes: Int): List<FriendEarlySlot> 
  */
 data class FriendLateSlot(
     val name: String,
-    /** Canonical type label: lecture / tutorial / practical. */
+    /** Canonical type label: lecture / tutorial / lab. */
     val typeLabel: String,
     /** When that class ends — the time the bottom note displays. */
     val endMinutes: Int
@@ -215,7 +215,7 @@ fun List<FriendDay>.lateSlotsAfter(afterMinutes: Int): List<FriendLateSlot> =
                 ?: return@mapNotNull null
             val typeLabel = when (last.lectureType?.trim()?.uppercase()) {
                 "TUTORIAL" -> "tutorial"
-                "PRACTICAL" -> "practical"
+                "PRACTICAL" -> "lab"
                 else -> "lecture"
             }
             FriendLateSlot(day.friend.name, typeLabel, last.endMinutes)

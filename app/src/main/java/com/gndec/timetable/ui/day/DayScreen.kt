@@ -1111,7 +1111,7 @@ private fun TimelineRail(lecture: LectureEntity, state: LectureState, nodeIndex:
  * Examples:
  * - "Vishal has a lecture at 8:30 AM"
  * - "Vishal and Prince have a lecture at 8:30 AM"
- * - "Vishal has a lecture and Prince has a practical at 8:30 AM"
+ * - "Vishal has a lecture and Prince has a lab at 8:30 AM"
  * Names and activity types are bold.
  */
 @Composable
@@ -1170,7 +1170,7 @@ private fun androidx.compose.ui.text.AnnotatedString.Builder.appendFriendsBefore
                 append(formatTime(startMinutes))
             }
         } else {
-            // Mixed types at the same time: "Vishal has a lecture and Prince has a practical at 8:30 AM"
+            // Mixed types at the same time: "Vishal has a lecture and Prince has a lab at 8:30 AM"
             group.forEachIndexed { i, slot ->
                 if (i > 0) withStyle(body) { append(" and ") }
                 withStyle(bold) { append(slot.name) }
@@ -1193,7 +1193,7 @@ private fun androidx.compose.ui.text.AnnotatedString.Builder.appendFriendsBefore
  * Examples:
  * - "Vishal has a lecture until 5:30 PM"
  * - "Vishal and Prince have a lecture until 5:30 PM"
- * - "Vishal has a lecture and Prince has a practical until 5:30 PM"
+ * - "Vishal has a lecture and Prince has a lab until 5:30 PM"
  * Names and activity types are bold; "until" carries the class END time
  * because the student's day is already over at that point.
  */
@@ -1252,7 +1252,7 @@ private fun androidx.compose.ui.text.AnnotatedString.Builder.appendFriendsAfterD
                 append(formatTime(endMinutes))
             }
         } else {
-            // Mixed types at the same end: "Vishal has a lecture and Prince has a practical until 5:30 PM"
+            // Mixed types at the same end: "Vishal has a lecture and Prince has a lab until 5:30 PM"
             group.forEachIndexed { i, slot ->
                 if (i > 0) withStyle(body) { append(" and ") }
                 withStyle(bold) { append(slot.name) }
